@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Jam Canvas Starter</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top left, #1e293b 0%, transparent 55%),
+        radial-gradient(circle at bottom right, #0b1020 0%, transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      padding: 16px;
+    }
+
+    .game-shell {
+      width: min(100%, 1600px);
+      background: color-mix(in srgb, var(--panel), black 15%);
+      border: 1px solid color-mix(in srgb, var(--muted), transparent 70%);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .badge {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #0b1224;
+      border-radius: 8px;
+      image-rendering: pixelated;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-shell">
+    <div class="header">
+      <span class="badge">Canvas Starter</span>
+      <span>WASD / Arrows to move, F3 for debug</span>
+    </div>
+    <canvas id="game" width="800" height="450"></canvas>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
