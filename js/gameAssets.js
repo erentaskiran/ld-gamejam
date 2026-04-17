@@ -1,65 +1,42 @@
-function frame(x, y, w = 16, h = 16) {
-  return { x, y, w, h };
-}
-
 export const ASSETS = {
   images: {
+    mapTileset: "./assets/spritesheet.png",
     dungeon: "./assets/0x72_DungeonTilesetII_v1.7.png",
   },
   audio: {},
 };
 
-export const TILESET_KEY = "dungeon";
+export const MAP_TILESET_KEY = "mapTileset";
+export const ACTOR_TILESET_KEY = "dungeon";
 
 export const TILE_RENDER = {
   size: 16,
   sourceInset: 0,
 };
 
-export const TERRAIN_TILES = {
-  floor: [
-    frame(16, 64),
-    frame(32, 64),
-    frame(48, 64),
-    frame(16, 80),
-    frame(32, 80),
-    frame(48, 80),
-    frame(16, 96),
-    frame(32, 96),
-  ],
-  wall: [
-    frame(16, 0),
-    frame(32, 0),
-    frame(48, 0),
-    frame(16, 16),
-    frame(32, 16),
-    frame(48, 16),
-  ],
+export const TILESET_META = {
+  columns: 8,
+  tileWidth: 16,
+  tileHeight: 16,
+  startId: 0,
 };
 
-export const ENVIRONMENT_ANIMATIONS = {
-  spikes: [
-    frame(16, 192),
-    frame(32, 192),
-    frame(48, 192),
-    frame(64, 192),
-  ],
-  fountainTop: [
-    frame(64, 0),
-    frame(80, 0),
-    frame(96, 0),
-  ],
-  fountainMid: [
-    frame(64, 16),
-    frame(80, 16),
-    frame(96, 16),
-  ],
-  fountainBasin: [
-    frame(64, 32),
-    frame(80, 32),
-    frame(96, 32),
-  ],
+export const MAP_CONFIG = {
+  path: "./assets/map.json",
 };
+
+export const MAP_PARSE_CONFIG = {
+  spawnLayerNames: ["spawns", "spawn", "spawn_points"],
+  spawnTileIds: {
+    player: [],
+    enemy: [],
+    goal: [],
+  },
+};
+
+function frame(x, y, w = 16, h = 16) {
+  return { x, y, w, h };
+}
 
 export const PLAYER_ANIMATIONS = {
   idle: [
@@ -98,3 +75,27 @@ export const DECOR_FRAMES = {
 };
 
 export const GOAL_SPRITE_FRAME = frame(304, 416, 16, 16);
+
+export const ENVIRONMENT_ANIMATIONS = {
+  spikes: [
+    frame(16, 192),
+    frame(32, 192),
+    frame(48, 192),
+    frame(64, 192),
+  ],
+  fountainTop: [
+    frame(64, 0),
+    frame(80, 0),
+    frame(96, 0),
+  ],
+  fountainMid: [
+    frame(64, 16),
+    frame(80, 16),
+    frame(96, 16),
+  ],
+  fountainBasin: [
+    frame(64, 32),
+    frame(80, 32),
+    frame(96, 32),
+  ],
+};
