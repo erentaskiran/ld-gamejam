@@ -9,6 +9,11 @@ export const CASES = [
     file: "./dialogs/sessiz-commit.json",
     label: "CASE B - SESSIZ COMMIT",
   },
+  {
+    id: "TR TEST",
+    file: "./dialogs/soguk--oda.json",
+    label: "CASE TR TEST",
+  },
 ];
 
 export async function loadAllCases() {
@@ -20,7 +25,7 @@ export async function loadAllCases() {
       }
       const data = await response.json();
       return [caseDef.id, data.game_data];
-    })
+    }),
   );
   return Object.fromEntries(entries);
 }

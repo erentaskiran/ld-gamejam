@@ -1,0 +1,251 @@
+{
+  "game_data": {
+    "title": "Yıldıztepe Rezidans İstinat Duvarı Davası",
+    "suspect": {
+      "name": "Selim Arslaner",
+      "role": "Lüks konut projeleri geliştiren müteahhit",
+      "profile": "Karadeniz'in küçük bir kasabasında, babası marangoz olan bir ailenin ortanca çocuğu olarak büyüdü. İnşaat mühendisliği eğitimini bursla tamamladıktan sonra büyük bir holdingde şantiye şefi olarak başladığı kariyerine on yıl önce kendi firmasını kurarak devam etti. Bugün İstanbul'un Avrupa yakasında üç büyük rezidans projesinin sahibi. Dışa dönük, girişken ve toplantı masalarında havayı hızla okuyan bir adam; ancak kendisine yöneltilen eleştirilere karşı aşırı savunmacı tavrı dikkat çekiyor. Son altı aydır Bakırköy'deki projesinin ruhsat süreciyle ilgili belediye yetkilileriyle alışılmadık sıklıkta yemek yediği konuşuluyor. Boşandığı eşinden olan on yaşındaki kızını her hafta sonu almak için şehir dışından uçakla gelmekten hiç vazgeçmedi; kızının çizdiği resimleri ofisindeki camlı vitrinde özenle sergiliyor."
+    },
+    "system_config": {
+      "initial_fear_bar": 20,
+      "max_fear_bar": 100,
+      "fear_bar_description": "Korku Bari, suphelinin psikolojik baski altinda maskesinin ne kadar coztugunu olcer. Operatorun her hamlesi bari yukseltir ya da dusurur; biyometrik sinyaller (kalp atisi, GSR, EEG) ve mikro-ifadeler bu degeri besler. Bar yuksek tutuldugunda supheli savunma duvarlarini birakir ve itirafa yaklasir; bar dustugunde ise kontrolu geri alir, hukuki kalkanin ardina cekilir."
+    },
+    "context": "Bakırköy'deki Yıldıztepe Rezidans şantiyesinde yapımı süren istinat duvarı, Mart ayındaki şiddetli yağışların ardından alt kottaki bitişik apartmanın bahçesine çökerek zemin kat dairesinde oturan Yücel ailesinin ağır şekilde yaralanmasına yol açtı. Yücel ailesi, projenin yüklenicisi Arslaner İnşaat A.Ş. ve şirketin sahibi Selim Arslaner aleyhine hem maddi-manevi tazminat hem de taksirle yaralama suçlamasıyla şikâyetçi oldu; Cumhuriyet Savcılığı bilirkişi raporu doğrultusunda soruşturmayı derinleştirdi. İddiaya göre duvarda kullanılan beton ve demir donatı, onaylı statik projede öngörülen sınıfın altında kalıyor ve zemin etüdündeki uyarılar yeterince dikkate alınmamış. Selim Arslaner, malzeme seçiminin tamamen taşeron firmanın inisiyatifinde olduğunu, kendisinin teknik ayrıntılardan haberdar edilmediğini öne sürüyor. Ancak firma içi yazışmaların bir kısmının silindiğine dair ihbar ve eski şantiye şefinin aniden başka bir ile tayin edilmesi, savcılığın Arslaner'in bilgisi ve talimatı olup olmadığını sorgulamasına neden oluyor. Ruhsat sürecinde belediyeyle olan yakın ilişkiler de ayrı bir ön soruşturma dosyasına konu edildi.",
+    "start_node": "node_01_intro",
+    "nodes": {
+      "node_01_intro": {
+        "theme": "Sogutma Odasi",
+        "description": "Selim Arslaner, pahali takim elbisesinin ceketini sandalyenin arkasina asmis, masada duruyor. Avukati yanda. Operatör odasindaki ekranlarda biyometrik taban degerleri stabil akiyor.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EMPATHIC",
+            "question": "Bu kadar buyuk bir projede her detaya yetismek imkansiz olmali. O gun kendinizi nasil hissettiniz, Sayin Arslaner?",
+            "answer": "Yikildim tabii. Bir ailenin evinin bahcesine duvar cokuyor, cocuklari hastanede... Ben de bir babayim. Ama teknik kararlari sahada mudurler verir, ben finansman ve izinlerle ilgilenirim.",
+            "mechanics": {
+              "heart_rate": "STABLE",
+              "breathing": "DEEP",
+              "gsr": "BASELINE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "REHEARSED_SOFTENING",
+              "korku_bari_delta": 5,
+              "gameplay_note": "ILERLEME: Supheli ezberli bir duygusal cerceveye geciyor ama sinyaller temiz. Guven kuruldu, simdi zemini kaydirma zamani."
+            },
+            "next_node": "node_02_teknik_bilgi"
+          },
+          {
+            "type": "AGGRESSIVE",
+            "question": "Sayin Arslaner, o duvarin altinda bir aile kaldi. Cimriliginiz bir cocugun belkemigini kirdi. Bunu kabul ediyor musunuz?",
+            "answer": "Avukatim burada ve bu tur hakaret iceren ifadelere cevap vermemi tavsiye etmiyor. Ben bu firmada binlerce kisiye ekmek veriyorum. Sucluyu ariyorsaniz, taseronun ofisine gidin.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "DEFENSIVE_CROSS_ARMS",
+              "korku_bari_delta": -15,
+              "gameplay_note": "YANLIS HAMLE: Erken saldiri, supheliyi avukatin arkasina itti. Bundan sonraki her soru hukuki filtreden gececek."
+            },
+            "next_node": "node_fail_avukat_duvari"
+          },
+          {
+            "type": "ANALYTICAL",
+            "question": "Statik projeyle yerinde kullanilan malzeme arasinda sinif farki var. Beton sinifini kim, hangi asamada degistirdi?",
+            "answer": "Bunu bana sormayin. Satin alma kararlarini sahadaki teknik ofis verir. Ben onaylarim, evet, ama onumde yuzlerce kalem gecer. Taseron firmanin irsaliyesine bakmaniz lazim.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "INCREASE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": 10,
+              "gameplay_note": "YALAN SINYALI: 'Onaylarim' derken goz kaciyor. Teknik olayin detayini biliyor ama kagit uzerinde kendini koruyor."
+            },
+            "next_node": "node_02_teknik_bilgi"
+          }
+        ]
+      },
+      "node_02_teknik_bilgi": {
+        "theme": "Kagit Izi",
+        "description": "Operatör, Arslaner Insaat'in satin alma kayitlarinin bir kismini Selim'in önüne koyar. Beton siparisleri onun elektronik imzasiyla onaylanmis.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EVIDENCE",
+            "question": "Iste Subat ayina ait siparis onaylari. Her biri sizin e-imzanizla. Dusuk sinif betonun siparisini siz onaylamissiniz. Hala teknikten haberiniz olmadigini mi soyleyeceksiniz?",
+            "answer": "E-imza sistemi ofiste acik bir cihaz. Asistanim toplu onay yapar, ben genel toplami gorurum. Spesifik sinifi hatirlayacak halim yok, yuzlerce kalem gecer dedim size.",
+            "mechanics": {
+              "heart_rate": "INCREASE",
+              "breathing": "SHALLOW",
+              "gsr": "SPIKE",
+              "eeg": "ERRATIC",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": 15,
+              "gameplay_note": "KISMEN DOGRU: Savunma kagit uzerinde tutarli ama GSR sicrayisi sinif degisikliginin bilincli oldugunu ima ediyor."
+            },
+            "next_node": "node_03_silinen_email"
+          },
+          {
+            "type": "NARROW_TARGET",
+            "question": "Peki bu siparisleri sizin adiniza yapan asistaniniz kim? Ismini verin, ifadesine basvuralim.",
+            "answer": "Asistanimi bu ise karistirmayin, kadin yeni dogum yapti. Kurumsal prosedur boyle isliyor, tek bir ismin ustune yikamazsiniz.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SURGE",
+              "eeg": "CHAOTIC",
+              "cctv_visual": "MICRO_TWITCH",
+              "korku_bari_delta": 20,
+              "gameplay_note": "DOGRU HAMLE: Supheli blok hamlesini atlayamiyor. Savundugu kisinin olmadigi bir an - bu asistan belki de hic onaylamadi."
+            },
+            "next_node": "node_03_silinen_email"
+          },
+          {
+            "type": "GULLIBLE",
+            "question": "Tamam, e-imza sistemleri gercekten karisik olabiliyor. Belki de sistem hatasi vardir?",
+            "answer": "Aynen oyle! Yillardir bunu IT'ye anlatamadik. Bakin, ben sizin tarafinizdayim aslinda, ben de magdurum bu olayda.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "RELIEVED_EXHALE",
+              "korku_bari_delta": -25,
+              "gameplay_note": "YANLIS HAMLE: Supheliye kacis rampasi verdiniz. Rahatlamis omuzlari ve nefes verisi, elinizden kaydigini gosteriyor."
+            },
+            "next_node": "node_fail_kacis_rampasi"
+          }
+        ]
+      },
+      "node_03_silinen_email": {
+        "theme": "Silinen E-posta",
+        "description": "Operatör masaya yeni bir cikti koyar: sirketin yedek sunucusundan kurtarilmis bir e-posta. Gonderen sahantiye sefi; alici bizzat Selim. Konu: 'Zemin raporu uyumsuzluklari - acil'. E-posta Selim'in gelen kutusundan silinmis.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "FORENSIC_CALL_OUT",
+            "question": "Olaydan on dort gun once sahantiye sefiniz Hakan Bey size bu raporu gonderdi. Siz e-postayi actiniz, okudunuz ve iki dakika sonra sildiniz. IT logu elimde. Taseronun insiyatifi olmadigini biliyordunuz, degil mi?",
+            "answer": "Ben... o e-postayi hatirlamiyorum. Gunde yuz mail aliyorum. Silmek otomatik bir refleks olabilir.",
+            "mechanics": {
+              "heart_rate": "MAX_SPIKE",
+              "breathing": "HYPERVENTILATION",
+              "gsr": "MAX",
+              "eeg": "CHAOTIC",
+              "cctv_visual": "FROZEN",
+              "korku_bari_delta": 30,
+              "gameplay_note": "ILERLEME: Biyometrik zirve. Ses 'hatirlamiyorum' diyor ama vucut 'yakalandim' diyor. Sahantiye sefini masaya cek."
+            },
+            "next_node": "node_04_hakan_bey"
+          },
+          {
+            "type": "MORAL_PRESSURE",
+            "question": "Zemin katta seksen yasinda bir kadin vardi Selim Bey. Kaburgalari kirildi. Siz o e-postayi okudugunuz gece kiziniza iyi geceler opucugu verdiniz mi?",
+            "answer": "Kizimi bu isin icine SOKMAYIN. Bu soru asli degil! Avukat Bey, bu sorgulama kosullari kabul edilemez.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "UNEVEN",
+              "gsr": "SURGE",
+              "eeg": "ERRATIC",
+              "cctv_visual": "LIP_PRESS",
+              "korku_bari_delta": -10,
+              "gameplay_note": "YANLIS HAMLE: Ahlaki baski yerine itiraz refleksi tetiklediniz. Supheli simdi yeniden toparlaniyor, elinizdeki ivmeyi kaybettiniz."
+            },
+            "next_node": "node_04_hakan_bey"
+          },
+          {
+            "type": "STRATEGIC",
+            "question": "E-postayi acip silmek bir saniye surer. Ama sizin bilgisayariniz on iki dakika ayni mesajda kaldi. Okumadiysaniz, o on iki dakika ne yaptiniz?",
+            "answer": "Belki... ekrani acik birakip kalktim. Belki okudum, hatirlamaya calisiyorum ama... Bakin, raporu okumus olsam bile, icinde 'durdurun' diye bir sey yazmiyordu. Sadece uyumsuzluk dedi.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "SHALLOW",
+              "gsr": "SURGE",
+              "eeg": "CHAOTIC",
+              "cctv_visual": "LOOK_DOWN",
+              "korku_bari_delta": 35,
+              "gameplay_note": "DOGRU HAMLE: Yari itiraf geldi. 'Icinde durdurun yazmiyordu' cumlesi, okudugunu dolayli olarak kabul ediyor."
+            },
+            "next_node": "node_04_hakan_bey"
+          }
+        ]
+      },
+      "node_04_hakan_bey": {
+        "theme": "Surgun Edilen Sef",
+        "description": "Operatör son karta gelir: sahantiye sefi Hakan Demirel'in Erzurum'daki küçük bir projeye ani tayin belgesi ve Hakan'in iki gun önce savciliga verdigi on ifadenin ozeti. Selim bunu henuz bilmiyor.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "TRAP",
+            "question": "Hakan Demirel dun savciliga gelip ifade verdi. E-postayi sizin istegiizle yeniden yazmadigini, orijinal halini kendi sahsi e-postasina yedekledigini soyluyor. Siz Hakan'i surgun etmeden önce, Hakan sizi koruma altina aldi. Simdi yaliz kaldiniz Selim Bey.",
+            "answer": "Yok... yok, Hakan bunu yapmaz. Ben ona... ben ona aile gibi davrandim. Tamam. TAMAM. Raporu gordum. Ama ben 'dusuk sinif kullanin' demedim, 'maliyeti dusurun, yontem sizin bileceginiz is' dedim. Taseronla iki dudak arasinda konustuk, kagit yok. Kizimi bu evle buyuttuk, projeyi batiramazdim...",
+            "mechanics": {
+              "heart_rate": "MAX_SPIKE",
+              "breathing": "CRYING",
+              "gsr": "MAX",
+              "eeg": "FLATLINE",
+              "cctv_visual": "BREAKDOWN",
+              "korku_bari_delta": 45,
+              "gameplay_note": "ITIRAF: Maske cozuldu. Dogrudan talimat olmasa da sozlu yonlendirmeyi ve raporu bildigini kabul etti. Taksirli sorumluluk kesinlesti."
+            },
+            "next_node": "node_success_itiraf"
+          },
+          {
+            "type": "LEGAL_THREAT",
+            "question": "Eger simdi konusmazsaniz, sahantiye sefinizin sessiz kalacagini saniyorsunuz. Onu bir daha surgun edemezsiniz. Isbirligi yapin yoksa tek sanik siz olursunuz.",
+            "answer": "Bu bir tehdit mi? Avukat Bey kayda gecirin. Ben hicbir sey kabul etmiyorum. Hakan benimle yillardir calisir, o benim aleyhime konusmaz. Konusursa da, yalancidir.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "DEEP",
+              "gsr": "INCREASE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "STONE_FACE",
+              "korku_bari_delta": -20,
+              "gameplay_note": "YANLIS HAMLE: Blof hamlesi erken geldi. Supheli Hakan'a olan guvenini test ederken kendini toparladi. Sorgu kilitlendi."
+            },
+            "next_node": "node_fail_kilitlenme"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "Hakan ile aranizdaki ilisikiyi biliyorum. On bir yil birlikte calismissiniz. Onu Erzurum'a göndermek zorunda kalmak size de kolay gelmemistir. O rapor elinize geldiginde ne hissettiginizi anlatir misiniz?",
+            "answer": "Hakan iyi adamdir. Onu uzaklastirmak istemedim ama... proje durursa hepimiz bitiyorduk. Rapor geldi, okudum. Bir an kizimin resmine baktim vitrindeki. Sonra sildim. Hakan bir hafta sonra istifa etmek istedi, ben transfer olarak yazdim. Bilmenizi isterim ki kimsenin olmesini istemedim.",
+            "mechanics": {
+              "heart_rate": "INCREASE",
+              "breathing": "UNEVEN",
+              "gsr": "SPIKE",
+              "eeg": "ERRATIC",
+              "cctv_visual": "TEAR_POOLING",
+              "korku_bari_delta": 40,
+              "gameplay_note": "ITIRAF: Empati capasi calisti. Raporu okudugunu, sildigini ve sahantiye sefinin istifa isteyecek kadar itiraz ettigini dogruladi."
+            },
+            "next_node": "node_success_itiraf"
+          }
+        ]
+      },
+      "node_success_itiraf": {
+        "theme": "Camli Vitrin",
+        "description": "Selim Arslaner kollari ustune katlanmis, ekranda biyometri dususe geciyor. Avukat konusmayi keser ama artik gec.",
+        "is_end_state": true,
+        "result_text": "Sorgu basarili. Selim Arslaner'in iki asamali ifadesi - sahantiye sefinin uyari raporundan haberdar oldugu ve maliyet dusurme talimatini sozlu verdigi - taksirli yaralama dosyasinin iddianameye tasinmasi icin yeterli somut dayanagi olusturdu. Silinen e-postanin kurtarilmis kopyasi ve Hakan Demirel'in ifadesi maddi delil zincirini tamamladi. Yücel ailesinin tazminat davasinda Arslaner Insaat A.Ş.'nin sorumlulugu tartismasiz hale geldi. Operatör, suphelinin kizini koruma durtusunu empati capasi olarak kullanarak teknik savunma duvarini dolasmasini bildi."
+      },
+      "node_fail_avukat_duvari": {
+        "theme": "Hukuki Kalkan",
+        "description": "Avukat dosyasini kapatir, Selim susma hakkini kullanir. Ekranda biyometrik sinyal taban degerine doner.",
+        "is_end_state": true,
+        "result_text": "Sorgu basarisiz. Erken saldirganliginiz, supheliyi bir sanik degil magdur olarak konumlandirdi ve avukatin meshru mudahale zemini kazandi. Bu oturumdan sonra tum sorular yazili olarak, avukat suzgecinden gecerek cevaplandi. Silinen e-posta delili iddianamede kaldi ama Selim'in bilgisi dogrultusunda verilmis talimat iddiasi ispatlanamadi. Dava dusuk sinif beton icin sadece taseron firmaya donuk bir taksir davasina evrildi; Yücel ailesi sembolik bir tazminatla yetinmek zorunda kaldi."
+      },
+      "node_fail_kacis_rampasi": {
+        "theme": "Sistem Hatasi Masali",
+        "description": "Selim'in omuzlari duser, rahatlamis bir gulusle arkasina yaslanir. Operatör, verdigi 'sistem hatasi' cercevesinin suphelinin tum savunmasinin bel kemigi haline geldigini fark eder.",
+        "is_end_state": true,
+        "result_text": "Sorgu basarisiz. Suphelinin tercih ettigi anlatiyi - 'e-imza sistem hatasi' - kendi elinizle meshrulastirdiniz. Sonraki tum ifadelerinde bu cercevenin arkasina sigindi ve dosyaya dahil edilen IT uzmani raporu sistemin hatasiz calistigini gosterse bile, supheli 'makul suphe' esigini korudu. Hakan Demirel'in silinen e-postasi bile artik bir ihmal hikayesine donustu. Arslaner Insaat cezai sorumluluktan siyrildi, yalnizca hafif idari para cezasi aldi."
+      },
+      "node_fail_kilitlenme": {
+        "theme": "Kilitlenen Oda",
+        "description": "Selim kollarini gogsunde kavusturur, avukat telefonuna uzanir. Odadaki hava cimentolasir.",
+        "is_end_state": true,
+        "result_text": "Sorgu basarisiz. Erken bir hukuki tehdit, suphelinin sahantiye sefine olan sadakat ve guven refleksini tetikleyerek onu kilitledi. Hakan Demirel'in gercek ifadesi elinize geldiginde Selim artik ne soyleyeceginin senaryosunu yazmisti: 'sadik calisan dusmanim oldu, komplo kuruyor.' Jüri önunde bu anlati ikna edici duruyordu. Taksirli yaralama davasi sahsen Arslaner'e deil, sirket tuzel kisiligine baglandi; Selim Arslaner hukmen temiz sicille cikti."
+      }
+    }
+  }
+}

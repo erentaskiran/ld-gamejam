@@ -1,0 +1,12 @@
+{
+  "name": "ld-gamejam",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node --env-file=.env scripts/generate-case.mjs",
+    "generate:tr": "node --env-file=.env scripts/generate-case-tr.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0"
+  }
+}
