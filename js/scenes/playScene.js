@@ -1,6 +1,6 @@
 import { registerScene, setScene } from "../sceneManager.js";
 import { getMousePos, getWheelDelta, wasKeyPressed, wasMousePressed } from "../input.js";
-import { clamp } from "../math.js";
+import { clamp, lerp } from "../math.js";
 import { pickChoice, resetRun, setNode, state } from "../game/state.js";
 import { updateWave } from "../game/waves.js";
 import { drawSceneBackground } from "../ui/background.js";
@@ -10,6 +10,7 @@ import { drawPolygraph } from "../ui/polygraph.js";
 import { drawChoiceModal } from "../ui/choiceModal.js";
 import { drawDialogueModal } from "../ui/dialogueModal.js";
 import { drawLogPanel, drawLogTab } from "../ui/dialogLog.js";
+import { DESIGN_H, DESIGN_W } from "../ui/theme.js";
 
 const LAYOUT = {
   narration: { x: 8, y: 8, w: 518, h: 64 },
@@ -21,18 +22,52 @@ const LAYOUT = {
   polygraph: { x: 0, y: 236, w: 600, h: 164 },
 };
 
+const QUESTION_CPS = 80;
+const ANSWER_CPS = 55;
+const FEAR_SMOOTH = 6;
+const FEAR_FLASH_DECAY = 2;
+const LOG_ANIM_SPEED = 12;
+const PORTRAIT_SLIDE_SPEED = 2.5;
+const NARRATION_SLIDE_SPEED = 4;
+const NARRATION_CPS = 45;
+const CHOICES_ANIM_SPEED = 1.6;
+const POLYGRAPH_SLIDE_SPEED = 3;
+const LANE_FLASH_DECAY = 1.8;
+
 let logExpanded = false;
+let logAnim = 0;
 let logScrollOffset = 0;
 let logMaxScroll = 0;
+let portraitSlide = 0;
+let narrationSlide = 0;
+let narrationTextProgress = 0;
+let choicesAnim = 0;
+let polygraphSlide = 0;
+let displayedNodeId = "";
+
+const laneFlash = { heartRate: 0, eeg: 0, gsr: 0 };
+const prevMetrics = { heartRate: "", eeg: "", gsr: "" };
+
+function smoothstep(t) {
+  return t * t * (3 - 2 * t);
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
 
 function inRect(point, rect) {
   return point.x >= rect.x && point.x <= rect.x + rect.w && point.y >= rect.y && point.y <= rect.y + rect.h;
 }
 
 function drawConversationPortraits(ctx) {
+  const slideE = easeOutCubic(clamp(portraitSlide, 0, 1));
+  const opX = lerp(DESIGN_W, LAYOUT.operatorBadge.x, slideE);
+  const defX = lerp(-LAYOUT.defendantBadge.w, LAYOUT.defendantBadge.x, slideE);
+
   drawPortraitBadge(
     ctx,
-    LAYOUT.operatorBadge.x,
+    opX,
     LAYOUT.operatorBadge.y,
     LAYOUT.operatorBadge.w,
     LAYOUT.operatorBadge.h,
@@ -42,7 +77,7 @@ function drawConversationPortraits(ctx) {
 
   drawPortraitBadge(
     ctx,
-    LAYOUT.defendantBadge.x,
+    defX,
     LAYOUT.defendantBadge.y,
     LAYOUT.defendantBadge.w,
     LAYOUT.defendantBadge.h,
@@ -54,58 +89,105 @@ function drawConversationPortraits(ctx) {
 function drawPlayScene(ctx) {
   drawSceneBackground(ctx);
 
-  const node = state.currentNode;
-  if (node) {
-    drawNarrationBox(ctx, LAYOUT.narration.x, LAYOUT.narration.y, LAYOUT.narration.w, LAYOUT.narration.h, node.theme, node.description);
-  }
-
   drawConversationPortraits(ctx);
 
+  const node = state.currentNode;
+  if (node) {
+    const narrEase = easeOutCubic(clamp(narrationSlide, 0, 1));
+    const narrY = lerp(-LAYOUT.narration.h, LAYOUT.narration.y, narrEase);
+
+    const titleStr = node.theme || "";
+    const descStr = node.description || "";
+    const titleLen = titleStr.length;
+    const shown = Math.floor(narrationTextProgress);
+    const titleSlice = titleStr.slice(0, Math.min(titleLen, shown));
+    const descSlice = descStr.slice(0, Math.max(0, shown - titleLen));
+
+    drawNarrationBox(ctx, LAYOUT.narration.x, narrY, LAYOUT.narration.w, LAYOUT.narration.h, titleSlice, descSlice);
+  }
+
+  const mouse = getMousePos();
+  const textFullyRevealed = narrationTextProgress >= narrationTotalLen();
+
   if (state.responseMode && (state.lastQuestion || state.lastAnswer)) {
+    const qVisible = state.lastQuestion.slice(0, Math.floor(state.questionProgress));
+    const aVisible = state.lastAnswer.slice(0, Math.floor(state.answerProgress));
     drawDialogueModal(ctx, {
       x: LAYOUT.modal.x,
       y: LAYOUT.modal.y,
       w: LAYOUT.modal.w,
       h: LAYOUT.modal.h,
-      question: state.lastQuestion,
-      answer: state.lastAnswer,
+      question: qVisible,
+      answer: aVisible,
     });
     state.choiceRects = [];
-  } else if (node && node.choices && !node.is_end_state) {
+  } else if (textFullyRevealed && node && node.choices && !node.is_end_state) {
     state.choiceRects = drawChoiceModal(ctx, {
       x: LAYOUT.modal.x,
       y: LAYOUT.modal.y,
       w: LAYOUT.modal.w,
       h: LAYOUT.modal.h,
       choices: node.choices,
+      mouse: logExpanded ? null : mouse,
+      animProgress: choicesAnim,
     });
   } else {
     state.choiceRects = [];
   }
 
-  drawPolygraph(ctx, LAYOUT.polygraph.x, LAYOUT.polygraph.y, LAYOUT.polygraph.w, LAYOUT.polygraph.h, {
+  const polyE = easeOutCubic(clamp(polygraphSlide, 0, 1));
+  const polyY = lerp(DESIGN_H, LAYOUT.polygraph.y, polyE);
+  drawPolygraph(ctx, LAYOUT.polygraph.x, polyY, LAYOUT.polygraph.w, LAYOUT.polygraph.h, {
     waves: state.wave,
     time: state.time,
     metrics: state.metrics,
-    fearBar: state.fearBar,
+    fearBar: state.fearBarDisplay,
     maxFearBar: state.maxFearBar,
+    fearFlash: state.fearFlash,
+    laneFlash,
   });
 
-  if (logExpanded) {
+  const ease = smoothstep(clamp(logAnim, 0, 1));
+  const tabAlpha = 1 - Math.min(1, ease * 2);
+  if (tabAlpha > 0.01) {
+    ctx.save();
+    ctx.globalAlpha = tabAlpha;
+    drawLogTab(ctx, LAYOUT.logTab.x, LAYOUT.logTab.y, LAYOUT.logTab.w, LAYOUT.logTab.h, state.topLog.length);
+    ctx.restore();
+  }
+
+  if (ease > 0.01) {
+    const panelRect = {
+      x: lerp(LAYOUT.logTab.x, LAYOUT.logPanel.x, ease),
+      y: lerp(LAYOUT.logTab.y, LAYOUT.logPanel.y, ease),
+      w: lerp(LAYOUT.logTab.w, LAYOUT.logPanel.w, ease),
+      h: lerp(LAYOUT.logTab.h, LAYOUT.logPanel.h, ease),
+    };
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, ease * 1.4);
     const result = drawLogPanel(
       ctx,
-      LAYOUT.logPanel.x,
-      LAYOUT.logPanel.y,
-      LAYOUT.logPanel.w,
-      LAYOUT.logPanel.h,
+      panelRect.x,
+      panelRect.y,
+      panelRect.w,
+      panelRect.h,
       state.topLog,
       logScrollOffset,
     );
-    logMaxScroll = result.maxScroll;
-    logScrollOffset = result.clampedScroll;
-  } else {
-    drawLogTab(ctx, LAYOUT.logTab.x, LAYOUT.logTab.y, LAYOUT.logTab.w, LAYOUT.logTab.h, state.topLog.length);
+    ctx.restore();
+    if (ease > 0.95) {
+      logMaxScroll = result.maxScroll;
+      logScrollOffset = result.clampedScroll;
+    }
   }
+}
+
+function narrationTotalLen() {
+  const node = state.currentNode;
+  if (!node) {
+    return 0;
+  }
+  return (node.theme || "").length + (node.description || "").length;
 }
 
 function advanceToPendingNode() {
@@ -118,7 +200,7 @@ function advanceToPendingNode() {
   }
 }
 
-function updateLogHover() {
+function updateLogHover(dt) {
   const mouse = getMousePos();
   const rect = logExpanded ? LAYOUT.logPanel : LAYOUT.logTab;
   const hovering = inRect(mouse, rect);
@@ -130,6 +212,13 @@ function updateLogHover() {
     logExpanded = true;
   }
 
+  const target = logExpanded ? 1 : 0;
+  const diff = target - logAnim;
+  logAnim += diff * Math.min(1, dt * LOG_ANIM_SPEED);
+  if (Math.abs(diff) < 0.005) {
+    logAnim = target;
+  }
+
   if (logExpanded) {
     const wheel = getWheelDelta();
     if (wheel !== 0) {
@@ -138,19 +227,106 @@ function updateLogHover() {
   }
 }
 
+function tickFearAnimation(dt) {
+  const diff = state.fearBar - state.fearBarDisplay;
+  state.fearBarDisplay += diff * Math.min(1, dt * FEAR_SMOOTH);
+  if (Math.abs(diff) < 0.05) {
+    state.fearBarDisplay = state.fearBar;
+  }
+  state.fearFlash = Math.max(0, state.fearFlash - dt * FEAR_FLASH_DECAY);
+}
+
+function handleResponseMode(dt) {
+  const qLen = state.lastQuestion.length;
+  const aLen = state.lastAnswer.length;
+  const qDone = state.questionProgress >= qLen;
+  const aDone = state.answerProgress >= aLen;
+
+  if (wasKeyPressed("enter")) {
+    if (!qDone) {
+      state.questionProgress = qLen;
+      return;
+    }
+    if (!aDone) {
+      state.answerProgress = aLen;
+      return;
+    }
+    advanceToPendingNode();
+    return;
+  }
+
+  if (!qDone) {
+    state.questionProgress = Math.min(qLen, state.questionProgress + dt * QUESTION_CPS);
+    return;
+  }
+
+  if (!aDone) {
+    state.answerProgress = Math.min(aLen, state.answerProgress + dt * ANSWER_CPS);
+    return;
+  }
+
+  state.responseTimer -= dt;
+  if (state.responseTimer <= 0) {
+    advanceToPendingNode();
+  }
+}
+
 export function registerPlayScene(_canvas, ctx) {
   registerScene("play", {
     enter() {
       resetRun();
       logExpanded = false;
+      logAnim = 0;
       logScrollOffset = 0;
       logMaxScroll = 0;
+      portraitSlide = 0;
+      narrationSlide = 0;
+      narrationTextProgress = 0;
+      choicesAnim = 0;
+      polygraphSlide = 0;
+      laneFlash.heartRate = 0;
+      laneFlash.eeg = 0;
+      laneFlash.gsr = 0;
+      prevMetrics.heartRate = state.metrics.heartRate;
+      prevMetrics.eeg = state.metrics.eeg;
+      prevMetrics.gsr = state.metrics.gsr;
+      displayedNodeId = state.currentNodeId;
     },
     update(dt) {
       state.time += dt;
       updateWave(state.wave, state.waveTarget, dt);
+      tickFearAnimation(dt);
 
-      updateLogHover();
+      portraitSlide = Math.min(1, portraitSlide + dt * PORTRAIT_SLIDE_SPEED);
+      polygraphSlide = Math.min(1, polygraphSlide + dt * POLYGRAPH_SLIDE_SPEED);
+      if (portraitSlide >= 0.7) {
+        narrationSlide = Math.min(1, narrationSlide + dt * NARRATION_SLIDE_SPEED);
+      }
+
+      for (const key of ["heartRate", "eeg", "gsr"]) {
+        if (state.metrics[key] !== prevMetrics[key]) {
+          prevMetrics[key] = state.metrics[key];
+          laneFlash[key] = 1;
+        }
+        laneFlash[key] = Math.max(0, laneFlash[key] - dt * LANE_FLASH_DECAY);
+      }
+
+      if (state.currentNodeId !== displayedNodeId) {
+        displayedNodeId = state.currentNodeId;
+        narrationTextProgress = 0;
+        choicesAnim = 0;
+      }
+
+      const totalTextLen = narrationTotalLen();
+      if (narrationSlide >= 0.99 && narrationTextProgress < totalTextLen) {
+        narrationTextProgress = Math.min(totalTextLen, narrationTextProgress + dt * NARRATION_CPS);
+      }
+
+      if (narrationTextProgress >= totalTextLen && !state.responseMode) {
+        choicesAnim += dt * CHOICES_ANIM_SPEED;
+      }
+
+      updateLogHover(dt);
 
       if (wasKeyPressed("escape")) {
         setScene("menu");
@@ -159,19 +335,22 @@ export function registerPlayScene(_canvas, ctx) {
 
       if (wasKeyPressed("r")) {
         resetRun();
+        narrationTextProgress = 0;
+        choicesAnim = 0;
+        return;
+      }
+
+      if (!state.responseMode && narrationTextProgress < totalTextLen && wasKeyPressed("enter")) {
+        narrationTextProgress = totalTextLen;
         return;
       }
 
       if (state.responseMode) {
-        if (wasKeyPressed("enter")) {
-          state.responseTimer = 0;
-        } else {
-          state.responseTimer -= dt;
-        }
+        handleResponseMode(dt);
+        return;
+      }
 
-        if (state.responseTimer <= 0) {
-          advanceToPendingNode();
-        }
+      if (narrationTextProgress < totalTextLen) {
         return;
       }
 

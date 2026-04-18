@@ -2,7 +2,7 @@ import { createGameLoop } from "./gameLoop.js";
 import { endFrameInput, initInput, setDesignScale } from "./input.js";
 import { preloadAssets } from "./assets.js";
 import { clearCanvas, drawText } from "./draw.js";
-import { renderScene, setScene, updateScene } from "./sceneManager.js";
+import { getTransitionAlpha, renderScene, setScene, updateScene } from "./sceneManager.js";
 import { loadAllCases } from "./game/cases.js";
 import { setSelectedCase, state } from "./game/state.js";
 import { registerMenuScene } from "./scenes/menuScene.js";
@@ -62,6 +62,12 @@ function render() {
   ctx.setTransform(renderScale, 0, 0, renderScale, 0, 0);
   ctx.imageSmoothingEnabled = false;
   renderScene();
+
+  const alpha = getTransitionAlpha();
+  if (alpha > 0) {
+    ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+    ctx.fillRect(0, 0, DESIGN_W, DESIGN_H);
+  }
 }
 
 const loop = createGameLoop({ update, render });

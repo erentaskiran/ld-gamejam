@@ -84,7 +84,7 @@ function readout(type, profile) {
   return `${Math.round(8 + profile.amp * 42)} uS`;
 }
 
-function drawLane(ctx, x, y, w, h, { label, color, profile, type, time, metric }) {
+function drawLane(ctx, x, y, w, h, { label, color, profile, type, time, metric, flash = 0 }) {
   const labelW = 48;
   const valueW = 130;
   const waveX = x + labelW;
@@ -92,6 +92,13 @@ function drawLane(ctx, x, y, w, h, { label, color, profile, type, time, metric }
 
   drawLaneGrid(ctx, waveX, y + 2, waveW, h - 4);
   drawLaneWave(ctx, waveX, y + 2, waveW, h - 4, color, profile, type, time);
+
+  if (flash > 0.001) {
+    ctx.save();
+    ctx.globalAlpha = Math.min(0.4, flash * 0.4);
+    drawRect(ctx, waveX, y + 2, waveW, h - 4, color);
+    ctx.restore();
+  }
 
   drawText(ctx, label, x + 4, y + h / 2, {
     size: 16,
@@ -110,7 +117,7 @@ function drawLane(ctx, x, y, w, h, { label, color, profile, type, time, metric }
 }
 
 export function drawPolygraph(ctx, x, y, w, h, data) {
-  const { waves, time, metrics, fearBar, maxFearBar } = data;
+  const { waves, time, metrics, fearBar, maxFearBar, fearFlash = 0, laneFlash = {} } = data;
 
   drawRect(ctx, x, y, w, h, COLORS.panelSolid);
   drawRect(ctx, x, y, w, 1, COLORS.amber);
@@ -142,6 +149,16 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
   drawRect(ctx, fearBarX, y + headerH / 2 - 4, fearBarW, 8, COLORS.fearTrack);
   const ratio = clamp(fearBar / maxFearBar, 0, 1);
   drawRect(ctx, fearBarX, y + headerH / 2 - 4, fearBarW * ratio, 8, COLORS.fear);
+  if (fearFlash > 0.001) {
+    drawRect(
+      ctx,
+      fearBarX,
+      y + headerH / 2 - 4,
+      fearBarW,
+      8,
+      `rgba(255, 220, 150, ${Math.min(0.75, fearFlash * 0.75)})`,
+    );
+  }
 
   drawText(ctx, fearValText, fearValX, fearMidY, {
     size: 16,
@@ -164,6 +181,7 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     type: "heart",
     time,
     metric: metrics.heartRate,
+    flash: laneFlash.heartRate || 0,
   });
 
   drawLane(ctx, x, lanesY + laneH, w, laneH, {
@@ -173,6 +191,7 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     type: "eeg",
     time,
     metric: metrics.eeg,
+    flash: laneFlash.eeg || 0,
   });
 
   drawLane(ctx, x, lanesY + laneH * 2, w, laneH, {
@@ -182,5 +201,6 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     type: "gsr",
     time,
     metric: metrics.gsr,
+    flash: laneFlash.gsr || 0,
   });
 }

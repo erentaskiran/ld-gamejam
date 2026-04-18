@@ -19,6 +19,10 @@ export const state = {
   responseTimer: 0,
   pendingNodeId: "",
   choiceRects: [],
+  questionProgress: 0,
+  answerProgress: 0,
+  fearBarDisplay: 0,
+  fearFlash: 0,
   menuCaseRects: [],
   caseIndex: 0,
   caseDataById: {},
@@ -86,10 +90,14 @@ export function resetRun() {
   const config = state.gameData.system_config;
   state.maxFearBar = config.max_fear_bar;
   state.fearBar = config.initial_fear_bar;
+  state.fearBarDisplay = config.initial_fear_bar;
+  state.fearFlash = 0;
   state.topLog = [];
   state.lastQuestion = "";
   state.lastAnswer = "";
   state.error = "";
+  state.questionProgress = 0;
+  state.answerProgress = 0;
   pushLog(state.gameData.context);
   return setNode(state.gameData.start_node);
 }
@@ -118,12 +126,18 @@ export function pickChoice(index) {
   state.metrics.breathing = mechanics.breathing || state.metrics.breathing;
   state.metrics.cctvVisual = mechanics.cctv_visual || state.metrics.cctvVisual;
 
+  const prevFear = state.fearBar;
   state.fearBar = clamp(state.fearBar + (mechanics.korku_bari_delta || 0), 0, state.maxFearBar);
+  if (state.fearBar !== prevFear) {
+    state.fearFlash = 1;
+  }
   setWaveTargetsFromMechanics(state.waveTarget, mechanics);
 
   state.responseMode = true;
-  state.responseTimer = 2.1;
+  state.responseTimer = 1.2;
   state.pendingNodeId = choice.next_node;
+  state.questionProgress = 0;
+  state.answerProgress = 0;
 
   return true;
 }

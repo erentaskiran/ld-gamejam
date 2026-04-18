@@ -20,14 +20,16 @@ export function drawDialogueModal(ctx, { x, y, w, h, question, answer }) {
     maxLines: 2,
   });
 
-  const aStartY = y + 34 + qLines * 16 + 8;
-  drawWrappedText(ctx, `OZAN: ${answer}`, x + 8, aStartY, w - 16, {
-    size: 16,
-    color: COLORS.cream,
-    font: UI_FONT,
-    lineHeight: 16,
-    maxLines: 5,
-  });
+  if (answer) {
+    const aStartY = y + 34 + qLines * 16 + 8;
+    drawWrappedText(ctx, `OZAN: ${answer}`, x + 8, aStartY, w - 16, {
+      size: 16,
+      color: COLORS.cream,
+      font: UI_FONT,
+      lineHeight: 16,
+      maxLines: 5,
+    });
+  }
 
   drawText(ctx, "ENTER ile atla", x + w - 8, y + h - 8, {
     size: 16,
