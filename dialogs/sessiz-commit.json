@@ -1,0 +1,234 @@
+{
+  "game_data": {
+    "title": "The Operator - Case: Sessiz Commit",
+    "suspect": {
+      "name": "Elif",
+      "role": "Kidemli ML Muhendisi",
+      "profile": "Yuksek zeka, guclu etik refleksler, ama ailesine yonelik tehdit altinda. Dogrudan yalandan cok yari dogrularla ilerler. Teknik detaylarda cok guvenli, duygu odakli sorularda kontrol kaybedebilir."
+    },
+    "system_config": {
+      "initial_fear_bar": 18,
+      "max_fear_bar": 100,
+      "fear_bar_description": "Elif'in kontrolu ne kadar kaybettigini gosterir. Dogru biyometrik okumalarla gercegin cekirdegine ulasirsin."
+    },
+    "context": "Noxtera Biotech'in Klinik AI platformunda gece yarisi imzasiz bir model guncellemesi yapildi. Ertesi sabah yogun bakimda risk puani algoritmasi 14 hastayi dusuk oncelikledi. Elif, o gece binaya kart basan son kisiydi. Sunucu odasindan cikmadan once USB engel loglarinda 7 dakikalik bir kor nokta olustu.",
+    "start_node": "node_01_midnight_push",
+    "nodes": {
+      "node_01_midnight_push": {
+        "theme": "Gece Yarisi Commit'i",
+        "description": "Elif sakin gorunuyor, nefesi kontrollu. Ilk bakista profesyonel bir savunma hazirligi var.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "ANALYTICAL",
+            "question": "Saat 00:41'de production'a imzasiz bir model commit'i gecildi. O dakikada terminal senin token'inla acik. Bunu nasil acikliyorsun?",
+            "answer": "Token'im gun boyu acikti. Build server birkac kez timeout verdi, muhtemelen otomatik rollback script'i tetiklendi.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "eeg": "CHAOTIC",
+              "cctv_visual": "LIP_PRESS",
+              "korku_bari_delta": 12,
+              "gameplay_note": "YALAN SINYALI: Teknik jargon hizlandi, EEG belirgin kaotik. Hazir bir savunma metni okutuyor."
+            },
+            "next_node": "node_02_badge_clash"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "Bu odada birilerini korumaya calisan insanlar da olur. O gece yalniz miydin, yoksa bir baski var miydi?",
+            "answer": "Baski... herkesin uzerinde var. Ama bu olayda kimseyi satmam.",
+            "mechanics": {
+              "heart_rate": "INCREASE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SPIKE",
+              "eeg": "INCREASE",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": 16,
+              "gameplay_note": "KISMEN DOGRU: Duygusal tetikleme koruma davranisini ortaya cikardi. Dogrudan yalan yerine saklama moduna gecti."
+            },
+            "next_node": "node_02_badge_clash"
+          }
+        ]
+      },
+      "node_02_badge_clash": {
+        "theme": "Kart Kayitlarindaki Celiski",
+        "description": "Ilk katman kirildi. Simdi bina loglari ile anlatim arasindaki farki kullanabilirsin.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "GULLIBLE",
+            "question": "Anladim. Demek ki sistem otomatik bir hata zinciri uretmis. O zaman bu olayi yazilim kazasi olarak kapatalim.",
+            "answer": "Evet, dogrusu bu. Teknik ekip zaten raporu tamamlar.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "eeg": "BASELINE",
+              "cctv_visual": "RELIEVED_EXHALE",
+              "korku_bari_delta": -28,
+              "gameplay_note": "YANLIS HAMLE: Supheli, sorgunun teknik detayla boguldugunu gordu ve kontrolu geri aldi."
+            },
+            "next_node": "node_fail_technical_closure"
+          },
+          {
+            "type": "FORENSIC_CALL_OUT",
+            "question": "Problem su: senin kartin 00:39'da server katina cikiyor, ama ayni anda giriste gecici personel karti da ayni turnikeden geciyor. Iki kart ayni anda nasil hareket ediyor Elif?",
+            "answer": "... O karti ben okutmadim. Biri benden once odadaydi.",
+            "mechanics": {
+              "heart_rate": "ERRATIC",
+              "breathing": "HYPERVENTILATION",
+              "gsr": "MAX",
+              "eeg": "BASELINE",
+              "cctv_visual": "LOOK_DOWN",
+              "korku_bari_delta": 30,
+              "gameplay_note": "DOGRU HAMLE: Somut kayit celiskisi yalan katmanini kopardi. Uydurma azalirken yakalanma stresi tavana cikti."
+            },
+            "next_node": "node_03_proxy_account"
+          }
+        ]
+      },
+      "node_03_proxy_account": {
+        "theme": "Proxy Hesap",
+        "description": "Elif artik tek basina hareket etmedigini ima ediyor. Zincirde baska bir halka var.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "AGGRESSIVE",
+            "question": "Demek bir ortak var. O zaman acik konusayim: bu bir satis operasyonu. Kime kac para karsiligi sattiniz?",
+            "answer": "Yeter. Beni sucluyorsun, kanit sunmuyorsun. Avukatim olmadan devam etmeyecegim.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "BASELINE",
+              "gsr": "BASELINE",
+              "eeg": "BASELINE",
+              "cctv_visual": "DEFENSIVE_CROSS_ARMS",
+              "korku_bari_delta": -45,
+              "gameplay_note": "YANLIS HAMLE: Erken suclama, supheliyi hukuki savunmaya gecirdi. Biyometrik pencere kapandi."
+            },
+            "next_node": "node_fail_lawyer_wall"
+          },
+          {
+            "type": "STRATEGIC",
+            "question": "CI sunucusundaki proxy hesabin root kilidi, senin eski mentorun Kerem'in SSH anahtariyla acilmis. Onu korumaya calisiyorsun. Neden?",
+            "answer": "Kerem degil... anahtari o gece baskasi kullandi. Bana sadece 'modeli geri cekme, yoksa kardesine ulasiriz' dediler.",
+            "mechanics": {
+              "heart_rate": "MAX_SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "MAX",
+              "eeg": "INCREASE",
+              "cctv_visual": "TEAR_POOLING",
+              "korku_bari_delta": 24,
+              "gameplay_note": "ILERLEME: Maddi cikardan cok tehdit motivasyonu belirdi. Hikayenin cekirdegi zorlamayla ilgili olabilir."
+            },
+            "next_node": "node_04_motive_split"
+          }
+        ]
+      },
+      "node_04_motive_split": {
+        "theme": "Niyetin Dugumu",
+        "description": "Elif'in sesi titriyor. Artik mesele sadece suclu bulmak degil, hangi gercegin saklandigini ayirmak.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "LEGAL_THREAT",
+            "question": "Tehdit hikayesini mahkemede anlatirsin. Simdi isim vermezsen tum hastane zararini tek basina ustlenirsin.",
+            "answer": "O zaman susarim. Yazdiginiz tutanaga itiraz edecegim.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "eeg": "BASELINE",
+              "cctv_visual": "STONE_FACE",
+              "korku_bari_delta": -35,
+              "gameplay_note": "YANLIS HAMLE: Sert hukuki baski, hayatta kalma refleksini aktifleştirdi. Iletisim kanali koptu."
+            },
+            "next_node": "node_fail_silence_protocol"
+          },
+          {
+            "type": "MORAL_PRESSURE",
+            "question": "Sana baski yapanlar hastalarin risk modelini bilerek bozdular. On dort kisi az daha tedavi disi kalacakti. Bu dosyada susmak degil, zinciri durdurmak var. Kim emri verdi?",
+            "answer": "Yonetim kurulundan biri... Finans Direktoru Arman. Klinik basari oranini yuksek gostermek icin modelin threshold'unu gecici kaydirdi. Ben geri almak istedim. Kardesimi kullanip beni susturdular.",
+            "mechanics": {
+              "heart_rate": "ERRATIC",
+              "breathing": "CRYING",
+              "gsr": "SPIKE",
+              "eeg": "DROP",
+              "cctv_visual": "BREAKDOWN",
+              "korku_bari_delta": 28,
+              "gameplay_note": "DOGRU YON: Etik cerceve, tehdit altindaki kisinin savunmasini indirdi. Ana fail hatti gorunur oldu."
+            },
+            "next_node": "node_05_boardroom_switch"
+          }
+        ]
+      },
+      "node_05_boardroom_switch": {
+        "theme": "Yonetim Katina Uzanan Iz",
+        "description": "Elif ana ismi verdi ama hala bir test var: Onu gunah kecisi yapacak misin, yoksa sistemik manipülasyonu ayiklayacak misin?",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "NARROW_TARGET",
+            "question": "Ismi verdin ama kaydi sen degistirdin. Bu dosyada tek fail sensin Elif. Tum sorumlulugu kabul ediyor musun?",
+            "answer": "... Tamam. Her seyi ben yaptim.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "eeg": "FLATLINE",
+              "cctv_visual": "EMPTY_STARE",
+              "korku_bari_delta": -10,
+              "gameplay_note": "YANLIS OKUMA: Kopmus kabul ifadesi geldi; EEG flatline duygusal kapanmaya isaret ediyor. Gercek zincir kayboldu."
+            },
+            "next_node": "node_fail_scapegoat"
+          },
+          {
+            "type": "SYSTEMIC_READ",
+            "question": "EEG'in su an kapanma modunda. Bu 'her seyi ben yaptim' ifadesi gercek degil, kendini feda refleksi. Arman'in talimat zincirini, kullanilan gecici kart sahibini ve tehdit kanalini tek tek ver. Seni degil yapinin failini alacagiz.",
+            "answer": "Gecici kart Onur adina acildi, ama kullanan Arman'in korumasi Erkut'tu. Tehdit mesajlari sirket ici kriz hattindan yonlendirildi. Loglari saklayan da altyapi yoneticisi Derya. Hepsi 00:30-01:10 arasinda aktifti. Dosya yollarini da veririm.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "CRYING",
+              "gsr": "DECREASE",
+              "eeg": "DROP",
+              "cctv_visual": "RELEASED_SHOULDERS",
+              "korku_bari_delta": 45,
+              "gameplay_note": "MUKEMMEL HAMLE: Biyometrik kapanmayi fark edip dogru psikolojik capayi attin. Supheliyi degil organizasyonu cozdun."
+            },
+            "next_node": "node_success_chain_exposed"
+          }
+        ]
+      },
+      "node_success_chain_exposed": {
+        "theme": "Basari",
+        "description": "Elif tam log zincirini, emir akislarini ve tehdit kanalini acikladi. Operasyon sadece bir veri sizintisi degil, yonetsel manipülasyon cikti.",
+        "is_end_state": true,
+        "result_text": "TEBRIKLER. Biyometrik sinyalleri dogru yorumlayip yalani, korkuyu ve kendini feda refleksini ayirdin. Gercek faili sisteme saklanan guc zinciri olarak ortaya cikardin."
+      },
+      "node_fail_technical_closure": {
+        "theme": "Basarisizlik",
+        "description": "Dosya teknik ariza diye kapandi. Hastane risk modeli bir daha denetlenemedi.",
+        "is_end_state": true,
+        "result_text": "BASARISIZ OLDUN. Biyometrik celiskiyi takip etmek yerine teknik aciklamaya sigindin. Supheli rahatlayip sorgu hattini kapatti."
+      },
+      "node_fail_lawyer_wall": {
+        "theme": "Basarisizlik",
+        "description": "Erken suclama hukuki duvar yaratti. Elif avukat talebiyle tum kapilari kapatti.",
+        "is_end_state": true,
+        "result_text": "BASARISIZ OLDUN. Duygusal-fizyolojik kirilma noktasinda veri yerine baski kullandin. Sorgu geri donulemez sekilde durdu."
+      },
+      "node_fail_silence_protocol": {
+        "theme": "Basarisizlik",
+        "description": "Tehdit altindaki supheli sessizlik protokolune gecti. Kaynaklara ulasacak pencere kaybedildi.",
+        "is_end_state": true,
+        "result_text": "BASARISIZ OLDUN. Zorlayici hukuk dili, koruma arayan bir supheliyi tamamen kapatti. Kritik isimler asla cikmadi."
+      },
+      "node_fail_scapegoat": {
+        "theme": "Basarisizlik",
+        "description": "Elif tum sucu ustlenip dosyayi tek kisiye kapatti. Yonetim zinciri karanlikta kaldi.",
+        "is_end_state": true,
+        "result_text": "BASARISIZ OLDUN. Flatline'i 'itiraf' sandin. Aslinda bu, travmatik kapanma ve kendini feda etme tepkisiydi."
+      }
+    }
+  }
+}

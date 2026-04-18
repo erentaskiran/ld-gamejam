@@ -12,6 +12,11 @@ const mouse = {
 };
 
 let isInitialized = false;
+let designScale = 1;
+
+export function setDesignScale(scale) {
+  designScale = scale || 1;
+}
 
 function normalizeKey(key) {
   return String(key).toLowerCase();
@@ -48,8 +53,8 @@ function onMouseMove(event, canvas) {
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
 
-  mouse.x = (event.clientX - rect.left) * scaleX;
-  mouse.y = (event.clientY - rect.top) * scaleY;
+  mouse.x = ((event.clientX - rect.left) * scaleX) / designScale;
+  mouse.y = ((event.clientY - rect.top) * scaleY) / designScale;
 }
 
 export function initInput(canvas) {

@@ -68,3 +68,58 @@ export function drawText(ctx, text, x, y, options = {}) {
   ctx.textBaseline = baseline;
   ctx.fillText(text, x, y);
 }
+
+const DEFAULT_FONT = "Trebuchet MS, Segoe UI, sans-serif";
+
+export function wrapTextLines(ctx, text, maxWidth, size = 12, font = DEFAULT_FONT) {
+  const content = String(text || "").trim();
+  if (!content) {
+    return [];
+  }
+
+  const paragraphs = content.split(/\n+/);
+  const lines = [];
+  const prevFont = ctx.font;
+  ctx.font = `${size}px ${font}`;
+
+  for (const paragraph of paragraphs) {
+    const words = paragraph.split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      lines.push("");
+      continue;
+    }
+
+    let line = words[0];
+    for (let i = 1; i < words.length; i += 1) {
+      const candidate = `${line} ${words[i]}`;
+      if (ctx.measureText(candidate).width <= maxWidth) {
+        line = candidate;
+      } else {
+        lines.push(line);
+        line = words[i];
+      }
+    }
+    lines.push(line);
+  }
+
+  ctx.font = prevFont;
+  return lines;
+}
+
+export function drawWrappedText(ctx, text, x, y, maxWidth, options = {}) {
+  const size = options.size ?? 12;
+  const font = options.font ?? DEFAULT_FONT;
+  const lineHeight = options.lineHeight ?? Math.round(size * 1.35);
+  const maxLines = options.maxLines ?? Number.POSITIVE_INFINITY;
+  const lines = wrapTextLines(ctx, text, maxWidth, size, font).slice(0, maxLines);
+
+  for (let i = 0; i < lines.length; i += 1) {
+    drawText(ctx, lines[i], x, y + i * lineHeight, {
+      ...options,
+      size,
+      font,
+    });
+  }
+
+  return lines.length;
+}
