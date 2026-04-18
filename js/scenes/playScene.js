@@ -16,7 +16,7 @@ const LAYOUT = {
   narration: { x: 8, y: 8, w: 518, h: 48 },
   operatorBadge: { x: 530, y: 4, w: 62, h: 56 },
   defendantBadge: { x: 8, y: 192, w: 62, h: 56 },
-  modal: { x: 82, y: 128, w: 434, h: 120 },
+  modal: { x: 82, y: 116, w: 434, h: 132 },
   logTab: { x: DESIGN_W - 14, y: 94, w: 12, h: 84 },
   logPanel: { x: DESIGN_W - 196, y: 64, w: 192, h: 170 },
   polygraph: { x: 0, y: 252, w: 600, h: 148 },
@@ -38,6 +38,10 @@ let logExpanded = false;
 let logAnim = 0;
 let logScrollOffset = 0;
 let logMaxScroll = 0;
+let answerScrollOffset = 0;
+let answerMaxScroll = 0;
+let choiceScrollOffset = 0;
+let choiceMaxScroll = 0;
 let portraitSlide = 0;
 let narrationSlide = 0;
 let narrationTextProgress = 0;
@@ -125,17 +129,20 @@ function drawPlayScene(ctx) {
   if (state.responseMode && (state.lastQuestion || state.lastAnswer)) {
     const qVisible = state.lastQuestion.slice(0, Math.floor(state.questionProgress));
     const aVisible = state.lastAnswer.slice(0, Math.floor(state.answerProgress));
-    drawDialogueModal(ctx, {
+    const modalResult = drawDialogueModal(ctx, {
       x: LAYOUT.modal.x,
       y: LAYOUT.modal.y,
       w: LAYOUT.modal.w,
       h: LAYOUT.modal.h,
       question: qVisible,
       answer: aVisible,
+      answerScrollOffset,
     });
+    answerMaxScroll = modalResult.maxScroll;
+    answerScrollOffset = modalResult.clampedScroll;
     state.choiceRects = [];
   } else if (textFullyRevealed && node && node.choices && !node.is_end_state) {
-    state.choiceRects = drawChoiceModal(ctx, {
+    const choiceResult = drawChoiceModal(ctx, {
       x: LAYOUT.modal.x,
       y: LAYOUT.modal.y,
       w: LAYOUT.modal.w,
@@ -143,7 +150,11 @@ function drawPlayScene(ctx) {
       choices: node.choices,
       mouse: logExpanded ? null : mouse,
       animProgress: choicesAnim,
+      scrollOffset: choiceScrollOffset,
     });
+    state.choiceRects = choiceResult.rects;
+    choiceMaxScroll = choiceResult.maxScroll;
+    choiceScrollOffset = choiceResult.clampedScroll;
   } else {
     state.choiceRects = [];
   }
@@ -302,6 +313,10 @@ export function registerPlayScene(_canvas, ctx) {
       logAnim = 0;
       logScrollOffset = 0;
       logMaxScroll = 0;
+      answerScrollOffset = 0;
+      answerMaxScroll = 0;
+      choiceScrollOffset = 0;
+      choiceMaxScroll = 0;
       portraitSlide = 0;
       narrationSlide = 0;
       narrationTextProgress = 0;
@@ -338,6 +353,10 @@ export function registerPlayScene(_canvas, ctx) {
         displayedNodeId = state.currentNodeId;
         narrationTextProgress = 0;
         choicesAnim = 0;
+        answerScrollOffset = 0;
+        answerMaxScroll = 0;
+        choiceScrollOffset = 0;
+        choiceMaxScroll = 0;
       }
 
       const totalTextLen = narrationTotalLen();
@@ -369,8 +388,19 @@ export function registerPlayScene(_canvas, ctx) {
       }
 
       if (state.responseMode) {
+        const wheel = getWheelDelta();
+        if (wheel !== 0) {
+          answerScrollOffset = clamp(answerScrollOffset + wheel / 30, 0, answerMaxScroll);
+        }
         handleResponseMode(dt);
         return;
+      }
+
+      if (!state.responseMode && state.currentNode?.choices && !logExpanded) {
+        const wheel = getWheelDelta();
+        if (wheel !== 0) {
+          choiceScrollOffset = clamp(choiceScrollOffset + wheel / 30, 0, choiceMaxScroll);
+        }
       }
 
       if (narrationTextProgress < totalTextLen) {

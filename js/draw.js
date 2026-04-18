@@ -123,3 +123,35 @@ export function drawWrappedText(ctx, text, x, y, maxWidth, options = {}) {
 
   return lines.length;
 }
+
+export function drawScrollableText(ctx, text, x, y, w, h, scrollOffset, options = {}) {
+  const size = options.size ?? 12;
+  const font = options.font ?? DEFAULT_FONT;
+  const lineH = options.lineHeight ?? size;
+  const color = options.color ?? '#e5e7eb';
+  const scrollbarW = options.scrollbarW ?? 3;
+  const trackColor = options.scrollbarTrackColor ?? '#7a4b1e';
+  const thumbColor = options.scrollbarThumbColor ?? '#ffb55a';
+
+  const textW = w - scrollbarW - 4;
+  const maxLines = Math.max(1, Math.floor(h / lineH));
+  const allLines = wrapTextLines(ctx, text, textW, size, font);
+  const maxScroll = Math.max(0, allLines.length - maxLines);
+  const clamped = Math.min(Math.max(0, scrollOffset), maxScroll);
+  const visible = allLines.slice(clamped, clamped + maxLines);
+
+  for (let i = 0; i < visible.length; i++) {
+    drawText(ctx, visible[i], x, y + i * lineH, { size, font, color, baseline: 'top' });
+  }
+
+  if (maxScroll > 0) {
+    const trackX = x + w - scrollbarW;
+    drawRect(ctx, trackX, y, scrollbarW, h, trackColor);
+    const thumbH = Math.max(8, h * (maxLines / allLines.length));
+    const thumbRatio = maxScroll === 0 ? 0 : clamped / maxScroll;
+    const thumbY = y + (h - thumbH) * thumbRatio;
+    drawRect(ctx, trackX, thumbY, scrollbarW, thumbH, thumbColor);
+  }
+
+  return { clampedScroll: clamped, maxScroll };
+}

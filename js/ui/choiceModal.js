@@ -1,4 +1,4 @@
-import { drawText, wrapTextLines } from '../draw.js';
+import { drawText, drawRect, wrapTextLines } from '../draw.js';
 import { clamp } from '../math.js';
 import { COLORS, UI_FONT } from './theme.js';
 import { drawPanel } from './panel.js';
@@ -13,8 +13,20 @@ function easeOutCubic(t) {
 
 export function drawChoiceModal(
   ctx,
-  { x, y, w, h, choices, mouse, animProgress = 1, title = 'SORU SEC' }
+  { x, y, w, h, choices, mouse, animProgress = 1, scrollOffset = 0, title = 'SORU SEC' }
 ) {
+  const fontSize = 12;
+  const lineH = 12;
+  const gap = 3;
+  const btnPadY = 4;
+  const headerH = 22;
+  const scrollbarW = 3;
+  const stagger = 0.18;
+  const slideDuration = 0.4;
+  const slideDistance = 10;
+  const typeStart = 0.12;
+  const typeCps = 70;
+
   drawPanel(ctx, x, y, w, h, { border: COLORS.amber });
 
   drawText(ctx, `[ ${title} ]`, x + 8, y + 10, {
@@ -24,29 +36,41 @@ export function drawChoiceModal(
     baseline: 'middle',
   });
 
-  const rects = [];
-  let cursor = y + 22;
-  const fontSize = 12;
-  const lineH = 12;
-  const gap = 3;
-  const maxLines = 2;
-  const btnPadY = 4;
-  const stagger = 0.18;
-  const slideDuration = 0.4;
-  const slideDistance = 10;
-  const typeStart = 0.12;
-  const typeCps = 70;
-
-  for (let i = 0; i < choices.length; i += 1) {
-    const text = `${i + 1}. ${choices[i].question}`;
-    const lines = wrapTextLines(ctx, text, w - 20, fontSize, UI_FONT).slice(0, maxLines);
+  // Pre-calculate all choice sizes
+  const choiceData = choices.map((choice, i) => {
+    const text = `${i + 1}. ${choice.question}`;
+    const lines = wrapTextLines(ctx, text, w - 20 - scrollbarW - 4, fontSize, UI_FONT);
     const btnH = Math.max(22, lines.length * lineH + btnPadY * 2);
+    return { lines, btnH };
+  });
 
-    if (cursor + btnH > y + h - 4) {
-      break;
+  const totalContentH = choiceData.reduce(
+    (sum, d, i) => sum + d.btnH + (i < choiceData.length - 1 ? gap : 0),
+    0
+  );
+  const bodyY = y + headerH;
+  const bodyH = h - headerH - 4;
+  const maxScroll = Math.max(0, totalContentH - bodyH);
+  const clamped = Math.min(Math.max(0, scrollOffset), maxScroll);
+
+  const rects = [];
+  let contentY = bodyY - clamped;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x + 1, bodyY, w - 2, bodyH);
+  ctx.clip();
+
+  for (let i = 0; i < choiceData.length; i += 1) {
+    const { lines, btnH } = choiceData[i];
+    const choiceY = contentY;
+    contentY += btnH + gap;
+
+    if (choiceY + btnH <= bodyY || choiceY >= bodyY + bodyH) {
+      continue;
     }
 
-    const rect = { x: x + 6, y: cursor, w: w - 12, h: btnH, index: i };
+    const rect = { x: x + 6, y: choiceY, w: w - 12 - scrollbarW - 2, h: btnH, index: i };
     rects.push(rect);
 
     const local = animProgress - i * stagger;
@@ -55,43 +79,53 @@ export function drawChoiceModal(
     const alpha = slideEase;
     const yOffset = (1 - slideEase) * slideDistance;
 
+    if (alpha <= 0.01) {
+      continue;
+    }
+
     const typeElapsed = Math.max(0, local - typeStart);
     const totalChars = lines.reduce((acc, line) => acc + line.length, 0);
     const charsToShow = Math.min(totalChars, Math.floor(typeElapsed * typeCps));
 
-    if (alpha > 0.01) {
-      const drawY = rect.y + yOffset;
-      const interactive = slideEase > 0.6;
-      const hovered = interactive && pointInRect(mouse, rect);
+    const drawY = rect.y + yOffset;
+    const interactive = slideEase > 0.6;
+    const hovered = interactive && pointInRect(mouse, rect);
 
-      ctx.save();
-      ctx.globalAlpha = alpha;
+    ctx.save();
+    ctx.globalAlpha = alpha;
 
-      drawPanel(ctx, rect.x, drawY, rect.w, rect.h, {
-        border: hovered ? COLORS.amberBright : COLORS.amberDim,
-        fill: hovered ? 'rgba(70, 42, 16, 0.75)' : COLORS.panelFillLight,
+    drawPanel(ctx, rect.x, drawY, rect.w, rect.h, {
+      border: hovered ? COLORS.amberBright : COLORS.amberDim,
+      fill: hovered ? 'rgba(70, 42, 16, 0.75)' : COLORS.panelFillLight,
+    });
+
+    let remaining = charsToShow;
+    for (let j = 0; j < lines.length; j += 1) {
+      if (remaining <= 0) break;
+      const slice = lines[j].slice(0, remaining);
+      drawText(ctx, slice, rect.x + 6, drawY + btnPadY + 6 + j * lineH, {
+        size: fontSize,
+        color: hovered ? COLORS.amberBright : COLORS.cream,
+        font: UI_FONT,
+        baseline: 'middle',
       });
-
-      let remaining = charsToShow;
-      for (let j = 0; j < lines.length; j += 1) {
-        if (remaining <= 0) {
-          break;
-        }
-        const slice = lines[j].slice(0, remaining);
-        drawText(ctx, slice, rect.x + 6, drawY + btnPadY + 6 + j * lineH, {
-          size: fontSize,
-          color: hovered ? COLORS.amberBright : COLORS.cream,
-          font: UI_FONT,
-          baseline: 'middle',
-        });
-        remaining -= lines[j].length;
-      }
-
-      ctx.restore();
+      remaining -= lines[j].length;
     }
 
-    cursor += btnH + gap;
+    ctx.restore();
   }
 
-  return rects;
+  ctx.restore();
+
+  // Scrollbar
+  if (maxScroll > 0) {
+    const trackX = x + w - scrollbarW - 2;
+    drawRect(ctx, trackX, bodyY, scrollbarW, bodyH, COLORS.amberDim);
+    const thumbH = Math.max(10, bodyH * (bodyH / totalContentH));
+    const thumbRatio = clamped / maxScroll;
+    const thumbY = bodyY + (bodyH - thumbH) * thumbRatio;
+    drawRect(ctx, trackX, thumbY, scrollbarW, thumbH, COLORS.amberBright);
+  }
+
+  return { rects, clampedScroll: clamped, maxScroll };
 }

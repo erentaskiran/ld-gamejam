@@ -1,6 +1,6 @@
-import { drawRect, drawText, drawWrappedText } from '../draw.js';
+import { drawRect, drawText, drawWrappedText, drawScrollableText } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
-import { getMousePos, wasKeyPressed, wasMousePressed } from '../input.js';
+import { getMousePos, getWheelDelta, wasKeyPressed, wasMousePressed } from '../input.js';
 import { clamp } from '../math.js';
 import { CASES } from '../game/cases.js';
 import { getSelectedCaseData, setSelectedCase, state } from '../game/state.js';
@@ -9,6 +9,9 @@ import { drawSceneBackground } from '../ui/background.js';
 import { drawPanel } from '../ui/panel.js';
 
 let menuAnim = 0;
+let infoScrollOffset = 0;
+let infoMaxScroll = 0;
+let lastCaseIndex = -1;
 
 function smoothstep(t) {
   return t * t * (3 - 2 * t);
@@ -45,27 +48,27 @@ function drawCaseCard(ctx, x, y, w, h, opts) {
 
   drawPanel(ctx, x, y, w, h, { border: borderColor, fill: fillColor });
 
-  drawText(ctx, number, x + 14, y + h / 2, {
-    size: 22,
+  drawText(ctx, number, x + 12, y + h / 2, {
+    size: 18,
     color: selected ? COLORS.amberBright : COLORS.amber,
     font: UI_FONT,
     baseline: 'middle',
   });
 
-  drawRect(ctx, x + 42, y + 8, 1, h - 16, COLORS.amberDim);
+  drawRect(ctx, x + 36, y + 6, 1, h - 12, COLORS.amberDim);
 
-  drawText(ctx, prefix, x + 50, y + 16, {
-    size: 12,
+  drawText(ctx, prefix, x + 44, y + 13, {
+    size: 11,
     color: selected ? COLORS.amberBright : COLORS.cream,
     font: UI_FONT,
     baseline: 'middle',
   });
 
-  drawWrappedText(ctx, suffix, x + 50, y + 32, w - 60, {
-    size: 12,
+  drawWrappedText(ctx, suffix, x + 44, y + 28, w - 52, {
+    size: 11,
     color: COLORS.creamDim,
     font: UI_FONT,
-    lineHeight: 12,
+    lineHeight: 11,
     maxLines: 2,
   });
 
@@ -118,26 +121,25 @@ function drawMenuScene(ctx) {
   }
 
   state.menuCaseRects = [];
-  const cardW = 236;
-  const cardH = 56;
-  const cardGap = 16;
-  const cardsTotalW = cardW * CASES.length + cardGap * (CASES.length - 1);
-  const startX = (DESIGN_W - cardsTotalW) / 2;
-  const cardY = 100;
+  const cardW = 192;
+  const cardH = 44;
+  const cardGap = 6;
+  const listX = 28;
+  const listStartY = 96;
   const mouse = getMousePos();
 
   for (let i = 0; i < CASES.length; i += 1) {
-    const x = startX + i * (cardW + cardGap);
-    const rect = { x, y: cardY, w: cardW, h: cardH, index: i };
+    const y = listStartY + i * (cardH + cardGap);
+    const rect = { x: listX, y, w: cardW, h: cardH, index: i };
     state.menuCaseRects.push(rect);
 
-    const cardStart = 0.5 + i * 0.15;
-    const cardP = smoothstep(clamp((menuAnim - cardStart) / 0.4, 0, 1));
+    const cardStart = 0.5 + i * 0.12;
+    const cardP = smoothstep(clamp((menuAnim - cardStart) / 0.35, 0, 1));
     if (cardP < 0.01) {
       continue;
     }
 
-    const yOffset = (1 - cardP) * 18;
+    const xOffset = (1 - cardP) * 16;
     const selected = i === state.caseIndex;
     const interactive = cardP > 0.6;
     const hovered = interactive && inRect(mouse, rect);
@@ -147,7 +149,7 @@ function drawMenuScene(ctx) {
 
     ctx.save();
     ctx.globalAlpha = cardP;
-    drawCaseCard(ctx, x, cardY + yOffset, cardW, cardH, {
+    drawCaseCard(ctx, listX - xOffset, y, cardW, cardH, {
       number: numberStr,
       prefix,
       suffix,
@@ -161,34 +163,46 @@ function drawMenuScene(ctx) {
   const infoP = smoothstep(clamp((menuAnim - 0.85) / 0.4, 0, 1));
   if (infoP > 0.01) {
     const caseData = getSelectedCaseData();
-    const infoX = 48;
-    const infoBaseY = 176;
+    const infoX = listX + cardW + 12;
+    const infoW = DESIGN_W - infoX - 20;
+    const infoBaseY = listStartY;
+    const infoH = DESIGN_H - listStartY - 56;
     const infoYOffset = (1 - infoP) * 14;
     const infoY = infoBaseY + infoYOffset;
-    const infoW = DESIGN_W - 96;
-    const infoH = 168;
 
     ctx.save();
     ctx.globalAlpha = infoP;
     drawPanel(ctx, infoX, infoY, infoW, infoH, { border: COLORS.amberDim });
 
     if (caseData) {
-      drawText(ctx, caseData.title, DESIGN_W / 2, infoY + 14, {
+      drawText(ctx, caseData.title, infoX + infoW / 2, infoY + 14, {
         align: 'center',
         size: 12,
         color: COLORS.amberBright,
         font: UI_FONT,
         baseline: 'middle',
       });
-      drawWrappedText(ctx, caseData.context, infoX + 12, infoY + 34, infoW - 24, {
-        size: 12,
-        color: COLORS.cream,
-        font: UI_FONT,
-        lineHeight: 12,
-        maxLines: 9,
-      });
+      const scrollResult = drawScrollableText(
+        ctx,
+        caseData.context,
+        infoX + 12,
+        infoY + 32,
+        infoW - 24,
+        infoH - 40,
+        infoScrollOffset,
+        {
+          size: 12,
+          color: COLORS.cream,
+          font: UI_FONT,
+          lineHeight: 12,
+          scrollbarTrackColor: COLORS.amberDim,
+          scrollbarThumbColor: COLORS.amberBright,
+        }
+      );
+      infoMaxScroll = scrollResult.maxScroll;
+      infoScrollOffset = scrollResult.clampedScroll;
     } else {
-      drawText(ctx, 'Vaka yuklenemedi.', DESIGN_W / 2, infoY + infoH / 2, {
+      drawText(ctx, 'Vaka yuklenemedi.', infoX + infoW / 2, infoY + infoH / 2, {
         align: 'center',
         size: 12,
         color: COLORS.fail,
@@ -204,7 +218,7 @@ function drawMenuScene(ctx) {
   if (promptP > 0.01) {
     ctx.save();
     ctx.globalAlpha = promptP;
-    drawText(ctx, '1-2 / OK TUSLARI: VAKA SEC', DESIGN_W / 2, DESIGN_H - 44, {
+    drawText(ctx, '1-' + CASES.length + ' / OK TUSLARI: VAKA SEC', DESIGN_W / 2, DESIGN_H - 44, {
       align: 'center',
       size: 12,
       color: COLORS.creamDim,
@@ -231,15 +245,27 @@ export function registerMenuScene(_canvas, ctx) {
   registerScene('menu', {
     enter() {
       menuAnim = 0;
+      infoScrollOffset = 0;
+      infoMaxScroll = 0;
+      lastCaseIndex = -1;
     },
     update(dt) {
       menuAnim += dt;
 
-      if (wasKeyPressed('1')) {
-        setSelectedCase(0);
+      if (state.caseIndex !== lastCaseIndex) {
+        lastCaseIndex = state.caseIndex;
+        infoScrollOffset = 0;
       }
-      if (wasKeyPressed('2')) {
-        setSelectedCase(1);
+
+      const wheel = getWheelDelta();
+      if (wheel !== 0) {
+        infoScrollOffset = clamp(infoScrollOffset + wheel / 30, 0, infoMaxScroll);
+      }
+
+      for (let i = 0; i < Math.min(CASES.length, 9); i += 1) {
+        if (wasKeyPressed(String(i + 1))) {
+          setSelectedCase(i);
+        }
       }
       if (
         wasKeyPressed('arrowleft') ||
