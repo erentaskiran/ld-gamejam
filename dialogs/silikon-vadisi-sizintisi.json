@@ -9,7 +9,10 @@
         "system_config": {
             "initial_fear_bar": 20,
             "max_fear_bar": 100,
-            "fear_bar_description": "Ozan'ın kırılma noktası. Grafikleri doğru okuyup onu köşeye sıkıştırdıkça artar."
+            "fear_bar_description": "Ozan'ın kırılma noktası. Grafikleri doğru okuyup onu köşeye sıkıştırdıkça artar.",
+            "heart_rate_baseline": 78,
+            "eeg_baseline": 29.1,
+            "gsr_baseline": 8.4
         },
         "context": "Şirketin geliştirdiği yeni nesil bir yapay zeka çekirdeği (Core-X) yerel sunucudan kopyalanıp harici bir bellekle dışarı çıkarıldı. Ozan, olay gecesi mesaiye kalan 3 kişiden biriydi. Kameraların kör noktası olan yangın merdiveninde 10 dakika geçirdiği tespit edildi.",
         "start_node": "node_01_the_blindspot",

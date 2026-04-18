@@ -98,7 +98,11 @@ export function resetRun() {
   state.error = '';
   state.questionProgress = 0;
   state.answerProgress = 0;
-  resetBiometricsOnState(state);
+  resetBiometricsOnState(state, {
+    heartRate: config.heart_rate_baseline,
+    eeg: config.eeg_baseline,
+    gsr: config.gsr_baseline,
+  });
   pushLog(state.gameData.context);
   return setNode(state.gameData.start_node);
 }

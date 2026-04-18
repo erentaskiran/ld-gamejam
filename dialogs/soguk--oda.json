@@ -9,7 +9,10 @@
     "system_config": {
       "initial_fear_bar": 20,
       "max_fear_bar": 100,
-      "fear_bar_description": "Korku Bari, suphelinin psikolojik baski altinda maskesinin ne kadar coztugunu olcer. Operatorun her hamlesi bari yukseltir ya da dusurur; biyometrik sinyaller (kalp atisi, GSR, EEG) ve mikro-ifadeler bu degeri besler. Bar yuksek tutuldugunda supheli savunma duvarlarini birakir ve itirafa yaklasir; bar dustugunde ise kontrolu geri alir, hukuki kalkanin ardina cekilir."
+      "fear_bar_description": "Korku Bari, suphelinin psikolojik baski altinda maskesinin ne kadar coztugunu olcer. Operatorun her hamlesi bari yukseltir ya da dusurur; biyometrik sinyaller (kalp atisi, GSR, EEG) ve mikro-ifadeler bu degeri besler. Bar yuksek tutuldugunda supheli savunma duvarlarini birakir ve itirafa yaklasir; bar dustugunde ise kontrolu geri alir, hukuki kalkanin ardina cekilir.",
+      "heart_rate_baseline": 70,
+      "eeg_baseline": 22.8,
+      "gsr_baseline": 6.3
     },
     "context": "Bakırköy'deki Yıldıztepe Rezidans şantiyesinde yapımı süren istinat duvarı, Mart ayındaki şiddetli yağışların ardından alt kottaki bitişik apartmanın bahçesine çökerek zemin kat dairesinde oturan Yücel ailesinin ağır şekilde yaralanmasına yol açtı. Yücel ailesi, projenin yüklenicisi Arslaner İnşaat A.Ş. ve şirketin sahibi Selim Arslaner aleyhine hem maddi-manevi tazminat hem de taksirle yaralama suçlamasıyla şikâyetçi oldu; Cumhuriyet Savcılığı bilirkişi raporu doğrultusunda soruşturmayı derinleştirdi. İddiaya göre duvarda kullanılan beton ve demir donatı, onaylı statik projede öngörülen sınıfın altında kalıyor ve zemin etüdündeki uyarılar yeterince dikkate alınmamış. Selim Arslaner, malzeme seçiminin tamamen taşeron firmanın inisiyatifinde olduğunu, kendisinin teknik ayrıntılardan haberdar edilmediğini öne sürüyor. Ancak firma içi yazışmaların bir kısmının silindiğine dair ihbar ve eski şantiye şefinin aniden başka bir ile tayin edilmesi, savcılığın Arslaner'in bilgisi ve talimatı olup olmadığını sorgulamasına neden oluyor. Ruhsat sürecinde belediyeyle olan yakın ilişkiler de ayrı bir ön soruşturma dosyasına konu edildi.",
     "start_node": "node_01_intro",

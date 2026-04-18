@@ -9,7 +9,10 @@
     "system_config": {
       "initial_fear_bar": 18,
       "max_fear_bar": 100,
-      "fear_bar_description": "Elif'in kontrolu ne kadar kaybettigini gosterir. Dogru biyometrik okumalarla gercegin cekirdegine ulasirsin."
+      "fear_bar_description": "Elif'in kontrolu ne kadar kaybettigini gosterir. Dogru biyometrik okumalarla gercegin cekirdegine ulasirsin.",
+      "heart_rate_baseline": 74,
+      "eeg_baseline": 26.4,
+      "gsr_baseline": 7.2
     },
     "context": "Noxtera Biotech'in Klinik AI platformunda gece yarisi imzasiz bir model guncellemesi yapildi. Ertesi sabah yogun bakimda risk puani algoritmasi 14 hastayi dusuk oncelikledi. Elif, o gece binaya kart basan son kisiydi. Sunucu odasindan cikmadan once USB engel loglarinda 7 dakikalik bir kor nokta olustu.",
     "start_node": "node_01_midnight_push",

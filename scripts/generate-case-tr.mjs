@@ -212,7 +212,10 @@ CIKTI:
     "system_config": {
       "initial_fear_bar": 20,
       "max_fear_bar": 100,
-      "fear_bar_description": string
+      "fear_bar_description": string,
+      "heart_rate_baseline": number,
+      "eeg_baseline": number,
+      "gsr_baseline": number
     },
     "context": string,
     "start_node": string,
@@ -229,6 +232,15 @@ KURALLAR:
   theme, description, is_end_state, choices, mechanics, next_node,
   result_text alanlarini yeniden sekillendirme veya silme
 - fear_bar_description duygusal/psikolojik baski takibini Turkce aciklamali
+- Yalnizca system_config icine temel biyometrik alanlar ekle:
+  - heart_rate_baseline
+  - eeg_baseline
+  - gsr_baseline
+- Bu baseline degerleri SAYISAL olmali ve gercekci aralikta secilmeli:
+  - heart_rate_baseline: BPM sayisi (genelde 60-90)
+  - eeg_baseline: mikrovolt sayisi (genelde 18-35)
+  - gsr_baseline: microsiemens sayisi (genelde 4-10)
+- Degerler sakin/normale yakin olmali ve uretilen vakayla uyumlu secilmeli.
 - Ekstra alan ekleme
 - Gecerli JSON olmasini sagla`;
 

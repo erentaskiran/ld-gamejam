@@ -204,7 +204,10 @@ OUTPUT:
     "system_config": {
       "initial_fear_bar": 20,
       "max_fear_bar": 100,
-      "fear_bar_description": string
+      "fear_bar_description": string,
+      "heart_rate_baseline": number,
+      "eeg_baseline": number,
+      "gsr_baseline": number
     },
     "context": string,
     "start_node": string,
@@ -220,6 +223,16 @@ RULES:
   fields. Preserve theme, description, is_end_state, choices, mechanics,
   next_node, result_text exactly as given.
 - fear_bar_description should explain emotional/psychological pressure tracking
+- Add baseline biometric values to system_config only:
+  - heart_rate_baseline
+  - eeg_baseline
+  - gsr_baseline
+- Baseline values must be NUMERIC and realistic:
+  - heart_rate_baseline: BPM number (typical calm range 60-90)
+  - eeg_baseline: microvolt level number (typical calm range 18-35)
+  - gsr_baseline: microsiemens number (typical calm range 4-10)
+- These baseline values should be calm/neutral defaults that match your
+  generated case.
 - Do not include extra fields
 - Ensure valid JSON`;
 

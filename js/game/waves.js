@@ -120,6 +120,11 @@ function createBiometricState() {
       eegUv: 24.5,
       gsrUs: 6.8,
     },
+    baseline: {
+      bpm: 72,
+      eegUv: 24.5,
+      gsrUs: 6.8,
+    },
     buffers: {
       heartRate: createRingBuffer(SAMPLE_RATE.heartRate),
       eeg: createRingBuffer(SAMPLE_RATE.eeg),
@@ -150,6 +155,27 @@ function applyDelta(latent, delta, weight = 1) {
 
 function applyMechanicMetric(latent, metricValue, weight = 1) {
   applyDelta(latent, METRIC_TO_DELTA[metricValue], weight);
+}
+
+function normalizedMetric(value) {
+  if (typeof value !== 'string') {
+    return 'BASELINE';
+  }
+  const key = value.trim().toUpperCase();
+  return METRIC_TO_DELTA[key] ? key : 'BASELINE';
+}
+
+function toFiniteNumber(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === 'string' && value.trim().length > 0) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+  return null;
 }
 
 function triggerGsrEvent(model, intensity = 0.5) {
@@ -191,8 +217,12 @@ function updateLatentAndDrive(model, dt) {
 
 function updateEcgParams(model, dt) {
   const { ecg, drive, latent, time } = model;
+  const baseBpm = model.baseline?.bpm ?? 72;
   const bpmTarget = clamp(
-    56 + drive.sympathetic * 66 + latent.painManipulation * 18 - drive.parasympathetic * 8,
+    baseBpm +
+      (drive.sympathetic - 0.28) * 52 -
+      (drive.parasympathetic - 0.54) * 18 +
+      latent.painManipulation * 14,
     48,
     162
   );
@@ -303,7 +333,10 @@ function emitEegSamples(model, dt) {
   }
 
   const rms = rmsRecent(model.buffers.eeg, SAMPLE_RATE.eeg, 1.2);
-  const uv = clamp(16 + rms * 130, 9, 95);
+  const uvFromRms = clamp(16 + rms * 130, 9, 95);
+  const baseUv = model.baseline?.eegUv ?? 24.5;
+  const uvDrift = (uvFromRms - 26) * 0.72 + (model.drive.sympathetic - 0.3) * 6;
+  const uv = clamp(baseUv + uvDrift + model.transient.eegExcite * 7, 8, 120);
   model.readout.eegUv += (uv - model.readout.eegUv) * 0.18;
 }
 
@@ -311,7 +344,12 @@ function emitGsrSamples(model, dt) {
   model.accum.gsr += dt;
   const step = 1 / SAMPLE_RATE.gsr;
   const stress = model.drive.sympathetic;
-  const tonicTarget = clamp(0.16 + stress * 0.5 + model.latent.fatigue * 0.08, 0.08, 1.1);
+  const baseTonic = clamp(((model.baseline?.gsrUs ?? 6.8) - 2) / 13.5, 0.08, 1.1);
+  const tonicTarget = clamp(
+    baseTonic + (stress - 0.3) * 0.28 + model.latent.fatigue * 0.05,
+    0.08,
+    1.1
+  );
   model.gsr.tonic += (tonicTarget - model.gsr.tonic) * Math.min(1, dt * 0.7);
   model.gsr.eventCooldown = Math.max(0, model.gsr.eventCooldown - dt);
 
@@ -399,14 +437,74 @@ function warmupModel(model, seconds = 4) {
   }
 }
 
-export function initBiometricsOnState(state) {
-  state.biometric = createBiometricState();
-  warmupModel(state.biometric, 4);
+function applyBaselineMetricsToModel(model, baseline = {}) {
+  const latent = model.latent;
+
+  const heartNumeric = toFiniteNumber(baseline.heartRate);
+  const eegNumeric = toFiniteNumber(baseline.eeg);
+  const gsrNumeric = toFiniteNumber(baseline.gsr);
+
+  if (heartNumeric !== null || eegNumeric !== null || gsrNumeric !== null) {
+    const bpm = clamp(heartNumeric ?? 72, 48, 170);
+    const eegUv = clamp(eegNumeric ?? 24.5, 8, 120);
+    const gsrUs = clamp(gsrNumeric ?? 6.8, 1.5, 25);
+
+    model.ecg.bpm = bpm;
+    model.ecg.rr = clamp(60 / bpm, 0.36, 1.4);
+    model.readout.bpm = bpm;
+    model.baseline.bpm = bpm;
+
+    const eegNorm = (eegUv - 8) / (120 - 8);
+    model.eeg.phase = { d: 0, t: 0, a: 0, b: 0, g: 0 };
+    model.eeg.pink = 0;
+    model.eeg.blink = 0;
+    model.eeg.emg = clamp(0.04 + eegNorm * 0.14, 0, 0.4);
+    model.readout.eegUv = eegUv;
+    model.baseline.eegUv = eegUv;
+
+    const gsrNorm = (gsrUs - 1.5) / (25 - 1.5);
+    model.gsr.tonic = clamp((gsrUs - 2) / 13.5, 0.08, 1.1);
+    model.readout.gsrUs = gsrUs;
+    model.baseline.gsrUs = gsrUs;
+
+    latent.arousal = clamp(0.16 + gsrNorm * 0.52 + (bpm - 55) / 140, 0, 1);
+    latent.cognitiveLoad = clamp(0.2 + eegNorm * 0.42, 0, 1);
+    latent.painManipulation = clamp(0.02 + gsrNorm * 0.08, 0, 1);
+    latent.control = clamp(0.7 - eegNorm * 0.22, 0, 1);
+    latent.fatigue = clamp(0.1 + (1 - eegNorm) * 0.22, 0, 1);
+  } else {
+    const heart = normalizedMetric(baseline.heartRate);
+    const eeg = normalizedMetric(baseline.eeg);
+    const gsr = normalizedMetric(baseline.gsr);
+    applyMechanicMetric(latent, heart, 0.6);
+    applyMechanicMetric(latent, eeg, 0.66);
+    applyMechanicMetric(latent, gsr, 0.54);
+    model.baseline.bpm = model.readout.bpm;
+    model.baseline.eegUv = model.readout.eegUv;
+    model.baseline.gsrUs = model.readout.gsrUs;
+  }
+
+  for (let i = 0; i < 180; i += 1) {
+    const dt = 1 / 60;
+    model.time += dt;
+    updateLatentAndDrive(model, dt);
+    updateEcgParams(model, dt);
+    emitEcgSamples(model, dt);
+    emitEegSamples(model, dt);
+    emitGsrSamples(model, dt);
+  }
 }
 
-export function resetBiometricsOnState(state) {
+export function initBiometricsOnState(state, baseline) {
   state.biometric = createBiometricState();
   warmupModel(state.biometric, 4);
+  applyBaselineMetricsToModel(state.biometric, baseline);
+}
+
+export function resetBiometricsOnState(state, baseline) {
+  state.biometric = createBiometricState();
+  warmupModel(state.biometric, 4);
+  applyBaselineMetricsToModel(state.biometric, baseline);
   syncLegacyWave(state);
 }
 
