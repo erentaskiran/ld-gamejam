@@ -78,7 +78,7 @@ async function boot() {
   clearCanvas(ctx, COLORS.ink);
   drawText(ctx, "Yukleniyor...", DESIGN_W / 2, DESIGN_H / 2, {
     align: "center",
-    size: 24,
+    size: 18,
     color: COLORS.cream,
     font: UI_FONT,
     baseline: "middle",
@@ -110,16 +110,16 @@ boot().catch((error) => {
   ctx.setTransform(renderScale, 0, 0, renderScale, 0, 0);
   ctx.imageSmoothingEnabled = false;
   clearCanvas(ctx, "#1a0b10");
-  drawText(ctx, "Oyun baslatilamadi", DESIGN_W / 2, DESIGN_H / 2 - 14, {
+  drawText(ctx, "Oyun baslatilamadi", DESIGN_W / 2, DESIGN_H / 2 - 12, {
     align: "center",
-    size: 24,
+    size: 18,
     color: COLORS.fail,
     font: UI_FONT,
     baseline: "middle",
   });
-  drawText(ctx, error.message, DESIGN_W / 2, DESIGN_H / 2 + 16, {
+  drawText(ctx, error.message, DESIGN_W / 2, DESIGN_H / 2 + 10, {
     align: "center",
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     font: UI_FONT,
     baseline: "middle",

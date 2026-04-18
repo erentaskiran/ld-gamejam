@@ -6,7 +6,7 @@ import { drawPanel } from "./panel.js";
 export function drawPortraitBadge(ctx, x, y, w, h, imageKey, label) {
   drawPanel(ctx, x, y, w, h, { border: COLORS.amber });
 
-  const labelH = 16;
+  const labelH = 12;
   const portraitX = x + 3;
   const portraitY = y + 3;
   const portraitW = w - 6;
@@ -32,7 +32,7 @@ export function drawPortraitBadge(ctx, x, y, w, h, imageKey, label) {
   drawRect(ctx, x + 1, y + h - labelH - 1, w - 2, 1, COLORS.amberDim);
 
   drawText(ctx, label, x + w / 2, y + h - labelH / 2, {
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     align: "center",
     font: UI_FONT,

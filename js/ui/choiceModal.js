@@ -14,35 +14,36 @@ function easeOutCubic(t) {
 export function drawChoiceModal(ctx, { x, y, w, h, choices, mouse, animProgress = 1, title = "SORU SEC" }) {
   drawPanel(ctx, x, y, w, h, { border: COLORS.amber });
 
-  drawText(ctx, `[ ${title} ]`, x + 8, y + 14, {
-    size: 16,
+  drawText(ctx, `[ ${title} ]`, x + 8, y + 10, {
+    size: 12,
     color: COLORS.amberBright,
     font: UI_FONT,
     baseline: "middle",
   });
 
   const rects = [];
-  let cursor = y + 28;
-  const lineH = 16;
-  const gap = 4;
+  let cursor = y + 22;
+  const fontSize = 12;
+  const lineH = 12;
+  const gap = 3;
   const maxLines = 2;
-  const btnPadY = 6;
+  const btnPadY = 4;
   const stagger = 0.18;
   const slideDuration = 0.4;
-  const slideDistance = 14;
+  const slideDistance = 10;
   const typeStart = 0.12;
   const typeCps = 70;
 
   for (let i = 0; i < choices.length; i += 1) {
     const text = `${i + 1}. ${choices[i].question}`;
-    const lines = wrapTextLines(ctx, text, w - 24, 16, UI_FONT).slice(0, maxLines);
-    const btnH = Math.max(28, lines.length * lineH + btnPadY * 2);
+    const lines = wrapTextLines(ctx, text, w - 20, fontSize, UI_FONT).slice(0, maxLines);
+    const btnH = Math.max(22, lines.length * lineH + btnPadY * 2);
 
-    if (cursor + btnH > y + h - 6) {
+    if (cursor + btnH > y + h - 4) {
       break;
     }
 
-    const rect = { x: x + 8, y: cursor, w: w - 16, h: btnH, index: i };
+    const rect = { x: x + 6, y: cursor, w: w - 12, h: btnH, index: i };
     rects.push(rect);
 
     const local = animProgress - i * stagger;
@@ -74,8 +75,8 @@ export function drawChoiceModal(ctx, { x, y, w, h, choices, mouse, animProgress 
           break;
         }
         const slice = lines[j].slice(0, remaining);
-        drawText(ctx, slice, x + 14, drawY + btnPadY + 8 + j * lineH, {
-          size: 16,
+        drawText(ctx, slice, rect.x + 6, drawY + btnPadY + 6 + j * lineH, {
+          size: fontSize,
           color: hovered ? COLORS.amberBright : COLORS.cream,
           font: UI_FONT,
           baseline: "middle",

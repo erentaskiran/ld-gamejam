@@ -20,43 +20,43 @@ function drawResultScene(ctx) {
 
   drawPanel(ctx, panelX, panelY, panelW, panelH, { border });
 
-  drawText(ctx, `[ ${success ? "SONUC: BASARI" : "SONUC: BASARISIZ"} ]`, DESIGN_W / 2, panelY + 22, {
+  drawText(ctx, `[ ${success ? "SONUC: BASARI" : "SONUC: BASARISIZ"} ]`, DESIGN_W / 2, panelY + 16, {
     align: "center",
-    size: 16,
+    size: 12,
     color: success ? COLORS.success : COLORS.fail,
     font: UI_FONT,
     baseline: "middle",
   });
 
   if (endNode) {
-    drawText(ctx, endNode.theme.toUpperCase(), DESIGN_W / 2, panelY + 56, {
+    drawText(ctx, endNode.theme.toUpperCase(), DESIGN_W / 2, panelY + 44, {
       align: "center",
-      size: 32,
+      size: 22,
       color: COLORS.amberBright,
       font: UI_FONT,
       baseline: "middle",
     });
-    drawWrappedText(ctx, endNode.description, DESIGN_W / 2, panelY + 84, panelW - 40, {
-      size: 16,
+    drawWrappedText(ctx, endNode.description, DESIGN_W / 2, panelY + 72, panelW - 40, {
+      size: 12,
       color: COLORS.cream,
       font: UI_FONT,
-      lineHeight: 16,
+      lineHeight: 12,
       maxLines: 4,
       align: "center",
     });
-    drawWrappedText(ctx, endNode.result_text, DESIGN_W / 2, panelY + 154, panelW - 40, {
-      size: 16,
+    drawWrappedText(ctx, endNode.result_text, DESIGN_W / 2, panelY + 134, panelW - 40, {
+      size: 12,
       color: COLORS.creamDim,
       font: UI_FONT,
-      lineHeight: 16,
+      lineHeight: 12,
       maxLines: 4,
       align: "center",
     });
   }
 
-  drawText(ctx, "R: Yeniden Oyna  |  ESC: Menu", DESIGN_W / 2, DESIGN_H - 28, {
+  drawText(ctx, "R: Yeniden Oyna  |  ESC: Menu", DESIGN_W / 2, DESIGN_H - 22, {
     align: "center",
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     font: UI_FONT,
   });
@@ -65,18 +65,18 @@ function drawResultScene(ctx) {
 function drawErrorScene(ctx) {
   drawSceneBackground(ctx);
   drawPanel(ctx, 60, 140, DESIGN_W - 120, 120, { border: COLORS.fail });
-  drawText(ctx, "[ HATA ]", DESIGN_W / 2, 168, {
+  drawText(ctx, "[ HATA ]", DESIGN_W / 2, 164, {
     align: "center",
-    size: 24,
+    size: 18,
     color: COLORS.fail,
     font: UI_FONT,
     baseline: "middle",
   });
-  drawWrappedText(ctx, state.error, DESIGN_W / 2, 200, DESIGN_W - 160, {
-    size: 16,
+  drawWrappedText(ctx, state.error, DESIGN_W / 2, 196, DESIGN_W - 160, {
+    size: 12,
     color: COLORS.cream,
     font: UI_FONT,
-    lineHeight: 16,
+    lineHeight: 12,
     maxLines: 4,
     align: "center",
   });

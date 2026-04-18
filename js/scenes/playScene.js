@@ -13,13 +13,13 @@ import { drawLogPanel, drawLogTab } from "../ui/dialogLog.js";
 import { DESIGN_H, DESIGN_W } from "../ui/theme.js";
 
 const LAYOUT = {
-  narration: { x: 8, y: 8, w: 518, h: 64 },
-  operatorBadge: { x: 530, y: 4, w: 62, h: 72 },
-  defendantBadge: { x: 8, y: 156, w: 62, h: 72 },
-  modal: { x: 82, y: 80, w: 434, h: 148 },
-  logTab: { x: 530, y: 80, w: 62, h: 20 },
-  logPanel: { x: 260, y: 80, w: 332, h: 210 },
-  polygraph: { x: 0, y: 236, w: 600, h: 164 },
+  narration: { x: 8, y: 8, w: 518, h: 48 },
+  operatorBadge: { x: 530, y: 4, w: 62, h: 56 },
+  defendantBadge: { x: 8, y: 192, w: 62, h: 56 },
+  modal: { x: 82, y: 128, w: 434, h: 120 },
+  logTab: { x: 530, y: 64, w: 62, h: 16 },
+  logPanel: { x: 260, y: 64, w: 332, h: 170 },
+  polygraph: { x: 0, y: 252, w: 600, h: 148 },
 };
 
 const QUESTION_CPS = 80;

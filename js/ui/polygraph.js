@@ -85,8 +85,8 @@ function readout(type, profile) {
 }
 
 function drawLane(ctx, x, y, w, h, { label, color, profile, type, time, metric, flash = 0 }) {
-  const labelW = 48;
-  const valueW = 130;
+  const labelW = 38;
+  const valueW = 108;
   const waveX = x + labelW;
   const waveW = w - labelW - valueW;
 
@@ -101,14 +101,14 @@ function drawLane(ctx, x, y, w, h, { label, color, profile, type, time, metric, 
   }
 
   drawText(ctx, label, x + 4, y + h / 2, {
-    size: 16,
+    size: 12,
     color,
     font: UI_FONT,
     baseline: "middle",
   });
 
   drawText(ctx, `${readout(type, profile)} ${metric}`, x + w - 4, y + h / 2, {
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     align: "right",
     font: UI_FONT,
@@ -122,46 +122,46 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
   drawRect(ctx, x, y, w, h, COLORS.panelSolid);
   drawRect(ctx, x, y, w, 1, COLORS.amber);
 
-  const headerH = 22;
-  drawText(ctx, "POLYGRAPH ANALYSIS", x + 8, y + headerH / 2 + 1, {
-    size: 16,
+  const headerH = 16;
+  drawText(ctx, "POLYGRAPH ANALYSIS", x + 6, y + headerH / 2 + 1, {
+    size: 12,
     color: COLORS.amberBright,
     font: UI_FONT,
     baseline: "middle",
   });
 
   const fearValText = `${Math.round(fearBar)}/${maxFearBar}`;
-  const fearValX = x + w - 8;
-  const fearValWidth = 44;
-  const fearBarW = 72;
+  const fearValX = x + w - 6;
+  const fearValWidth = 36;
+  const fearBarW = 56;
   const fearBarX = fearValX - fearValWidth - fearBarW;
   const fearLabelX = fearBarX - 4;
   const fearMidY = y + headerH / 2 + 1;
 
   drawText(ctx, "FEAR", fearLabelX, fearMidY, {
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     align: "right",
     font: UI_FONT,
     baseline: "middle",
   });
 
-  drawRect(ctx, fearBarX, y + headerH / 2 - 4, fearBarW, 8, COLORS.fearTrack);
+  drawRect(ctx, fearBarX, y + headerH / 2 - 3, fearBarW, 6, COLORS.fearTrack);
   const ratio = clamp(fearBar / maxFearBar, 0, 1);
-  drawRect(ctx, fearBarX, y + headerH / 2 - 4, fearBarW * ratio, 8, COLORS.fear);
+  drawRect(ctx, fearBarX, y + headerH / 2 - 3, fearBarW * ratio, 6, COLORS.fear);
   if (fearFlash > 0.001) {
     drawRect(
       ctx,
       fearBarX,
-      y + headerH / 2 - 4,
+      y + headerH / 2 - 3,
       fearBarW,
-      8,
+      6,
       `rgba(255, 220, 150, ${Math.min(0.75, fearFlash * 0.75)})`,
     );
   }
 
   drawText(ctx, fearValText, fearValX, fearMidY, {
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     align: "right",
     font: UI_FONT,

@@ -20,26 +20,26 @@ function drawMenuScene(ctx) {
   const panelH = DESIGN_H - 40;
   drawPanel(ctx, panelX, panelY, panelW, panelH, { border: COLORS.amber });
 
-  drawText(ctx, "THE OPERATOR", DESIGN_W / 2, 60, {
+  drawText(ctx, "THE OPERATOR", DESIGN_W / 2, 52, {
     align: "center",
-    size: 40,
+    size: 28,
     color: COLORS.amberBright,
     font: UI_FONT,
   });
-  drawText(ctx, "[ CASE SECIMI ]", DESIGN_W / 2, 88, {
+  drawText(ctx, "[ CASE SECIMI ]", DESIGN_W / 2, 76, {
     align: "center",
-    size: 16,
+    size: 12,
     color: COLORS.cream,
     font: UI_FONT,
   });
 
   state.menuCaseRects = [];
-  const cardW = 260;
-  const cardH = 40;
+  const cardW = 230;
+  const cardH = 30;
   const gap = 16;
   const cardsTotalW = cardW * CASES.length + gap * (CASES.length - 1);
   const startX = (DESIGN_W - cardsTotalW) / 2;
-  const cardY = 108;
+  const cardY = 96;
 
   for (let i = 0; i < CASES.length; i += 1) {
     const x = startX + i * (cardW + gap);
@@ -48,8 +48,8 @@ function drawMenuScene(ctx) {
       border: selected ? COLORS.amberBright : COLORS.amberDim,
       fill: selected ? "rgba(60, 36, 14, 0.7)" : COLORS.panelFillLight,
     });
-    drawText(ctx, `${i + 1}. ${CASES[i].label}`, x + 10, cardY + cardH / 2, {
-      size: 16,
+    drawText(ctx, `${i + 1}. ${CASES[i].label}`, x + 8, cardY + cardH / 2, {
+      size: 12,
       color: selected ? COLORS.amberBright : COLORS.cream,
       font: UI_FONT,
       baseline: "middle",
@@ -59,39 +59,39 @@ function drawMenuScene(ctx) {
 
   const caseData = getSelectedCaseData();
   const infoX = 48;
-  const infoY = 170;
+  const infoY = 146;
   const infoW = DESIGN_W - 96;
-  const infoH = 150;
+  const infoH = 158;
   drawPanel(ctx, infoX, infoY, infoW, infoH, { border: COLORS.amberDim });
 
   if (caseData) {
-    drawText(ctx, caseData.title, DESIGN_W / 2, infoY + 20, {
+    drawText(ctx, caseData.title, DESIGN_W / 2, infoY + 14, {
       align: "center",
-      size: 16,
+      size: 12,
       color: COLORS.amberBright,
       font: UI_FONT,
       baseline: "middle",
     });
-    drawWrappedText(ctx, caseData.context, infoX + 12, infoY + 42, infoW - 24, {
-      size: 16,
+    drawWrappedText(ctx, caseData.context, infoX + 10, infoY + 32, infoW - 20, {
+      size: 12,
       color: COLORS.cream,
       font: UI_FONT,
-      lineHeight: 16,
-      maxLines: 6,
+      lineHeight: 12,
+      maxLines: 8,
     });
   } else {
     drawText(ctx, "Vaka yuklenemedi.", DESIGN_W / 2, infoY + infoH / 2, {
       align: "center",
-      size: 16,
+      size: 12,
       color: COLORS.fail,
       font: UI_FONT,
       baseline: "middle",
     });
   }
 
-  drawText(ctx, "1-2: Vaka sec  |  ENTER: Basla", DESIGN_W / 2, DESIGN_H - 32, {
+  drawText(ctx, "1-2: Vaka sec  |  ENTER: Basla", DESIGN_W / 2, DESIGN_H - 28, {
     align: "center",
-    size: 16,
+    size: 12,
     color: COLORS.creamDim,
     font: UI_FONT,
   });
