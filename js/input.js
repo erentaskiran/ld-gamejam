@@ -13,6 +13,7 @@ const mouse = {
 
 let isInitialized = false;
 let designScale = 1;
+let wheelDelta = 0;
 
 export function setDesignScale(scale) {
   designScale = scale || 1;
@@ -48,6 +49,11 @@ function onMouseUp(event) {
   mouseReleased.add(event.button);
 }
 
+function onWheel(event) {
+  wheelDelta += event.deltaY;
+  event.preventDefault();
+}
+
 function onMouseMove(event, canvas) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
@@ -69,6 +75,7 @@ export function initInput(canvas) {
   canvas.addEventListener("mousedown", onMouseDown);
   window.addEventListener("mouseup", onMouseUp);
   canvas.addEventListener("mousemove", (event) => onMouseMove(event, canvas));
+  canvas.addEventListener("wheel", onWheel, { passive: false });
   canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 }
 
@@ -77,6 +84,11 @@ export function endFrameInput() {
   keysReleased.clear();
   mousePressed.clear();
   mouseReleased.clear();
+  wheelDelta = 0;
+}
+
+export function getWheelDelta() {
+  return wheelDelta;
 }
 
 export function isKeyDown(key) {

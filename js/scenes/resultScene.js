@@ -36,7 +36,7 @@ function drawResultScene(ctx) {
       font: UI_FONT,
       baseline: "middle",
     });
-    drawWrappedText(ctx, endNode.description, panelX + 20, panelY + 84, panelW - 40, {
+    drawWrappedText(ctx, endNode.description, DESIGN_W / 2, panelY + 84, panelW - 40, {
       size: 16,
       color: COLORS.cream,
       font: UI_FONT,
@@ -44,7 +44,7 @@ function drawResultScene(ctx) {
       maxLines: 4,
       align: "center",
     });
-    drawWrappedText(ctx, endNode.result_text, panelX + 20, panelY + 154, panelW - 40, {
+    drawWrappedText(ctx, endNode.result_text, DESIGN_W / 2, panelY + 154, panelW - 40, {
       size: 16,
       color: COLORS.creamDim,
       font: UI_FONT,
@@ -72,7 +72,7 @@ function drawErrorScene(ctx) {
     font: UI_FONT,
     baseline: "middle",
   });
-  drawWrappedText(ctx, state.error, 80, 200, DESIGN_W - 160, {
+  drawWrappedText(ctx, state.error, DESIGN_W / 2, 200, DESIGN_W - 160, {
     size: 16,
     color: COLORS.cream,
     font: UI_FONT,
