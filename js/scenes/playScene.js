@@ -17,8 +17,8 @@ const LAYOUT = {
   operatorBadge: { x: 530, y: 4, w: 62, h: 56 },
   defendantBadge: { x: 8, y: 192, w: 62, h: 56 },
   modal: { x: 82, y: 128, w: 434, h: 120 },
-  logTab: { x: 530, y: 64, w: 62, h: 16 },
-  logPanel: { x: 260, y: 64, w: 332, h: 170 },
+  logTab: { x: DESIGN_W - 14, y: 94, w: 12, h: 84 },
+  logPanel: { x: DESIGN_W - 196, y: 64, w: 192, h: 170 },
   polygraph: { x: 0, y: 252, w: 600, h: 148 },
 };
 
@@ -149,23 +149,20 @@ function drawPlayScene(ctx) {
   });
 
   const ease = smoothstep(clamp(logAnim, 0, 1));
-  const tabAlpha = 1 - Math.min(1, ease * 2);
-  if (tabAlpha > 0.01) {
-    ctx.save();
-    ctx.globalAlpha = tabAlpha;
-    drawLogTab(ctx, LAYOUT.logTab.x, LAYOUT.logTab.y, LAYOUT.logTab.w, LAYOUT.logTab.h, state.topLog.length);
-    ctx.restore();
-  }
+  const tabX = lerp(LAYOUT.logTab.x, LAYOUT.logPanel.x - LAYOUT.logTab.w - 2, ease);
+  const tabRect = { x: tabX, y: LAYOUT.logTab.y, w: LAYOUT.logTab.w, h: LAYOUT.logTab.h };
+  const tabHovered = inRect(mouse, tabRect);
+  drawLogTab(ctx, tabX, LAYOUT.logTab.y, LAYOUT.logTab.w, LAYOUT.logTab.h, ease > 0.4, tabHovered);
 
   if (ease > 0.01) {
     const panelRect = {
-      x: lerp(LAYOUT.logTab.x, LAYOUT.logPanel.x, ease),
-      y: lerp(LAYOUT.logTab.y, LAYOUT.logPanel.y, ease),
-      w: lerp(LAYOUT.logTab.w, LAYOUT.logPanel.w, ease),
-      h: lerp(LAYOUT.logTab.h, LAYOUT.logPanel.h, ease),
+      x: lerp(DESIGN_W, LAYOUT.logPanel.x, ease),
+      y: LAYOUT.logPanel.y,
+      w: LAYOUT.logPanel.w,
+      h: LAYOUT.logPanel.h,
     };
     ctx.save();
-    ctx.globalAlpha = Math.min(1, ease * 1.4);
+    ctx.globalAlpha = Math.min(1, ease * 1.25);
     const result = drawLogPanel(
       ctx,
       panelRect.x,
@@ -203,14 +200,26 @@ function advanceToPendingNode() {
 
 function updateLogHover(dt) {
   const mouse = getMousePos();
-  const rect = logExpanded ? LAYOUT.logPanel : LAYOUT.logTab;
-  const hovering = inRect(mouse, rect);
+  const ease = smoothstep(clamp(logAnim, 0, 1));
+  const tabX = lerp(LAYOUT.logTab.x, LAYOUT.logPanel.x - LAYOUT.logTab.w - 2, ease);
+  const liveTabRect = { x: tabX, y: LAYOUT.logTab.y, w: LAYOUT.logTab.w, h: LAYOUT.logTab.h };
+  const panelRect = {
+    x: LAYOUT.logPanel.x,
+    y: LAYOUT.logPanel.y,
+    w: LAYOUT.logPanel.w,
+    h: LAYOUT.logPanel.h,
+  };
 
-  if (!hovering && logExpanded) {
-    logExpanded = false;
-    logScrollOffset = 0;
-  } else if (hovering && !logExpanded) {
-    logExpanded = true;
+  if (wasMousePressed(0)) {
+    if (inRect(mouse, liveTabRect)) {
+      logExpanded = !logExpanded;
+      if (!logExpanded) {
+        logScrollOffset = 0;
+      }
+    } else if (logExpanded && !inRect(mouse, panelRect)) {
+      logExpanded = false;
+      logScrollOffset = 0;
+    }
   }
 
   const target = logExpanded ? 1 : 0;
@@ -220,7 +229,7 @@ function updateLogHover(dt) {
     logAnim = target;
   }
 
-  if (logExpanded) {
+  if (logExpanded && inRect(mouse, panelRect)) {
     const wheel = getWheelDelta();
     if (wheel !== 0) {
       logScrollOffset = clamp(logScrollOffset - wheel / 30, 0, logMaxScroll);

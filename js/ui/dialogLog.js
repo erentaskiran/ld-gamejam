@@ -27,15 +27,59 @@ function buildLines(ctx, log, textW, size) {
   return lines;
 }
 
-export function drawLogTab(ctx, x, y, w, h, count) {
-  drawPanel(ctx, x, y, w, h, { border: COLORS.amberDim });
-  drawText(ctx, `LOG (${count})`, x + w / 2, y + h / 2, {
-    size: 12,
-    color: COLORS.cream,
-    align: "center",
-    baseline: "middle",
-    font: UI_FONT,
+function drawTabTexture(ctx, x, y, w, h) {
+  for (let yy = y + 3; yy < y + h - 3; yy += 3) {
+    for (let xx = x + 2; xx < x + w - 2; xx += 2) {
+      const seed = (xx * 13 + yy * 7) % 11;
+      if (seed < 3) {
+        drawRect(ctx, xx, yy, 1, 1, "rgba(255, 245, 220, 0.04)");
+      } else if (seed > 8) {
+        drawRect(ctx, xx, yy, 1, 1, "rgba(12, 9, 7, 0.28)");
+      }
+    }
+  }
+}
+
+export function drawLogTab(ctx, x, y, w, h, expanded, hovered = false) {
+  if (hovered) {
+    ctx.save();
+    ctx.globalAlpha = 0.2;
+    drawRect(ctx, x - 1, y - 1, w + 2, h + 2, COLORS.amberBright);
+    ctx.restore();
+  }
+
+  drawPanel(ctx, x, y, w, h, {
+    border: COLORS.amberDim,
+    fill: hovered ? "rgba(20, 14, 8, 0.95)" : "rgba(14, 9, 6, 0.92)",
   });
+
+  drawRect(ctx, x + 1, y + 1, w - 2, h - 2, hovered ? "rgba(24, 18, 12, 0.42)" : "rgba(18, 13, 9, 0.5)");
+  drawTabTexture(ctx, x, y, w, h);
+
+  const cx = x + w / 2;
+  const cy = y + h / 2;
+  const size = 5;
+  const arrow = expanded
+    ? [
+        [cx - size / 2, cy - size],
+        [cx + size / 2, cy],
+        [cx - size / 2, cy + size],
+      ]
+    : [
+        [cx + size / 2, cy - size],
+        [cx - size / 2, cy],
+        [cx + size / 2, cy + size],
+      ];
+
+  ctx.save();
+  ctx.fillStyle = "rgba(130, 111, 82, 0.88)";
+  ctx.beginPath();
+  ctx.moveTo(arrow[0][0], arrow[0][1]);
+  ctx.lineTo(arrow[1][0], arrow[1][1]);
+  ctx.lineTo(arrow[2][0], arrow[2][1]);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
 }
 
 export function drawLogPanel(ctx, x, y, w, h, log, scrollOffset) {
