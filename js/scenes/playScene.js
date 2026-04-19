@@ -19,6 +19,12 @@ import { drawDialogueModal } from '../ui/dialogueModal.js';
 import { drawLogPanel, drawLogTab } from '../ui/dialogLog.js';
 import { drawDossierPanel, drawDossierTab } from '../ui/dossierPanel.js';
 import { drawPauseModal, drawSettingsModal } from '../ui/pauseModal.js';
+import {
+  drawTutorial,
+  getTutorialStepCount,
+  isTutorialDone,
+  markTutorialDone,
+} from '../ui/tutorial.js';
 import { DESIGN_H, DESIGN_W } from '../ui/theme.js';
 
 const LAYOUT = {
@@ -68,6 +74,9 @@ let narrationTextProgress = 0;
 let choicesAnim = 0;
 let polygraphSlide = 0;
 let displayedNodeId = '';
+let tutorialStep = -1;
+let tutorialPulseTime = 0;
+let tutorialPending = false;
 
 const laneFlash = { heartRate: 0, eeg: 0, gsr: 0 };
 const prevMetrics = { heartRate: '', eeg: '', gsr: '' };
@@ -283,6 +292,11 @@ function drawPlayScene(ctx) {
       pauseRects = result.rects;
     }
   }
+
+  if (tutorialStep >= 0) {
+    const pulse = 0.5 + 0.5 * Math.sin(tutorialPulseTime * 4);
+    drawTutorial(ctx, LAYOUT, tutorialStep, pulse);
+  }
 }
 
 function narrationTotalLen() {
@@ -459,6 +473,9 @@ export function registerPlayScene(_canvas, ctx) {
       dossierAnim = 0;
       dossierScrollOffset = 0;
       dossierMaxScroll = 0;
+      tutorialStep = -1;
+      tutorialPending = !isTutorialDone();
+      tutorialPulseTime = 0;
       answerScrollOffset = 0;
       answerMaxScroll = 0;
       choiceScrollOffset = 0;
@@ -481,6 +498,32 @@ export function registerPlayScene(_canvas, ctx) {
       updateWave(state, dt);
       tickFearAnimation(dt);
       updateMarkerCapture();
+
+      if (tutorialStep >= 0) {
+        tutorialPulseTime += dt;
+        const stepCount = getTutorialStepCount(LAYOUT);
+        if (wasKeyPressed('escape')) {
+          tutorialStep = -1;
+          markTutorialDone();
+        } else if (wasKeyPressed('enter') || wasMousePressed(0)) {
+          tutorialStep += 1;
+          if (tutorialStep >= stepCount) {
+            tutorialStep = -1;
+            markTutorialDone();
+          }
+        }
+        return;
+      }
+
+      if (
+        tutorialPending &&
+        polygraphSlide >= 1 &&
+        narrationSlide >= 0.99 &&
+        narrationTextProgress >= narrationTotalLen()
+      ) {
+        tutorialPending = false;
+        tutorialStep = 0;
+      }
 
       portraitSlide = Math.min(1, portraitSlide + dt * PORTRAIT_SLIDE_SPEED);
       polygraphSlide = Math.min(1, polygraphSlide + dt * POLYGRAPH_SLIDE_SPEED);

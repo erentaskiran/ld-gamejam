@@ -87,4 +87,18 @@ export const EN = {
   PAUSE_CONTINUE: 'CONTINUE',
   PAUSE_SETTINGS: 'SETTINGS',
   PAUSE_QUIT: 'QUIT TO MENU',
+
+  // tutorial
+  TUTORIAL_NEXT: 'NEXT (ENTER / CLICK)',
+  TUTORIAL_SKIP: 'ESC: SKIP',
+  TUTORIAL_STEP: 'STEP',
+  TUTORIAL_OF: '/',
+  TUTORIAL_POLYGRAPH_TITLE: 'POLYGRAPH PANEL',
+  TUTORIAL_POLYGRAPH_BODY: 'Shows the suspect\u2019s pulse, brain and skin reactions. Colored bands during questions mark the intensity of their response.',
+  TUTORIAL_DOSSIER_TITLE: 'DEFENDANT DOSSIER',
+  TUTORIAL_DOSSIER_BODY: 'Review medical notes, habits and pressure points. Some conditions can distort the polygraph readings.',
+  TUTORIAL_LOG_TITLE: 'CONVERSATION LOG',
+  TUTORIAL_LOG_BODY: 'Re-read everything that has been said during the interrogation here.',
+  TUTORIAL_CHOICES_TITLE: 'QUESTIONS',
+  TUTORIAL_CHOICES_BODY: 'Click or press 1-9 to pick a question. Each one will provoke a different reaction.',
 };

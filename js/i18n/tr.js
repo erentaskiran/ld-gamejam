@@ -87,4 +87,18 @@ export const TR = {
   PAUSE_CONTINUE: 'DEVAM ET',
   PAUSE_SETTINGS: 'AYARLAR',
   PAUSE_QUIT: 'MENUYE DON',
+
+  // tutorial
+  TUTORIAL_NEXT: 'DEVAM (ENTER / TIKLA)',
+  TUTORIAL_SKIP: 'ESC: ATLA',
+  TUTORIAL_STEP: 'ADIM',
+  TUTORIAL_OF: '/',
+  TUTORIAL_POLYGRAPH_TITLE: 'POLIGRAF PANELI',
+  TUTORIAL_POLYGRAPH_BODY: 'Sanigin kalp, beyin ve deri tepkilerini gosterir. Sorgu sirasinda olusan renkli bantlar, tepkinin siddetini belli eder.',
+  TUTORIAL_DOSSIER_TITLE: 'SANIK DOSYASI',
+  TUTORIAL_DOSSIER_BODY: 'Saglik, aliskanlik ve baski noktalarini inceleyin. Bazi durumlar poligraf okumalarini carpitabilir.',
+  TUTORIAL_LOG_TITLE: 'GECMIS KAYIT',
+  TUTORIAL_LOG_BODY: 'Sorgu boyunca yapilan konusmalari buradan tekrar okuyabilirsiniz.',
+  TUTORIAL_CHOICES_TITLE: 'SORULAR',
+  TUTORIAL_CHOICES_BODY: 'Tiklayarak veya 1-9 tuslarini kullanarak soru secin. Her soru farkli bir tepki doguracaktir.',
 };
