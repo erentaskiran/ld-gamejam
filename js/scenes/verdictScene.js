@@ -1,4 +1,4 @@
-import { drawRect, drawText, wrapTextLines } from '../draw.js';
+import { drawRect, drawScrollableText, drawText, drawWrappedText, wrapTextLines } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
 import { getMousePos, getPlatformScrollDelta, wasKeyPressed, wasMousePressed } from '../input.js';
 import { getSelectedCaseDef, getSuspectLabel, state } from '../game/state.js';
@@ -6,6 +6,7 @@ import { recordAttempt } from '../game/caseStats.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
 import { drawSceneBackground } from '../ui/background.js';
 import { drawPanel } from '../ui/panel.js';
+import { drawDossierPanel } from '../ui/dossierPanel.js';
 import { t } from '../i18n/index.js';
 import { applyAmbientProfile } from '../interrogationAudio.js';
 import { playCaseCloseSlam } from '../audio.js';
@@ -18,6 +19,12 @@ let anim = 0;
 let listScrollOffset = 0;
 let listMaxScroll = 0;
 let listViewportRect = null;
+let dossierScrollOffset = 0;
+let dossierMaxScroll = 0;
+let dossierViewportRect = null;
+let summaryScrollOffset = 0;
+let summaryMaxScroll = 0;
+let summaryViewportRect = null;
 
 function inRect(point, rect) {
   return (
@@ -86,7 +93,11 @@ function drawEvidenceEntry(ctx, x, y, w, h, index, evidence, marker) {
     baseline: 'middle',
   });
 
-  const qLines = wrapTextLines(ctx, evidence.question, textW - 24, 11, UI_FONT);
+  const allQuestionLines = wrapTextLines(ctx, evidence.question, textW - 24, 11, UI_FONT);
+  const qLines = allQuestionLines.slice(0, 3);
+  if (qLines.length > 0 && allQuestionLines.length > 3) {
+    qLines[qLines.length - 1] = `${qLines[qLines.length - 1]}...`;
+  }
   for (let i = 0; i < qLines.length; i += 1) {
     drawText(ctx, qLines[i], x + padX + 24, y + 10 + i * 11, {
       size: 11,
@@ -103,7 +114,12 @@ function drawEvidenceEntry(ctx, x, y, w, h, index, evidence, marker) {
     font: UI_FONT,
     baseline: 'middle',
   });
-  const aLines = wrapTextLines(ctx, evidence.answer || '', textW, 11, UI_FONT);
+  const answerLinesRoom = Math.max(1, Math.floor((textAreaBottom - (answerY + 11)) / 11));
+  const allAnswerLines = wrapTextLines(ctx, evidence.answer || '', textW, 11, UI_FONT);
+  const aLines = allAnswerLines.slice(0, answerLinesRoom);
+  if (aLines.length > 0 && allAnswerLines.length > answerLinesRoom) {
+    aLines[aLines.length - 1] = `${aLines[aLines.length - 1]}...`;
+  }
   for (let i = 0; i < aLines.length; i += 1) {
     drawText(ctx, aLines[i], x + padX, answerY + (i + 1) * 11, {
       size: 11,
@@ -200,19 +216,129 @@ function drawVerdictScene(ctx) {
 
   const btnH = 42;
   const buttonAreaH = btnH + 18;
-  const listX = panelX + 10;
-  const listY = panelY + 38;
-  const listW = panelW - 20;
-  const listH = panelH - (listY - panelY) - buttonAreaH - 6;
-  listViewportRect = { x: listX, y: listY, w: listW, h: listH };
+  const areaX = panelX + 10;
+  const areaY = panelY + 38;
+  const areaW = panelW - 20;
+  const areaH = panelH - (areaY - panelY) - buttonAreaH - 6;
+
+  const splitGap = 8;
+  const baseLeftW = 184;
+  const leftW = Math.floor(baseLeftW * 1.1);
+  const leftX = areaX;
+  const rightX = leftX + leftW + splitGap;
+  const rightW = areaW - leftW - splitGap;
+  const baseSummaryH = 96;
+  const summaryH = Math.floor(baseSummaryH * 1.1);
+  const dossierY = areaY + summaryH + 6;
+  const dossierH = areaH - summaryH - 6;
+
+  drawPanel(ctx, leftX, areaY, leftW, summaryH, {
+    border: COLORS.amberDim,
+    fill: 'rgba(10, 6, 3, 0.5)',
+  });
+
+  const summaryInnerX = leftX + 6;
+  const summaryInnerW = leftW - 14;
+  let summaryCursorY = areaY + 6;
+
+  drawText(ctx, t('VERDICT_SUMMARY_HEADER'), summaryInnerX, summaryCursorY, {
+    size: 10,
+    color: COLORS.amberBright,
+    font: UI_FONT,
+    baseline: 'top',
+  });
+  summaryCursorY += 12;
+
+  const caseDef = getSelectedCaseDef();
+  const caseLabel = (caseDef?.label || '').toUpperCase();
+  const caseLabelLines = drawWrappedText(
+    ctx,
+    caseLabel,
+    summaryInnerX,
+    summaryCursorY,
+    summaryInnerW,
+    {
+      size: 10,
+      color: COLORS.cream,
+      font: UI_FONT,
+      lineHeight: 10,
+      maxLines: 2,
+      baseline: 'top',
+    }
+  );
+  summaryCursorY += Math.max(10, caseLabelLines * 10) + 4;
+
+  drawText(ctx, t('DOSSIER_CASE_SUMMARY'), summaryInnerX, summaryCursorY, {
+    size: 9,
+    color: COLORS.creamDim,
+    font: UI_FONT,
+    baseline: 'top',
+  });
+  summaryCursorY += 12;
+
+  summaryViewportRect = {
+    x: summaryInnerX,
+    y: summaryCursorY,
+    w: summaryInnerW,
+    h: Math.max(20, areaY + summaryH - 6 - summaryCursorY),
+  };
+  const summaryScroll = drawScrollableText(
+    ctx,
+    state.gameData?.context || '',
+    summaryViewportRect.x,
+    summaryViewportRect.y,
+    summaryViewportRect.w,
+    summaryViewportRect.h,
+    summaryScrollOffset,
+    {
+      size: 10,
+      color: COLORS.creamDim,
+      font: UI_FONT,
+      lineHeight: 11,
+      scrollbarTrackColor: COLORS.amberDim,
+      scrollbarThumbColor: COLORS.amberBright,
+    }
+  );
+  summaryMaxScroll = summaryScroll.maxScroll;
+  summaryScrollOffset = summaryScroll.clampedScroll;
+
+  dossierViewportRect = { x: leftX, y: dossierY, w: leftW, h: dossierH };
+  const dossierScroll = drawDossierPanel(
+    ctx,
+    dossierViewportRect.x,
+    dossierViewportRect.y,
+    dossierViewportRect.w,
+    dossierViewportRect.h,
+    state.gameData?.dossier,
+    state.gameData?.suspect,
+    dossierScrollOffset
+  );
+  dossierMaxScroll = dossierScroll.maxScroll;
+  dossierScrollOffset = dossierScroll.clampedScroll;
+
+  const listX = rightX;
+  const listY = areaY;
+  const listW = rightW;
+  const listH = areaH;
 
   drawPanel(ctx, listX, listY, listW, listH, {
     border: COLORS.amberDim,
     fill: 'rgba(10, 6, 3, 0.5)',
   });
+  drawText(ctx, t('VERDICT_EVIDENCE_HEADER'), listX + 6, listY + 10, {
+    size: 10,
+    color: COLORS.amberBright,
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+
+  const listHeaderH = 16;
+  const listBodyY = listY + listHeaderH;
+  const listBodyH = listH - listHeaderH;
+  listViewportRect = { x: listX, y: listBodyY, w: listW, h: listBodyH };
 
   const scrollbarPad = 10;
-  const columns = 2;
+  const columns = 1;
   const colGap = 6;
   const entryGap = 4;
   const sidePad = 5;
@@ -225,20 +351,20 @@ function drawVerdictScene(ctx) {
 
   const rowCount = Math.ceil(evidence.length / columns);
   const totalH = rowCount * FIXED_ENTRY_H + Math.max(0, rowCount - 1) * entryGap;
-  listMaxScroll = Math.max(0, totalH - (listH - 8));
+  listMaxScroll = Math.max(0, totalH - (listBodyH - 8));
   listScrollOffset = Math.max(0, Math.min(listMaxScroll, listScrollOffset));
 
   ctx.save();
   ctx.beginPath();
-  ctx.rect(listX + 2, listY + 2, listW - 4, listH - 4);
+  ctx.rect(listX + 2, listBodyY + 2, listW - 4, listBodyH - 4);
   ctx.clip();
 
-  let cursorY = listY + 4 - listScrollOffset;
+  let cursorY = listBodyY + 4 - listScrollOffset;
   for (let r = 0; r < rowCount; r += 1) {
     for (let c = 0; c < columns; c += 1) {
       const idx = r * columns + c;
       if (idx >= evidence.length) break;
-      if (cursorY + FIXED_ENTRY_H >= listY && cursorY <= listY + listH) {
+      if (cursorY + FIXED_ENTRY_H >= listBodyY && cursorY <= listBodyY + listBodyH) {
         drawEvidenceEntry(
           ctx,
           colX(c),
@@ -257,17 +383,17 @@ function drawVerdictScene(ctx) {
 
   if (listMaxScroll > 0 && totalH > 0) {
     const trackX = listX + listW - 5;
-    const trackY = listY + 2;
-    const trackH = listH - 4;
+    const trackY = listBodyY + 2;
+    const trackH = listBodyH - 4;
     drawRect(ctx, trackX, trackY, 3, trackH, COLORS.amberDim);
-    const thumbH = Math.max(12, (trackH * listH) / totalH);
+    const thumbH = Math.max(12, (trackH * listBodyH) / totalH);
     const thumbRatio = listMaxScroll === 0 ? 0 : listScrollOffset / listMaxScroll;
     const thumbY = trackY + (trackH - thumbH) * thumbRatio;
     drawRect(ctx, trackX, thumbY, 3, thumbH, COLORS.amberBright);
   }
 
   if (evidence.length === 0) {
-    drawText(ctx, t('VERDICT_NO_RECORD'), DESIGN_W / 2, listY + listH / 2, {
+    drawText(ctx, t('VERDICT_NO_RECORD'), listX + listW / 2, listBodyY + listBodyH / 2, {
       align: 'center',
       size: 11,
       color: COLORS.creamDim,
@@ -344,6 +470,12 @@ export function registerVerdictScene(_canvas, ctx) {
       listScrollOffset = 0;
       listMaxScroll = 0;
       listViewportRect = null;
+      dossierScrollOffset = 0;
+      dossierMaxScroll = 0;
+      dossierViewportRect = null;
+      summaryScrollOffset = 0;
+      summaryMaxScroll = 0;
+      summaryViewportRect = null;
       applyAmbientProfile('verdict');
     },
     update(dt) {
@@ -351,8 +483,22 @@ export function registerVerdictScene(_canvas, ctx) {
 
       const mouse = getMousePos();
       const wheel = getPlatformScrollDelta();
-      if (wheel !== 0 && listMaxScroll > 0) {
-        if (!listViewportRect || inRect(mouse, listViewportRect)) {
+      if (wheel !== 0) {
+        if (summaryMaxScroll > 0 && summaryViewportRect && inRect(mouse, summaryViewportRect)) {
+          summaryScrollOffset = Math.max(
+            0,
+            Math.min(summaryMaxScroll, summaryScrollOffset + wheel / 30)
+          );
+        } else if (
+          dossierMaxScroll > 0 &&
+          dossierViewportRect &&
+          inRect(mouse, dossierViewportRect)
+        ) {
+          dossierScrollOffset = Math.max(
+            0,
+            Math.min(dossierMaxScroll, dossierScrollOffset + wheel / 30)
+          );
+        } else if (listMaxScroll > 0 && (!listViewportRect || inRect(mouse, listViewportRect))) {
           listScrollOffset = Math.max(0, Math.min(listMaxScroll, listScrollOffset + wheel / 30));
         }
       }

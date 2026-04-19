@@ -145,7 +145,6 @@ export const TR = {
   TUTORIAL_CHOICES_TITLE: 'SORULAR',
   TUTORIAL_CHOICES_BODY:
     'Tiklayarak veya 1-9 tuslarini kullanarak soru secin. Her soru farkli bir tepki doguracaktir.',
-  TUTORIAL_LANGUAGE_TITLE: 'DIL',
 
   // language / case filtering
   MENU_NO_CASES: 'BU DIL ICIN VAKA BULUNAMADI',

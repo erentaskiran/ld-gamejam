@@ -145,7 +145,6 @@ export const EN = {
   TUTORIAL_CHOICES_TITLE: 'QUESTIONS',
   TUTORIAL_CHOICES_BODY:
     'Click or press 1-9 to pick a question. Each one will provoke a different reaction.',
-  TUTORIAL_LANGUAGE_TITLE: 'LANGUAGE',
 
   // language / case filtering
   MENU_NO_CASES: 'NO CASES AVAILABLE FOR THIS LANGUAGE',
