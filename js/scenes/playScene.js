@@ -17,6 +17,7 @@ import { drawPolygraph } from '../ui/polygraph.js';
 import { drawChoiceModal } from '../ui/choiceModal.js';
 import { drawDialogueModal } from '../ui/dialogueModal.js';
 import { drawLogPanel, drawLogTab } from '../ui/dialogLog.js';
+import { drawDossierPanel, drawDossierTab } from '../ui/dossierPanel.js';
 import { DESIGN_H, DESIGN_W } from '../ui/theme.js';
 
 const LAYOUT = {
@@ -26,6 +27,8 @@ const LAYOUT = {
   modal: { x: 82, y: 154, w: 434, h: 132 },
   logTab: { x: DESIGN_W - 14, y: 94, w: 12, h: 84 },
   logPanel: { x: DESIGN_W - 196, y: 64, w: 192, h: 170 },
+  dossierTab: { x: 2, y: 94, w: 12, h: 84 },
+  dossierPanel: { x: 4, y: 64, w: 192, h: 220 },
   polygraph: { x: 0, y: 290, w: 600, h: 110 },
 };
 
@@ -45,6 +48,10 @@ let logExpanded = false;
 let logAnim = 0;
 let logScrollOffset = 0;
 let logMaxScroll = 0;
+let dossierExpanded = false;
+let dossierAnim = 0;
+let dossierScrollOffset = 0;
+let dossierMaxScroll = 0;
 let answerScrollOffset = 0;
 let answerMaxScroll = 0;
 let choiceScrollOffset = 0;
@@ -156,7 +163,7 @@ function drawPlayScene(ctx) {
       w: LAYOUT.modal.w,
       h: LAYOUT.modal.h,
       choices: node.choices,
-      mouse: logExpanded ? null : mouse,
+      mouse: logExpanded || dossierExpanded ? null : mouse,
       animProgress: choicesAnim,
       scrollOffset: choiceScrollOffset,
     });
@@ -186,6 +193,29 @@ function drawPlayScene(ctx) {
   const tabHovered = inRect(mouse, tabRect);
   drawLogTab(ctx, tabX, LAYOUT.logTab.y, LAYOUT.logTab.w, LAYOUT.logTab.h, ease > 0.4, tabHovered);
 
+  const dossEase = smoothstep(clamp(dossierAnim, 0, 1));
+  const dossTabX = lerp(
+    LAYOUT.dossierTab.x,
+    LAYOUT.dossierPanel.x + LAYOUT.dossierPanel.w + 2,
+    dossEase
+  );
+  const dossTabRect = {
+    x: dossTabX,
+    y: LAYOUT.dossierTab.y,
+    w: LAYOUT.dossierTab.w,
+    h: LAYOUT.dossierTab.h,
+  };
+  const dossTabHovered = inRect(mouse, dossTabRect);
+  drawDossierTab(
+    ctx,
+    dossTabX,
+    LAYOUT.dossierTab.y,
+    LAYOUT.dossierTab.w,
+    LAYOUT.dossierTab.h,
+    dossEase > 0.4,
+    dossTabHovered
+  );
+
   if (ease > 0.01) {
     const panelRect = {
       x: lerp(DESIGN_W, LAYOUT.logPanel.x, ease),
@@ -211,6 +241,31 @@ function drawPlayScene(ctx) {
     }
   }
 
+  if (dossEase > 0.01) {
+    const panelRect = {
+      x: lerp(-LAYOUT.dossierPanel.w, LAYOUT.dossierPanel.x, dossEase),
+      y: LAYOUT.dossierPanel.y,
+      w: LAYOUT.dossierPanel.w,
+      h: LAYOUT.dossierPanel.h,
+    };
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, dossEase * 1.25);
+    const result = drawDossierPanel(
+      ctx,
+      panelRect.x,
+      panelRect.y,
+      panelRect.w,
+      panelRect.h,
+      state.gameData?.dossier,
+      state.gameData?.suspect,
+      dossierScrollOffset
+    );
+    ctx.restore();
+    if (dossEase > 0.95) {
+      dossierMaxScroll = result.maxScroll;
+      dossierScrollOffset = result.clampedScroll;
+    }
+  }
 }
 
 function narrationTotalLen() {
@@ -281,6 +336,54 @@ function updateLogHover(dt) {
   }
 }
 
+function updateDossierHover(dt) {
+  const mouse = getMousePos();
+  const ease = smoothstep(clamp(dossierAnim, 0, 1));
+  const tabX = lerp(
+    LAYOUT.dossierTab.x,
+    LAYOUT.dossierPanel.x + LAYOUT.dossierPanel.w + 2,
+    ease
+  );
+  const liveTabRect = {
+    x: tabX,
+    y: LAYOUT.dossierTab.y,
+    w: LAYOUT.dossierTab.w,
+    h: LAYOUT.dossierTab.h,
+  };
+  const panelRect = {
+    x: LAYOUT.dossierPanel.x,
+    y: LAYOUT.dossierPanel.y,
+    w: LAYOUT.dossierPanel.w,
+    h: LAYOUT.dossierPanel.h,
+  };
+
+  if (wasMousePressed(0)) {
+    if (inRect(mouse, liveTabRect)) {
+      dossierExpanded = !dossierExpanded;
+      if (!dossierExpanded) {
+        dossierScrollOffset = 0;
+      }
+    } else if (dossierExpanded && !inRect(mouse, panelRect)) {
+      dossierExpanded = false;
+      dossierScrollOffset = 0;
+    }
+  }
+
+  const target = dossierExpanded ? 1 : 0;
+  const diff = target - dossierAnim;
+  dossierAnim += diff * Math.min(1, dt * LOG_ANIM_SPEED);
+  if (Math.abs(diff) < 0.005) {
+    dossierAnim = target;
+  }
+
+  if (dossierExpanded && inRect(mouse, panelRect)) {
+    const wheel = getWheelDelta();
+    if (wheel !== 0) {
+      dossierScrollOffset = clamp(dossierScrollOffset - wheel / 30, 0, dossierMaxScroll);
+    }
+  }
+}
+
 function tickFearAnimation(dt) {
   const diff = state.fearBar - state.fearBarDisplay;
   state.fearBarDisplay += diff * Math.min(1, dt * FEAR_SMOOTH);
@@ -330,6 +433,10 @@ export function registerPlayScene(_canvas, ctx) {
       logAnim = 0;
       logScrollOffset = 0;
       logMaxScroll = 0;
+      dossierExpanded = false;
+      dossierAnim = 0;
+      dossierScrollOffset = 0;
+      dossierMaxScroll = 0;
       answerScrollOffset = 0;
       answerMaxScroll = 0;
       choiceScrollOffset = 0;
@@ -387,6 +494,7 @@ export function registerPlayScene(_canvas, ctx) {
       }
 
       updateLogHover(dt);
+      updateDossierHover(dt);
 
       if (wasKeyPressed('escape')) {
         setScene('menu');
@@ -414,7 +522,7 @@ export function registerPlayScene(_canvas, ctx) {
         return;
       }
 
-      if (!state.responseMode && state.currentNode?.choices && !logExpanded) {
+      if (!state.responseMode && state.currentNode?.choices && !logExpanded && !dossierExpanded) {
         const wheel = getWheelDelta();
         if (wheel !== 0) {
           choiceScrollOffset = clamp(choiceScrollOffset + wheel / 30, 0, choiceMaxScroll);
@@ -433,7 +541,7 @@ export function registerPlayScene(_canvas, ctx) {
         }
       }
 
-      if (wasMousePressed(0) && state.choiceRects.length > 0 && !logExpanded) {
+      if (wasMousePressed(0) && state.choiceRects.length > 0 && !logExpanded && !dossierExpanded) {
         const mouse = getMousePos();
         for (const rect of state.choiceRects) {
           if (inRect(mouse, rect)) {
