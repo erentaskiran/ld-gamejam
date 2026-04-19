@@ -18,6 +18,7 @@ import { drawChoiceModal } from '../ui/choiceModal.js';
 import { drawDialogueModal } from '../ui/dialogueModal.js';
 import { drawLogPanel, drawLogTab } from '../ui/dialogLog.js';
 import { drawDossierPanel, drawDossierTab } from '../ui/dossierPanel.js';
+import { drawPauseModal, drawSettingsModal } from '../ui/pauseModal.js';
 import { DESIGN_H, DESIGN_W } from '../ui/theme.js';
 
 const LAYOUT = {
@@ -44,6 +45,10 @@ const CHOICES_ANIM_SPEED = 1.6;
 const POLYGRAPH_SLIDE_SPEED = 3;
 const LANE_FLASH_DECAY = 1.8;
 
+let pauseOpen = false;
+let pauseRects = [];
+let settingsOpen = false;
+let settingsRects = {};
 let logExpanded = false;
 let logAnim = 0;
 let logScrollOffset = 0;
@@ -163,7 +168,7 @@ function drawPlayScene(ctx) {
       w: LAYOUT.modal.w,
       h: LAYOUT.modal.h,
       choices: node.choices,
-      mouse: logExpanded || dossierExpanded ? null : mouse,
+      mouse: logExpanded || dossierExpanded || pauseOpen ? null : mouse,
       animProgress: choicesAnim,
       scrollOffset: choiceScrollOffset,
     });
@@ -266,6 +271,15 @@ function drawPlayScene(ctx) {
     if (dossEase > 0.95) {
       dossierMaxScroll = result.maxScroll;
       dossierScrollOffset = result.clampedScroll;
+    }
+  }
+
+  if (pauseOpen) {
+    if (settingsOpen) {
+      settingsRects = drawSettingsModal(ctx, { mouse });
+    } else {
+      const result = drawPauseModal(ctx, { mouse });
+      pauseRects = result.rects;
     }
   }
 }
@@ -431,6 +445,10 @@ export function registerPlayScene(_canvas, ctx) {
   registerScene('play', {
     enter() {
       resetRun();
+      pauseOpen = false;
+      pauseRects = [];
+      settingsOpen = false;
+      settingsRects = {};
       logExpanded = false;
       logAnim = 0;
       logScrollOffset = 0;
@@ -499,7 +517,53 @@ export function registerPlayScene(_canvas, ctx) {
       updateDossierHover(dt);
 
       if (wasKeyPressed('escape')) {
-        setScene('menu');
+        if (settingsOpen) {
+          settingsOpen = false;
+        } else {
+          pauseOpen = !pauseOpen;
+        }
+        return;
+      }
+
+      if (pauseOpen) {
+        if (settingsOpen) {
+          if (wasKeyPressed('arrowleft') || wasKeyPressed('a')) {
+            settingsRects.cycleLanguage?.(-1);
+            return;
+          }
+          if (wasKeyPressed('arrowright') || wasKeyPressed('d')) {
+            settingsRects.cycleLanguage?.(1);
+            return;
+          }
+          if (wasMousePressed(0)) {
+            const mouse = getMousePos();
+            if (settingsRects.hitTest) {
+              settingsRects.hitTest(mouse);
+            }
+          }
+          return;
+        }
+
+        if (wasMousePressed(0)) {
+          const mouse = getMousePos();
+          for (const rect of pauseRects) {
+            if (
+              mouse.x >= rect.x &&
+              mouse.x <= rect.x + rect.w &&
+              mouse.y >= rect.y &&
+              mouse.y <= rect.y + rect.h
+            ) {
+              if (rect.key === 'continue') {
+                pauseOpen = false;
+              } else if (rect.key === 'settings') {
+                settingsOpen = true;
+              } else if (rect.key === 'quit') {
+                setScene('menu');
+              }
+              return;
+            }
+          }
+        }
         return;
       }
 

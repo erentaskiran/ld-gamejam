@@ -81,4 +81,10 @@ export const TR = {
   DIALOGUE_SKIP_HINT: 'ENTER ile atla',
   CHOICE_MODAL_TITLE: 'SORU SEC',
   LOG_HEADER: '[ LOG ]',
+
+  // pause menu
+  PAUSE_TITLE: '[ DURAKLATILDI ]',
+  PAUSE_CONTINUE: 'DEVAM ET',
+  PAUSE_SETTINGS: 'AYARLAR',
+  PAUSE_QUIT: 'MENUYE DON',
 };

@@ -1,16 +1,16 @@
 import { t } from '../i18n/index.js';
 
 export const CASES = [
-  {
-    id: 'A',
-    file: './dialogs/silikon-vadisi-sizintisi.json',
-    label: 'CASE A - SILIKON VADISI SIZINTISI',
-  },
-  {
-    id: 'B',
-    file: './dialogs/sessiz-commit.json',
-    label: 'CASE B - SESSIZ COMMIT',
-  },
+  // {
+  //   id: 'A',
+  //   file: './dialogs/silikon-vadisi-sizintisi.json',
+  //   label: 'CASE A - SILIKON VADISI SIZINTISI',
+  // },
+  // {
+  //   id: 'B',
+  //   file: './dialogs/sessiz-commit.json',
+  //   label: 'CASE B - SESSIZ COMMIT',
+  // },
   {
     id: 'TR TEST',
     file: './dialogs/soguk--oda.json',
