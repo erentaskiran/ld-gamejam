@@ -218,8 +218,19 @@ function advanceToPendingNode() {
     return;
   }
   const result = setNode(state.pendingNodeId);
-  if (!result.ok || result.isEnd) {
+  if (!result.ok) {
     setScene('result');
+    return;
+  }
+  if (result.isEnd) {
+    state.interrogationOutcome = {
+      nodeId: state.currentNodeId,
+      theme: state.currentNode?.theme || '',
+      description: state.currentNode?.description || '',
+      resultText: state.currentNode?.result_text || '',
+      wasSuccess: state.currentNodeId.includes('success'),
+    };
+    setScene('verdict');
   }
 }
 

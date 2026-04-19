@@ -8,6 +8,7 @@ import { setSelectedCase, state } from './game/state.js';
 import { registerMenuScene } from './scenes/menuScene.js';
 import { registerPlayScene } from './scenes/playScene.js';
 import { registerResultScene } from './scenes/resultScene.js';
+import { registerVerdictScene } from './scenes/verdictScene.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from './ui/theme.js';
 
 async function loadCustomFonts() {
@@ -53,6 +54,7 @@ window.addEventListener('resize', resizeCanvas);
 
 registerMenuScene(canvas, ctx);
 registerPlayScene(canvas, ctx);
+registerVerdictScene(canvas, ctx);
 registerResultScene(canvas, ctx);
 
 function update(dt) {

@@ -26,6 +26,10 @@ export const state = {
   menuCaseRects: [],
   caseIndex: 0,
   caseDataById: {},
+  evidence: [],
+  verdict: '',
+  trueVerdict: '',
+  interrogationOutcome: null,
   metrics: {
     heartRate: 'BASELINE',
     eeg: 'BASELINE',
@@ -103,6 +107,10 @@ export function resetRun() {
   state.error = '';
   state.questionProgress = 0;
   state.answerProgress = 0;
+  state.evidence = [];
+  state.verdict = '';
+  state.trueVerdict = state.gameData.true_verdict || '';
+  state.interrogationOutcome = null;
   resetBiometricsOnState(state, {
     heartRate: config.heart_rate_baseline,
     eeg: config.eeg_baseline,
@@ -110,6 +118,26 @@ export function resetRun() {
   });
   pushLog(state.gameData.context);
   return setNode(state.gameData.start_node);
+}
+
+const STRESS_TIER = {
+  heartRate: {
+    MAX_SPIKE: 3, SPIKE: 2, MAX: 3, ERRATIC: 2, INCREASE: 1, RISE: 1,
+  },
+  gsr: {
+    MAX: 3, SURGE: 3, SPIKE: 2, INCREASE: 1,
+  },
+  eeg: {
+    FLATLINE: 3, CHAOTIC: 3, ERRATIC: 2, INCREASE: 1,
+  },
+};
+
+function classifyDeception(mechanics) {
+  const hr = STRESS_TIER.heartRate[mechanics.heart_rate] || 0;
+  const gsr = STRESS_TIER.gsr[mechanics.gsr] || 0;
+  const eeg = STRESS_TIER.eeg[mechanics.eeg] || 0;
+  const score = hr + gsr + eeg;
+  return { score, hr, gsr, eeg };
 }
 
 export function pickChoice(index) {
@@ -129,6 +157,19 @@ export function pickChoice(index) {
   pushLog(`SEN: ${choice.question}`);
   pushLog(`${getSuspectLabel()}: ${choice.answer}`);
   state.note = '';
+
+  const deception = classifyDeception(mechanics);
+  state.evidence.push({
+    nodeId: state.currentNodeId,
+    theme: state.currentNode.theme,
+    choiceType: choice.type,
+    question: choice.question,
+    heartRate: mechanics.heart_rate || 'BASELINE',
+    eeg: mechanics.eeg || 'BASELINE',
+    gsr: mechanics.gsr || 'BASELINE',
+    fearDelta: mechanics.korku_bari_delta || 0,
+    score: deception.score,
+  });
 
   state.metrics.heartRate = mechanics.heart_rate || state.metrics.heartRate;
   state.metrics.eeg = mechanics.eeg || state.metrics.eeg;

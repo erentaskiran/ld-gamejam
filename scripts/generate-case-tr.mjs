@@ -31,7 +31,8 @@ CIKTI:
     "profile": string,
     "motive": string,
     "secret": string,
-    "credibility": number
+    "credibility": number,
+    "true_verdict": "GUILTY" | "NOT_GUILTY"
   }
 }
 
@@ -46,7 +47,12 @@ KURALLAR:
   - bir insani detay
 - motive potansiyel bir dava veya haksiz fiille baglantili olmali
 - secret asikar OLMAMALI ama anlamli olmali
-- credibility 1-10 arasinda, gerekcesi ustu kapali ima edilmeli`;
+- credibility 1-10 arasinda, gerekcesi ustu kapali ima edilmeli
+- true_verdict oyuncunun poligraf kanitlarindan cikarmasi gereken GERCEK:
+  - "GUILTY" = supheli gercekten sorumlu (secret asil fiili iceriyor)
+  - "NOT_GUILTY" = secret karanlik bile olsa supheli bu suctan masum
+  - Davayi en ilginc kilan verdict'i sec; zamanla her ikisini de kullan
+  - Enum degerleri ingilizce kalmali`;
 
 const STEP_2_CASE = `Hukuki bir dava baglami uretiyorsun.
 
@@ -126,13 +132,39 @@ CIKTI SEMASI:
 
 KURALLAR:
 
+TEMEL TASARIM ILKESI (KRITIK):
+- Sorgu biter; DAVA bitmez. Oyuncu bir son dugume vardiktan sonra "hukum"
+  ekranina gecer ve sorgu boyunca biriken poligraf verilerini okuyarak
+  GUILTY / NOT_GUILTY kararini kendi verir. Son dugumler sorgu SONUCLARIDIR,
+  oyunun sonu degildir.
+- Poligraf sinyalleri (heart_rate, gsr, eeg) oyuncunun tek somut kanitidir.
+  Sinyalleri suspect.true_verdict ile TUTARLI sekilde uret — oyuncu
+  biyometriden sucu ya da masumiyeti okuyabilmelidir.
+
+SINYAL-GERCEK UYUMU:
+- Eger suspect.true_verdict == "GUILTY":
+  - Sikistirici/suclayici sorularda supheli gercek aldatma tepkileri
+    gosterir (heart_rate SPIKE/MAX_SPIKE, gsr SURGE/MAX,
+    eeg CHAOTIC/ERRATIC) — sozel cevap sakin kalsa bile
+  - Yumusak/empatik cerceveleme taktigi ile sakin yanitlar mumkun
+- Eger suspect.true_verdict == "NOT_GUILTY":
+  - Supheli gorunur biciminde gergin olabilir (masum insan da sorguda
+    sicrayabilir) ama keskin aldatma sinyalleri seyrek ve dagilmis
+    olmali — cogunlukla RISE/INCREASE seviyesinde, MAX_SPIKE/SURGE degil
+  - Sert suclama sorulari savunmaci sicramalar yaratabilir ama surekli
+    CHAOTIC/FLATLINE EEG veya MAX GSR KALITIMI OLMAMALI
+- NOT_GUILTY supheli icin asla sahte itiraf yazma; MAX_SPIKE + MAX GSR +
+  CHAOTIC/FLATLINE EEG kombinasyonunu sadece GUILTY gerceklere sakla
+
 DUGUM SAYISI:
 - Toplam 5-7 dugum
 - Icermesi gerekenler:
   - node_01_intro (giris dugumu)
   - 3-4 sorusturma dugumu
-  - tam olarak 1 basari son dugumu (id "success" icermeli, orn. node_success_*)
-  - 1+ basarisizlik son dugumu (id "fail" icermeli, orn. node_fail_*)
+  - 1 "temiz sonuc" son dugumu (id "success" icermeli, orn. node_success_*)
+    — supheli isbirligi / itiraf / yikilma; guclu sinyal deseni
+  - 1+ "asinmis sonuc" son dugumu (id "fail" icermeli, orn. node_fail_*)
+    — supheli avukata sigindi / kilitlendi / savdi; belirsiz sinyal deseni
 
 TUM DUGUMLER (son dugumler dahil) icin alanlar:
 - theme: 2-5 kelimelik kisa sahne etiketi (orn. "Gece Yarisi Commit'i")
@@ -146,7 +178,10 @@ SON OLMAYAN DUGUMLER:
 
 SON DUGUMLER:
 - is_end_state: true
-- result_text: oyuncuya gosterilen kapanis metni
+- result_text: sorgu sonucunu ozetleyen metin (supheli su an hangi
+  durumda — itiraf etti, kilitlendi, kismen kabul etti, savusturdu).
+  SUCU veya MASUMIYETI ilan ETME; oyuncu hukmu poligraf kayitlarindan
+  verecek
 - choices YOK
 
 CHOICE.type:
@@ -156,7 +191,8 @@ CHOICE.type:
   TRAP, PRESSURE, EVIDENCE — veya sahneye ozel yeni bir etiket
 - Not: EMPATHETIC degil, EMPATHIC kullan (mevcut veriyle tutarli)
 
-MECHANICS (suphelinin tepkisine uyan degeri sec):
+MECHANICS (suphelinin tepkisine VE true_verdict'e uyan degeri sec — yukaridaki
+SINYAL-GERCEK UYUMU bolumune bakin):
 - heart_rate: BASELINE | STABLE | RISE | INCREASE | SPIKE | MAX_SPIKE | DROP | ERRATIC
 - breathing: BASELINE | CALM | DEEP | SHALLOW | HOLDING_BREATH | UNEVEN | HYPERVENTILATION | CRYING
 - gsr: BASELINE | STABLE | INCREASE | SPIKE | SURGE | MAX | DECREASE
@@ -174,9 +210,11 @@ MECHANICS (suphelinin tepkisine uyan degeri sec):
 
 OYUN TASARIMI:
 - En az bir celiski kesfi yolu (adli / kanit tabanli)
-- En az bir yaniltici yol (dogru gorunur ama fail tetikler)
-- Iyi muhakeme -> basari dugumu
-- Kotu muhakeme -> basarisizlik dugumu
+- En az bir yaniltici yol — sorguyu zayiflatir, asinmis bir son dugume goturur
+- Guclu sorgulama -> "success" son dugumu (daha temiz kanit deseni)
+- Zayif sorgulama -> "fail" son dugumu (belirsiz kanit deseni)
+- Unutma: hicbir sonuc davayi otomatik bitirmez; sadece oyuncunun hukum
+  ekranina ne kadar kanit goturecegini belirler
 - Cevaplar gercekci hissettirmeli (savunmaci, kacamak, baski altinda, teknik)
 
 DOGRULAMA:
@@ -218,6 +256,8 @@ CIKTI:
       "gsr_baseline": number
     },
     "context": string,
+    "true_verdict": "GUILTY" | "NOT_GUILTY",
+    "verdict_truth_text": string,
     "start_node": string,
     "nodes": <dugum girdisinden OLDUGU GIBI kopyala; her dugumde theme,
               description, is_end_state bulunmali; ayrica choices[] veya
@@ -228,6 +268,14 @@ CIKTI:
 KURALLAR:
 - suspect.name, role, profile alanlarini girdiden kopyala
 - title ve context degerlerini dava girdisinden al
+- suspect.true_verdict degerini game_data.true_verdict icine OLDUGU GIBI yaz
+  (enum degeri ingilizce kalir: "GUILTY" veya "NOT_GUILTY")
+- verdict_truth_text uret: 2-3 cumle Turkce aciklama, suphelinin gercekte
+  ne yaptigini (veya yapmadigini) ac. Hukum ekranindan sonra sonuc ekraninda
+  gosterilir. suspect.secret, suspect.motive ve true_verdict ile tutarli olmali:
+  - GUILTY ise: suphelinin gercek fiilini acik bir dille anlat
+  - NOT_GUILTY ise: gercek sorumluyu ya da nedeni isaret et; suphelinin
+    secret'inin karanlik ama bu davada sucsuz oldugunu belirt
 - start_node ve nodes degerlerini dugum girdisinden AYNEN aktar -
   theme, description, is_end_state, choices, mechanics, next_node,
   result_text alanlarini yeniden sekillendirme veya silme

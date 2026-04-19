@@ -6,65 +6,111 @@ import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
 import { drawSceneBackground } from '../ui/background.js';
 import { drawPanel } from '../ui/panel.js';
 
+function verdictLabel(verdict) {
+  if (verdict === 'GUILTY') return 'SUCLU';
+  if (verdict === 'NOT_GUILTY') return 'SUCSUZ';
+  return '-';
+}
+
 function drawResultScene(ctx) {
   drawSceneBackground(ctx);
 
-  const endNode = state.currentNode;
-  const success = state.currentNodeId.includes('success');
-  const border = success ? COLORS.success : COLORS.fail;
+  const correct = state.verdict && state.trueVerdict && state.verdict === state.trueVerdict;
+  const border = correct ? COLORS.success : COLORS.fail;
 
   const panelX = 40;
-  const panelY = 60;
+  const panelY = 40;
   const panelW = DESIGN_W - 80;
-  const panelH = DESIGN_H - 120;
+  const panelH = DESIGN_H - 80;
 
   drawPanel(ctx, panelX, panelY, panelW, panelH, { border });
 
   drawText(
     ctx,
-    `[ ${success ? 'SONUC: BASARI' : 'SONUC: BASARISIZ'} ]`,
+    `[ ${correct ? 'DOGRU HUKUM' : 'HATALI HUKUM'} ]`,
     DESIGN_W / 2,
     panelY + 16,
     {
       align: 'center',
       size: 12,
-      color: success ? COLORS.success : COLORS.fail,
+      color: correct ? COLORS.success : COLORS.fail,
       font: UI_FONT,
       baseline: 'middle',
     }
   );
 
-  if (endNode) {
-    drawText(ctx, endNode.theme.toUpperCase(), DESIGN_W / 2, panelY + 44, {
+  drawText(
+    ctx,
+    `VERDIGINIZ HUKUM: ${verdictLabel(state.verdict)}`,
+    DESIGN_W / 2,
+    panelY + 36,
+    {
       align: 'center',
-      size: 22,
+      size: 11,
+      color: COLORS.cream,
+      font: UI_FONT,
+      baseline: 'middle',
+    }
+  );
+
+  drawText(
+    ctx,
+    `GERCEK: ${verdictLabel(state.trueVerdict)}`,
+    DESIGN_W / 2,
+    panelY + 52,
+    {
+      align: 'center',
+      size: 11,
+      color: correct ? COLORS.success : COLORS.fail,
+      font: UI_FONT,
+      baseline: 'middle',
+    }
+  );
+
+  const truthText = state.gameData?.verdict_truth_text || '';
+  if (truthText) {
+    drawText(ctx, 'DAVANIN GERCEK OYKUSU', DESIGN_W / 2, panelY + 76, {
+      align: 'center',
+      size: 11,
       color: COLORS.amberBright,
       font: UI_FONT,
       baseline: 'middle',
     });
-    drawWrappedText(ctx, endNode.description, DESIGN_W / 2, panelY + 72, panelW - 40, {
-      size: 12,
+    drawWrappedText(ctx, truthText, panelX + 20, panelY + 92, panelW - 40, {
+      size: 11,
       color: COLORS.cream,
       font: UI_FONT,
       lineHeight: 12,
-      maxLines: 4,
-      align: 'center',
-    });
-    drawWrappedText(ctx, endNode.result_text, DESIGN_W / 2, panelY + 134, panelW - 40, {
-      size: 12,
-      color: COLORS.creamDim,
-      font: UI_FONT,
-      lineHeight: 12,
-      maxLines: 4,
-      align: 'center',
+      maxLines: 6,
+      baseline: 'top',
     });
   }
 
-  drawText(ctx, 'R: Yeniden Oyna  |  ESC: Menu', DESIGN_W / 2, DESIGN_H - 22, {
+  const outcome = state.interrogationOutcome;
+  if (outcome) {
+    drawText(ctx, 'SORGU SONUCU', DESIGN_W / 2, panelY + 180, {
+      align: 'center',
+      size: 11,
+      color: COLORS.amberBright,
+      font: UI_FONT,
+      baseline: 'middle',
+    });
+    drawWrappedText(ctx, outcome.resultText, panelX + 20, panelY + 196, panelW - 40, {
+      size: 11,
+      color: COLORS.creamDim,
+      font: UI_FONT,
+      lineHeight: 12,
+      maxLines: 6,
+      baseline: 'top',
+    });
+  }
+
+  drawText(ctx, 'R: Yeniden Oyna  |  ESC: Menu', DESIGN_W / 2, panelY + panelH - 14, {
     align: 'center',
-    size: 12,
+    size: 11,
     color: COLORS.cream,
     font: UI_FONT,
+    baseline: 'middle',
   });
 }
 

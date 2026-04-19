@@ -28,7 +28,8 @@ OUTPUT:
     "profile": string,
     "motive": string,
     "secret": string,
-    "credibility": number
+    "credibility": number,
+    "true_verdict": "GUILTY" | "NOT_GUILTY"
   }
 }
 
@@ -43,7 +44,11 @@ RULES:
   - one humanizing detail
 - motive must connect to a potential lawsuit or wrongdoing
 - secret must NOT be obvious but meaningful
-- credibility must be 1-10 with subtle reasoning implied`;
+- credibility must be 1-10 with subtle reasoning implied
+- true_verdict is the ground truth the player must deduce from polygraph evidence:
+  - "GUILTY" means the suspect actually is responsible (secret contains the real act)
+  - "NOT_GUILTY" means the suspect is innocent of the charge even if the secret is shady
+  - Pick the verdict that makes the case most interesting; mix both over time`;
 
 const STEP_2_CASE = `You are generating a legal case context.
 
@@ -118,13 +123,40 @@ OUTPUT SHAPE:
 
 RULES:
 
+CORE DESIGN PRINCIPLE (CRITICAL):
+- The interrogation ends; the CASE does NOT. After reaching an end node the
+  player is taken to a verdict screen and must call GUILTY / NOT_GUILTY based
+  on polygraph readings accumulated throughout the session. End nodes are
+  interrogation OUTCOMES, not game endings.
+- The polygraph signals (heart_rate, gsr, eeg) are the player's only hard
+  evidence of deception. Align signals honestly with the suspect's
+  true_verdict: the player must be able to read guilt or innocence from the
+  biometrics.
+
+SIGNAL TRUTH ALIGNMENT:
+- If suspect.true_verdict == "GUILTY":
+  - On accusing/probing questions, suspect shows real deception tells
+    (heart_rate SPIKE/MAX_SPIKE, gsr SURGE/MAX, eeg CHAOTIC/ERRATIC) even when
+    the verbal answer stays composed.
+  - Calm answers are available on empathy or soft-framing tactics.
+- If suspect.true_verdict == "NOT_GUILTY":
+  - Suspect may be visibly stressed (innocent people under interrogation
+    spike too) but sharp deception signals should be sparse and diffuse —
+    mostly RISE/INCREASE levels, not MAX_SPIKE/SURGE.
+  - Hard accusation questions may produce defensive spikes but NO sustained
+    CHAOTIC/FLATLINE EEG patterns or MAX GSR surges.
+- Never fake a confession for a NOT_GUILTY suspect; reserve MAX_SPIKE + MAX
+  GSR + CHAOTIC/FLATLINE EEG clusters for GUILTY truths only.
+
 NODE COUNT:
 - 5 to 7 total nodes
 - Must include:
   - node_01_intro (intro node)
   - 3-4 investigation nodes
-  - exactly 1 success end node (id contains "success", e.g. node_success_*)
-  - 1+ fail end nodes (id contains "fail", e.g. node_fail_*)
+  - 1 "clean outcome" end node (id contains "success", e.g. node_success_*)
+    — suspect cooperates / confesses / breaks; strong signal pattern
+  - 1+ "degraded outcome" end nodes (id contains "fail", e.g. node_fail_*)
+    — suspect lawyers up / locks down / deflects; ambiguous signal pattern
 
 NODE FIELDS (ALL nodes, including end nodes):
 - theme: short scene label, 2-5 words, Title Case or descriptive phrase
@@ -138,7 +170,10 @@ NON-END NODES:
 
 END NODES:
 - is_end_state: true
-- result_text: in-game payoff text shown to the player
+- result_text: interrogation-outcome summary (what state the suspect is in
+  now — confessed, locked down, partial admission, evasive). Must NOT
+  pre-declare guilt or innocence; the player still has to judge from the
+  polygraph log.
 - NO choices
 
 CHOICE.type:
@@ -149,7 +184,8 @@ CHOICE.type:
   equally specific to the scene
 - Note: use EMPATHIC (not EMPATHETIC) to match existing data
 
-MECHANICS (choose the value that fits the suspect's reaction):
+MECHANICS (choose the value that fits the suspect's reaction AND the
+true_verdict — see SIGNAL TRUTH ALIGNMENT above):
 - heart_rate: BASELINE | STABLE | RISE | INCREASE | SPIKE | MAX_SPIKE | DROP | ERRATIC
 - breathing: BASELINE | CALM | DEEP | SHALLOW | HOLDING_BREATH | UNEVEN | HYPERVENTILATION | CRYING
 - gsr: BASELINE | STABLE | INCREASE | SPIKE | SURGE | MAX | DECREASE
@@ -167,9 +203,12 @@ MECHANICS (choose the value that fits the suspect's reaction):
 
 GAMEPLAY DESIGN:
 - At least one contradiction-discovery path (forensic / evidence-based)
-- At least one misleading path (looks right but triggers fail)
-- Good reasoning -> success node
-- Poor reasoning -> fail node
+- At least one misleading path that weakens the interrogation (pushes to a
+  degraded end node where the suspect locks down)
+- Strong questioning -> "success" end node (cleaner evidence pattern)
+- Weak questioning -> "fail" end node (ambiguous evidence pattern)
+- Remember: neither outcome decides the case; they just determine how much
+  evidence the player carries into the verdict screen
 - Answers must feel realistic (defensive, evasive, pressured, technical)
 
 VALIDATION:
@@ -210,6 +249,8 @@ OUTPUT:
       "gsr_baseline": number
     },
     "context": string,
+    "true_verdict": "GUILTY" | "NOT_GUILTY",
+    "verdict_truth_text": string,
     "start_node": string,
     "nodes": <copy from nodes input exactly; every node has theme,
              description, is_end_state, plus choices[] or result_text>
@@ -219,6 +260,14 @@ OUTPUT:
 RULES:
 - Copy suspect.name, role, profile from input
 - Use title and context from case input
+- Copy suspect.true_verdict VERBATIM into game_data.true_verdict
+- Generate verdict_truth_text: 2-3 sentence reveal of what the suspect
+  actually did (or didn't do). Shown on the result screen after the player
+  commits to a verdict. Must be consistent with suspect.secret,
+  suspect.motive, and true_verdict:
+  - If GUILTY: describe the suspect's real act of wrongdoing plainly
+  - If NOT_GUILTY: name the real party or cause, and clarify that the
+    suspect's secret was shady but not the crime charged
 - Use start_node and nodes from nodes input VERBATIM — do not reshape or drop
   fields. Preserve theme, description, is_end_state, choices, mechanics,
   next_node, result_text exactly as given.

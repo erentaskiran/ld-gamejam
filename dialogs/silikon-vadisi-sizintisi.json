@@ -15,6 +15,8 @@
             "gsr_baseline": 8.4
         },
         "context": "Şirketin geliştirdiği yeni nesil bir yapay zeka çekirdeği (Core-X) yerel sunucudan kopyalanıp harici bir bellekle dışarı çıkarıldı. Ozan, olay gecesi mesaiye kalan 3 kişiden biriydi. Kameraların kör noktası olan yangın merdiveninde 10 dakika geçirdiği tespit edildi.",
+        "true_verdict": "GUILTY",
+        "verdict_truth_text": "Ozan, Core-X'i yangın merdivenindeki kör noktada harici belleğe kopyaladı. Sızıntının sorumlusu odur.",
         "start_node": "node_01_the_blindspot",
         "nodes": {
             "node_01_the_blindspot": {

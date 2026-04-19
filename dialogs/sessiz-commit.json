@@ -15,6 +15,8 @@
       "gsr_baseline": 7.2
     },
     "context": "Noxtera Biotech'in Klinik AI platformunda gece yarisi imzasiz bir model guncellemesi yapildi. Ertesi sabah yogun bakimda risk puani algoritmasi 14 hastayi dusuk oncelikledi. Elif, o gece binaya kart basan son kisiydi. Sunucu odasindan cikmadan once USB engel loglarinda 7 dakikalik bir kor nokta olustu.",
+    "true_verdict": "GUILTY",
+    "verdict_truth_text": "Elif o gece sunucu odasinda tehdit altinda imzasiz commit'i yukledi. Yari dogrularla kapansa da sorumlusu kendisidir.",
     "start_node": "node_01_midnight_push",
     "nodes": {
       "node_01_midnight_push": {
