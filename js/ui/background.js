@@ -1,4 +1,5 @@
 import { getImage } from '../assets.js';
+import { playLightBuzz } from '../audio.js';
 import { drawRect } from '../draw.js';
 import { COLORS, DESIGN_H, DESIGN_W } from './theme.js';
 
@@ -35,8 +36,12 @@ function buildBurst() {
 function advancePhase(now) {
   if (flicker.burstQueue.length === 0) return;
   const next = flicker.burstQueue.shift();
+  const dimming = next.intensity < flicker.targetIntensity - 0.1 && next.intensity < 0.85;
   flicker.targetIntensity = next.intensity;
   flicker.phaseEnd = now + next.duration;
+  if (dimming && next.duration > 0) {
+    playLightBuzz(next.duration + 40, 1 - next.intensity);
+  }
 }
 
 function updateFlicker() {
