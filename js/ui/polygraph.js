@@ -245,7 +245,7 @@ function drawLane(
   }
 ) {
   const labelW = 40;
-  const valueW = 96;
+  const valueW = 62;
 
   const waveX = x + labelW;
   const waveW = w - labelW - valueW;
@@ -287,10 +287,68 @@ function drawLane(
     baseline: 'middle',
   });
 
-  drawText(ctx, `${readout(type, profile, biometricReadout)}`, x + w - 4, y + h / 2, {
+  drawText(ctx, `${readout(type, profile, biometricReadout)}`, waveX + waveW + 6, y + h / 2, {
     size: 11,
     color: COLORS.cream,
-    align: 'right',
+    align: 'left',
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+}
+
+function drawFearColumn(ctx, x, y, w, h, fearBar, maxFearBar, fearFlash) {
+  const labelY = y + 10;
+  const valueY = y + h - 8;
+  const barTop = labelY + 10;
+  const barBottom = valueY - 10;
+  const barH = Math.max(0, barBottom - barTop);
+  const barW = 8;
+  const barX = x + Math.floor((w - barW) / 2);
+
+  drawText(ctx, t('POLY_FEAR'), x + w / 2, labelY, {
+    size: 11,
+    color: COLORS.cream,
+    align: 'center',
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+
+  drawRect(ctx, barX, barTop, barW, barH, COLORS.fearTrack);
+
+  const ratio = clamp(fearBar / maxFearBar, 0, 1);
+  const fillH = Math.round(barH * ratio);
+  if (fillH > 0) {
+    drawRect(ctx, barX, barBottom - fillH, barW, fillH, COLORS.fear);
+  }
+
+  if (fearFlash > 0.001) {
+    drawRect(
+      ctx,
+      barX,
+      barTop,
+      barW,
+      barH,
+      `rgba(255, 220, 150, ${Math.min(0.75, fearFlash * 0.75)})`
+    );
+  }
+
+  for (let i = 1; i < 4; i += 1) {
+    const ty = barTop + Math.round((barH * i) / 4);
+    drawRect(ctx, barX - 2, ty, 2, 1, COLORS.amberDim);
+    drawRect(ctx, barX + barW, ty, 2, 1, COLORS.amberDim);
+  }
+
+  drawText(ctx, `${Math.round(fearBar)}`, x + w / 2, valueY - 6, {
+    size: 11,
+    color: COLORS.cream,
+    align: 'center',
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+  drawText(ctx, `/${maxFearBar}`, x + w / 2, valueY + 4, {
+    size: 9,
+    color: COLORS.amberDim,
+    align: 'center',
     font: UI_FONT,
     baseline: 'middle',
   });
@@ -328,55 +386,24 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     baseline: 'middle',
   });
 
-  const fearValText = `${Math.round(fearBar)}/${maxFearBar}`;
-  const fearValX = x + w - 6;
-  const fearValWidth = 36;
-  const fearBarW = 56;
-  const fearBarX = fearValX - fearValWidth - fearBarW;
-  const fearLabelX = fearBarX - 4;
-  const fearMidY = y + headerH / 2 + 1;
-
-  drawText(ctx, t('POLY_FEAR'), fearLabelX, fearMidY, {
-    size: 12,
-    color: COLORS.cream,
-    align: 'right',
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  drawRect(ctx, fearBarX, y + headerH / 2 - 3, fearBarW, 6, COLORS.fearTrack);
-  const ratio = clamp(fearBar / maxFearBar, 0, 1);
-  drawRect(ctx, fearBarX, y + headerH / 2 - 3, fearBarW * ratio, 6, COLORS.fear);
-  if (fearFlash > 0.001) {
-    drawRect(
-      ctx,
-      fearBarX,
-      y + headerH / 2 - 3,
-      fearBarW,
-      6,
-      `rgba(255, 220, 150, ${Math.min(0.75, fearFlash * 0.75)})`
-    );
-  }
-
-  drawText(ctx, fearValText, fearValX, fearMidY, {
-    size: 12,
-    color: COLORS.cream,
-    align: 'right',
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
   drawRect(ctx, x, y + headerH, w, 1, COLORS.amberDim);
+
+  const fearColW = 52;
+  const lanesX = x;
+  const lanesW = w - fearColW;
+  const fearColX = x + lanesW;
+
+  drawRect(ctx, fearColX, y + headerH, 1, h - headerH, COLORS.amberDim);
 
   const lanesY = y + headerH + 2;
   const lanesH = h - headerH - 4;
   const laneH = Math.floor(lanesH / 3);
   const labelW = 40;
-  const valueW = 96;
-  const waveW = w - labelW - valueW;
+  const valueW = 62;
+  const waveW = lanesW - labelW - valueW;
   const sharedCursor = Math.floor((time * 28) % Math.max(1, waveW));
 
-  drawLane(ctx, x, lanesY, w, laneH, {
+  drawLane(ctx, lanesX, lanesY, lanesW, laneH, {
     label: t('POLY_PULSE'),
     color: COLORS.pulse,
     profile: waves.heartRate,
@@ -392,7 +419,7 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     markers: allMarkers,
   });
 
-  drawLane(ctx, x, lanesY + laneH, w, laneH, {
+  drawLane(ctx, lanesX, lanesY + laneH, lanesW, laneH, {
     label: t('POLY_BREATHING'),
     color: COLORS.breathing,
     profile: waves.breathing,
@@ -408,7 +435,7 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     markers: allMarkers,
   });
 
-  drawLane(ctx, x, lanesY + laneH * 2, w, laneH, {
+  drawLane(ctx, lanesX, lanesY + laneH * 2, lanesW, laneH, {
     label: t('POLY_GSR'),
     color: COLORS.gsr,
     profile: waves.gsr,
@@ -423,4 +450,6 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     drawSweep: true,
     markers: allMarkers,
   });
+
+  drawFearColumn(ctx, fearColX, y + headerH, fearColW, h - headerH, fearBar, maxFearBar, fearFlash);
 }
