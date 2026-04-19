@@ -1,183 +1,200 @@
 {
-    "game_data": {
-        "title": "The Operator - Case: Silikon Vadisi Sızıntısı",
-        "suspect": {
-            "name": "Ozan",
-            "role": "Kıdemli Yazılım Geliştirici",
-            "profile": "Zeki, analitik düşünen ama baskı altında çabuk panikleyen bir profil. Poligraf testleri hakkında internetten araştırma yapmış. Hem hikaye uydurmayı hem de fiziksel manipülasyonu (kendine acı vermeyi) deneyecek."
+  "game_data": {
+    "title": "The Operator - Case: Silikon Vadisi Sızıntısı",
+    "suspect": {
+      "name": "Ozan",
+      "role": "Kıdemli Yazılım Geliştirici",
+      "profile": "Zeki, analitik düşünen ama baskı altında çabuk panikleyen bir profil. Poligraf testleri hakkında internetten araştırma yapmış. Hem hikaye uydurmayı hem de fiziksel manipülasyonu (kendine acı vermeyi) deneyecek."
+    },
+    "system_config": {
+      "initial_fear_bar": 20,
+      "max_fear_bar": 100,
+      "fear_bar_description": "Ozan'ın kırılma noktası. Grafikleri doğru okuyup onu köşeye sıkıştırdıkça artar.",
+      "heart_rate_baseline": 78,
+      "gsr_baseline": 8.4
+    },
+    "context": "Şirketin geliştirdiği yeni nesil bir yapay zeka çekirdeği (Core-X) yerel sunucudan kopyalanıp harici bir bellekle dışarı çıkarıldı. Ozan, olay gecesi mesaiye kalan 3 kişiden biriydi. Kameraların kör noktası olan yangın merdiveninde 10 dakika geçirdiği tespit edildi.",
+    "true_verdict": "GUILTY",
+    "verdict_truth_text": "Ozan, Core-X'i yangın merdivenindeki kör noktada harici belleğe kopyaladı. Sızıntının sorumlusu odur.",
+    "dossier": {
+      "age": 31,
+      "identity_summary": "Dokuz yillik ML deneyimi. Core-X projesinde kidemli kontributor. Son performans degerlendirmesinde 'terfi bekleyen ama geciken' statusu.",
+      "family": [
+        {
+          "relation": "Esi",
+          "name": "Merve",
+          "note": "Bir ay once issiz kaldi; ekonomik baski var."
         },
-        "system_config": {
-            "initial_fear_bar": 20,
-            "max_fear_bar": 100,
-            "fear_bar_description": "Ozan'ın kırılma noktası. Grafikleri doğru okuyup onu köşeye sıkıştırdıkça artar.",
-            "heart_rate_baseline": 78,
-            "eeg_baseline": 29.1,
-            "gsr_baseline": 8.4
-        },
-        "context": "Şirketin geliştirdiği yeni nesil bir yapay zeka çekirdeği (Core-X) yerel sunucudan kopyalanıp harici bir bellekle dışarı çıkarıldı. Ozan, olay gecesi mesaiye kalan 3 kişiden biriydi. Kameraların kör noktası olan yangın merdiveninde 10 dakika geçirdiği tespit edildi.",
-        "true_verdict": "GUILTY",
-        "verdict_truth_text": "Ozan, Core-X'i yangın merdivenindeki kör noktada harici belleğe kopyaladı. Sızıntının sorumlusu odur.",
-        "dossier": {
-          "age": 31,
-          "identity_summary": "Dokuz yillik ML deneyimi. Core-X projesinde kidemli kontributor. Son performans degerlendirmesinde 'terfi bekleyen ama geciken' statusu.",
-          "family": [
-            { "relation": "Esi", "name": "Merve", "note": "Bir ay once issiz kaldi; ekonomik baski var." },
-            { "relation": "Annesi", "name": "Ayse Hanim", "note": "Kronik bobrek yetmezligi, pahali tedavi suruyor." }
-          ],
-          "medical": [
-            { "condition": "Panik atak oykusu", "polygraph_effect": "Masum baski altinda bile GSR ve kalp atisi yuksek baslar; tek basina suc kaniti sayilamaz." }
-          ],
-          "habits": [
-            { "habit": "Gunde 6+ kahve", "polygraph_effect": "GSR ve kalp atisi baseline yuksek; hafif artislar yanli yorumlanabilir." },
-            { "habit": "Poligraf karsi onlem arastirmasi (tarayici gecmisinden)", "polygraph_effect": "Kasitli nefes kontrolu, parmaga bastirma gibi teknikler deneyebilir — biyometri ani dususlerle gelirse suphelenin." }
-          ],
-          "priors": [
-            "Universite doneminde bir defa kod hirsizligi sikayeti aldi; sikayet geri cekildi."
-          ],
-          "pressure_points": [
-            "Esinin issiz kalmasi ve annesinin tedavi masrafi ciddi finansal motivasyon.",
-            "Terfisinin geciktirilmesi ofis icinde konusulan bir mesele; huzursuzluk biliniyor."
-          ]
-        },
-        "start_node": "node_01_the_blindspot",
-        "nodes": {
-            "node_01_the_blindspot": {
-                "theme": "Kör Nokta Sorgusu",
-                "description": "Ozan gergin görünüyor ama göz teması kurmaya çalışıyor. Grafikler şu an stabil.",
-                "is_end_state": false,
-                "choices": [
-                    {
-                        "type": "ANALYTICAL",
-                        "question": "Ozan, saat 23:15'te sunucu odasının bulunduğu koridordan çıkıp yangın merdivenine girdiğini görüyoruz. Orada 10 dakika boyunca ne yaptın?",
-                        "answer": "Kız arkadaşımla telefonda tartışıyorduk. Özel bir konuydu, ofistekilerin duymasını istemedim.",
-                        "mechanics": {
-                            "heart_rate": "SPIKE",
-                            "breathing": "SHALLOW",
-                            "gsr": "INCREASE",
-                            "eeg": "CHAOTIC",
-                            "cctv_visual": "EYE_DART",
-                            "korku_bari_delta": 10,
-                            "gameplay_note": "YALAN TESPİTİ: EEG (Beyin Dalgaları) aşırı dalgalı (CHAOTIC). Şüpheli şu an yeni bir hikaye uyduruyor ve beyni yoğun çalışıyor."
-                        },
-                        "next_node": "node_02_lie_reaction"
-                    }
-                ]
-            },
-            "node_02_lie_reaction": {
-                "theme": "Yalanı Yüzleme",
-                "description": "EKG sıçradı ve en önemlisi EEG (Beyin) dalgaları birbirine girdi. Bir önceki soruda net bir hikaye uydurdu. Buna nasıl tepki vereceksin?",
-                "is_end_state": false,
-                "choices": [
-                    {
-                        "type": "GULLIBLE",
-                        "question": "Anlıyorum, özel hayat. Peki o merdiven boşluğunda şüpheli birini gördün mü?",
-                        "answer": "Hayır, kimse yoktu. Sadece ben vardım.",
-                        "mechanics": {
-                            "heart_rate": "DROP",
-                            "breathing": "DEEP",
-                            "gsr": "DECREASE",
-                            "eeg": "BASELINE",
-                            "cctv_visual": "RELIEVED_EXHALE",
-                            "korku_bari_delta": -20,
-                            "gameplay_note": "YANLIŞ HAMLE: Şüpheli yalanının işe yaradığını gördü. Rahatladı, korku barı düştü."
-                        },
-                        "next_node": "node_fail_gullible"
-                    },
-                    {
-                        "type": "CALL_OUT",
-                        "question": "Beyin dalgaların seninle aynı fikirde değil Ozan. Hikaye uydurmak yorucudur. Telefon kayıtlarını HTS'den çektiğimizde o saatte hiçbir arama yapmadığını göreceğiz, değil mi?",
-                        "answer": "... (Yutkunur) Tamam, arama yapmadım. Sadece hava almak istemiştim. Panik atak geçiriyordum.",
-                        "mechanics": {
-                            "heart_rate": "ERRATIC",
-                            "breathing": "HYPERVENTILATION",
-                            "gsr": "SPIKE",
-                            "eeg": "BASELINE",
-                            "cctv_visual": "LOOK_DOWN",
-                            "korku_bari_delta": 30,
-                            "gameplay_note": "DOĞRU HAMLE: Yalanı yakaladın. Uydurmayı bıraktığı için EEG düzeldi ama yakalandığı için EKG ve GSR (Terleme) fırladı."
-                        },
-                        "next_node": "node_03_the_bag"
-                    }
-                ]
-            },
-            "node_03_the_bag": {
-                "theme": "Kritik Kanıt",
-                "description": "Ozan'ın yalanı çöktü. Korku barı yükseliyor. Şimdi asıl darbeyi vurma zamanı.",
-                "is_end_state": false,
-                "choices": [
-                    {
-                        "type": "ANALYTICAL",
-                        "required_context": "cctv_footage",
-                        "question": "Yangın merdiveninden çıkarken elinde küçük siyah bir hard disk çantası vardı. İçinde Core-X'in kaynak kodları mı vardı Ozan?",
-                        "answer": "O sadece benim kişisel taşınabilir diskimdi! İçinde... müzik arşivim vardı.",
-                        "mechanics": {
-                            "heart_rate": "MAX_SPIKE",
-                            "breathing": "HOLDING_BREATH",
-                            "gsr": "MAX",
-                            "eeg": "FLATLINE",
-                            "cctv_visual": "HAND_PINCH_UNDER_TABLE",
-                            "korku_bari_delta": 10,
-                            "gameplay_note": "MANİPÜLASYON TESPİTİ: Kalp ve Terleme tavan yaptı ama Beyin (EEG) tamamen düz! Masanın altında eline tırnaklarını geçirerek fiziksel acıyla sensörleri şaşırtmaya çalışıyor."
-                        },
-                        "next_node": "node_04_manipulation_reaction"
-                    }
-                ]
-            },
-            "node_04_manipulation_reaction": {
-                "theme": "Fiziksel Manipülasyonu Kırma",
-                "description": "Kalbi yerinden çıkacak gibi atıyor ama beyin dalgaları bir ölü kadar sakin. Bu bir tutarsızlık. Nasıl yaklaşacaksın?",
-                "is_end_state": false,
-                "choices": [
-                    {
-                        "type": "AGRESSIVE",
-                        "question": "Bana yalan söyleme! Terden sırılsıklam oldun, kalbin deli gibi atıyor! Diski kime sattın?!",
-                        "answer": "Hastayım diyorum size! Beni bu şekilde strese sokamazsınız. Avukatım gelene kadar tek kelime etmiyorum!",
-                        "mechanics": {
-                            "heart_rate": "BASELINE",
-                            "breathing": "BASELINE",
-                            "gsr": "BASELINE",
-                            "eeg": "BASELINE",
-                            "cctv_visual": "DEFENSIVE_CROSS_ARMS",
-                            "korku_bari_delta": -50,
-                            "gameplay_note": "YANLIŞ HAMLE: Oyuncu manipülasyonu acı olarak değil, korku/yalan olarak yorumladı. Yanlış agresiflik şüpheliyi savunmaya itti."
-                        },
-                        "next_node": "node_fail_lawyer"
-                    },
-                    {
-                        "type": "ANALYTICAL_CALL_OUT",
-                        "question": "Masanın altında tırnaklarını etine batırmayı bırak Ozan. Fiziksel acı vererek EKG'yi zıplatabilirsin ama beyninin sakinliği seni ele veriyor. Çantada ne vardı?",
-                        "answer": "Ben... Ben istemedim! Ailemin borçları vardı. Bana sadece bir flash bellek taktılar, 'kopyala ve çık' dediler...",
-                        "mechanics": {
-                            "heart_rate": "DROP",
-                            "breathing": "CRYING",
-                            "gsr": "DECREASE",
-                            "eeg": "DROP",
-                            "cctv_visual": "BREAKDOWN",
-                            "korku_bari_delta": 50,
-                            "gameplay_note": "DOĞRU HAMLE: Şüphelinin taktiğini deşifre ettin. Korku barı %100'e ulaştı ve tam çöküş/itiraf yaşandı."
-                        },
-                        "next_node": "node_success_confession"
-                    }
-                ]
-            },
-            "node_success_confession": {
-                "theme": "Başarı",
-                "description": "Ozan gözyaşları içinde suç ortaklarının ismini ve kodların yerini verdi.",
-                "is_end_state": true,
-                "result_text": "TEBRİKLER. Biyometrik verileri kusursuz okudun. Yalanı ve fiziksel manipülasyonu birbirinden ayırarak şüpheliyi kırdın."
-            },
-            "node_fail_gullible": {
-                "theme": "Başarısızlık",
-                "description": "Ozan yalanının işe yaradığını anladı ve rahatladı. Sorgu tıkandı.",
-                "is_end_state": true,
-                "result_text": "BAŞARISIZ OLDUN. Şüphelinin yüksek bilişsel yükünü (EEG) okuyamadın ve uydurduğu hikayeye inandın."
-            },
-            "node_fail_lawyer": {
-                "theme": "Başarısızlık",
-                "description": "Ozan tıbbi bir mazeret uydurarak sorguyu sonlandırdı.",
-                "is_end_state": true,
-                "result_text": "BAŞARISIZ OLDUN. Fiziksel manipülasyonu yalan stresi zannettin. Yanlış zamanda uygulanan baskı şüpheliyi kaybettirdi."
-            }
+        {
+          "relation": "Annesi",
+          "name": "Ayse Hanim",
+          "note": "Kronik bobrek yetmezligi, pahali tedavi suruyor."
         }
+      ],
+      "medical": [
+        {
+          "condition": "Panik atak oykusu",
+          "polygraph_effect": "Masum baski altinda bile GSR ve kalp atisi yuksek baslar; tek basina suc kaniti sayilamaz."
+        }
+      ],
+      "habits": [
+        {
+          "habit": "Gunde 6+ kahve",
+          "polygraph_effect": "GSR ve kalp atisi baseline yuksek; hafif artislar yanli yorumlanabilir."
+        },
+        {
+          "habit": "Poligraf karsi onlem arastirmasi (tarayici gecmisinden)",
+          "polygraph_effect": "Kasitli nefes kontrolu, parmaga bastirma gibi teknikler deneyebilir — biyometri ani dususlerle gelirse suphelenin."
+        }
+      ],
+      "priors": [
+        "Universite doneminde bir defa kod hirsizligi sikayeti aldi; sikayet geri cekildi."
+      ],
+      "pressure_points": [
+        "Esinin issiz kalmasi ve annesinin tedavi masrafi ciddi finansal motivasyon.",
+        "Terfisinin geciktirilmesi ofis icinde konusulan bir mesele; huzursuzluk biliniyor."
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0,
+        "heart_rate_baseline_shift": 0,
+        "gsr_sensitivity": 1.55,
+        "gsr_baseline_shift": 0,
+        "breathing_instability": 0.3
+      }
+    },
+    "start_node": "node_01_the_blindspot",
+    "nodes": {
+      "node_01_the_blindspot": {
+        "theme": "Kör Nokta Sorgusu",
+        "description": "Ozan gergin görünüyor ama göz teması kurmaya çalışıyor. Grafikler şu an stabil.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "ANALYTICAL",
+            "question": "Ozan, saat 23:15'te sunucu odasının bulunduğu koridordan çıkıp yangın merdivenine girdiğini görüyoruz. Orada 10 dakika boyunca ne yaptın?",
+            "answer": "Kız arkadaşımla telefonda tartışıyorduk. Özel bir konuydu, ofistekilerin duymasını istemedim.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": 10,
+              "gameplay_note": "YALAN TESPİTİ: EEG (Beyin Dalgaları) aşırı dalgalı (CHAOTIC). Şüpheli şu an yeni bir hikaye uyduruyor ve beyni yoğun çalışıyor."
+            },
+            "next_node": "node_02_lie_reaction"
+          }
+        ]
+      },
+      "node_02_lie_reaction": {
+        "theme": "Yalanı Yüzleme",
+        "description": "Kalp atışı sıçradı ve nefesi yüzeyselleşti, GSR keskin bir artış gösterdi. Bir önceki soruda net bir hikaye uydurdu. Buna nasıl tepki vereceksin?",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "GULLIBLE",
+            "question": "Anlıyorum, özel hayat. Peki o merdiven boşluğunda şüpheli birini gördün mü?",
+            "answer": "Hayır, kimse yoktu. Sadece ben vardım.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "cctv_visual": "RELIEVED_EXHALE",
+              "korku_bari_delta": -20,
+              "gameplay_note": "YANLIŞ HAMLE: Şüpheli yalanının işe yaradığını gördü. Rahatladı, korku barı düştü."
+            },
+            "next_node": "node_fail_gullible"
+          },
+          {
+            "type": "CALL_OUT",
+            "question": "Nefesin ve GSR'in seninle aynı fikirde değil Ozan. Hikaye uydurmak yorucudur. Telefon kayıtlarını HTS'den çektiğimizde o saatte hiçbir arama yapmadığını göreceğiz, değil mi?",
+            "answer": "... (Yutkunur) Tamam, arama yapmadım. Sadece hava almak istemiştim. Panik atak geçiriyordum.",
+            "mechanics": {
+              "heart_rate": "ERRATIC",
+              "breathing": "HYPERVENTILATION",
+              "gsr": "SPIKE",
+              "cctv_visual": "LOOK_DOWN",
+              "korku_bari_delta": 30,
+              "gameplay_note": "DOĞRU HAMLE: Yalanı yakaladın. Uydurmayı bıraktığı için EEG düzeldi ama yakalandığı için EKG ve GSR (Terleme) fırladı."
+            },
+            "next_node": "node_03_the_bag"
+          }
+        ]
+      },
+      "node_03_the_bag": {
+        "theme": "Kritik Kanıt",
+        "description": "Ozan'ın yalanı çöktü. Korku barı yükseliyor. Şimdi asıl darbeyi vurma zamanı.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "ANALYTICAL",
+            "required_context": "cctv_footage",
+            "question": "Yangın merdiveninden çıkarken elinde küçük siyah bir hard disk çantası vardı. İçinde Core-X'in kaynak kodları mı vardı Ozan?",
+            "answer": "O sadece benim kişisel taşınabilir diskimdi! İçinde... müzik arşivim vardı.",
+            "mechanics": {
+              "heart_rate": "MAX_SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "MAX",
+              "cctv_visual": "HAND_PINCH_UNDER_TABLE",
+              "korku_bari_delta": 10,
+              "gameplay_note": "MANİPÜLASYON TESPİTİ: Kalp ve Terleme tavan yaptı ama Beyin (EEG) tamamen düz! Masanın altında eline tırnaklarını geçirerek fiziksel acıyla sensörleri şaşırtmaya çalışıyor."
+            },
+            "next_node": "node_04_manipulation_reaction"
+          }
+        ]
+      },
+      "node_04_manipulation_reaction": {
+        "theme": "Fiziksel Manipülasyonu Kırma",
+        "description": "Kalbi yerinden çıkacak gibi atıyor ve GSR tavanda ama nefesi bir ölü kadar sakin — bilinçli olarak nefes tutuyor. Bu bir tutarsızlık. Nasıl yaklaşacaksın?",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "AGRESSIVE",
+            "question": "Bana yalan söyleme! Terden sırılsıklam oldun, kalbin deli gibi atıyor! Diski kime sattın?!",
+            "answer": "Hastayım diyorum size! Beni bu şekilde strese sokamazsınız. Avukatım gelene kadar tek kelime etmiyorum!",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "BASELINE",
+              "gsr": "BASELINE",
+              "cctv_visual": "DEFENSIVE_CROSS_ARMS",
+              "korku_bari_delta": -50,
+              "gameplay_note": "YANLIŞ HAMLE: Oyuncu manipülasyonu acı olarak değil, korku/yalan olarak yorumladı. Yanlış agresiflik şüpheliyi savunmaya itti."
+            },
+            "next_node": "node_fail_lawyer"
+          },
+          {
+            "type": "ANALYTICAL_CALL_OUT",
+            "question": "Masanın altında tırnaklarını etine batırmayı bırak Ozan. Fiziksel acı vererek EKG'yi zıplatabilirsin ama beyninin sakinliği seni ele veriyor. Çantada ne vardı?",
+            "answer": "Ben... Ben istemedim! Ailemin borçları vardı. Bana sadece bir flash bellek taktılar, 'kopyala ve çık' dediler...",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "CRYING",
+              "gsr": "DECREASE",
+              "cctv_visual": "BREAKDOWN",
+              "korku_bari_delta": 50,
+              "gameplay_note": "DOĞRU HAMLE: Şüphelinin taktiğini deşifre ettin. Korku barı %100'e ulaştı ve tam çöküş/itiraf yaşandı."
+            },
+            "next_node": "node_success_confession"
+          }
+        ]
+      },
+      "node_success_confession": {
+        "theme": "Başarı",
+        "description": "Ozan gözyaşları içinde suç ortaklarının ismini ve kodların yerini verdi.",
+        "is_end_state": true,
+        "result_text": "TEBRİKLER. Biyometrik verileri kusursuz okudun. Yalanı ve fiziksel manipülasyonu birbirinden ayırarak şüpheliyi kırdın."
+      },
+      "node_fail_gullible": {
+        "theme": "Başarısızlık",
+        "description": "Ozan yalanının işe yaradığını anladı ve rahatladı. Sorgu tıkandı.",
+        "is_end_state": true,
+        "result_text": "BAŞARISIZ OLDUN. Şüphelinin nefes ve GSR kombinasyonundaki yüksek kognitif yükü okuyamadın ve uydurduğu hikayeye inandın."
+      },
+      "node_fail_lawyer": {
+        "theme": "Başarısızlık",
+        "description": "Ozan tıbbi bir mazeret uydurarak sorguyu sonlandırdı.",
+        "is_end_state": true,
+        "result_text": "BAŞARISIZ OLDUN. Fiziksel manipülasyonu yalan stresi zannettin. Yanlış zamanda uygulanan baskı şüpheliyi kaybettirdi."
+      }
     }
+  }
 }

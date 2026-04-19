@@ -52,7 +52,7 @@ export const EN = {
   VERDICT_INSTRUCTIONS: '1 / 2 / MOUSE: GIVE VERDICT',
   VERDICT_NO_RECORD: 'No interrogation record.',
   VERDICT_WAVE_HR: 'HR',
-  VERDICT_WAVE_EEG: 'EG',
+  VERDICT_WAVE_BREATHING: 'BR',
   VERDICT_WAVE_GSR: 'GS',
 
   // result
@@ -78,12 +78,43 @@ export const EN = {
   SETTINGS_LANGUAGE_TR: 'TURKCE',
   SETTINGS_BACK: 'ESC: Back to Menu',
   MENU_SETTINGS_HINT: 'S: Settings',
+  MENU_BRIEFING_HINT: 'B: Briefing',
+
+  // briefing
+  BRIEFING_TITLE: '[ OPERATOR BRIEFING ]',
+  BRIEFING_HINT_NEXT: 'ENTER / → : Next',
+  BRIEFING_HINT_BACK: '← : Back',
+  BRIEFING_HINT_EXIT: 'ESC : Menu',
+  BRIEFING_INTRO_TITLE: 'READING THE ROOM',
+  BRIEFING_INTRO_BODY:
+    'You have four live channels and one body-language channel. Pulse, breathing, GSR, the fear bar on screen, and the defendant portrait in the corner. No readout ever tells you "liar" — you read the waveforms yourself. This briefing walks each signal through its states so you know what to look for.',
+  BRIEFING_PULSE_TITLE: 'PULSE',
+  BRIEFING_PULSE_BODY:
+    'Heart rate rises with stress and drops when the suspect feels safe. Watch QRS spike height and beat density. Beta-blockers flatten the response even when the suspect is clearly cornered — always check the dossier before trusting a calm pulse.',
+  BRIEFING_BREATHING_TITLE: 'BREATHING',
+  BRIEFING_BREATHING_BODY:
+    'Breath shape reveals control. Deep sine = composed. Shallow fast = defensive. Long flat plateaus with a gasp = the suspect is holding their breath — a deliberate manipulation attempt. Crying shows tremor on top of a fast sine.',
+  BRIEFING_GSR_TITLE: 'GSR (SKIN CONDUCTANCE)',
+  BRIEFING_GSR_BODY:
+    'Sweat response fires 1-3 seconds after emotional spikes. Baseline is a near-flat line; a SPIKE or SURGE jumps visibly within the marker window. Heavy caffeine and anxiety raise baseline and amplify reactions — again, dossier first.',
+  BRIEFING_FEAR_TITLE: 'FEAR BAR',
+  BRIEFING_FEAR_BODY:
+    'Aggregate pressure. It rises when you land true contradictions or empathy hits, and falls hard when you misfire (aggressive attack on a calm suspect, legal threats too early). High fear = mask slipping. Zero fear = they are back in control.',
+  BRIEFING_CCTV_TITLE: 'DEFENDANT PORTRAIT',
+  BRIEFING_CCTV_BODY:
+    'Micro-expressions and body cues render as visual effects on the portrait during each answer. A red jittery tint = tense, warm red pulse + wobble = breakdown, cool purple sag = defensive cross-arms, desaturated stillness = controlled stone face, warm glow = relief. No text label — read the portrait.',
+  BRIEFING_MODIFIERS_TITLE: 'MEDICAL & HABITS',
+  BRIEFING_MODIFIERS_BODY:
+    'Every dossier lists medical conditions and habits with a "polygraph_effect" note. These are real: a beta-blocker really does mute pulse spikes, caffeine really does amplify GSR, anxiety really does destabilize breathing. Read the dossier before reading the chart — the signal model is already accounting for them.',
+  BRIEFING_CLOSE_TITLE: 'YOU ARE THE OPERATOR',
+  BRIEFING_CLOSE_BODY:
+    'No signal is proof on its own. Cross-check two channels with the dossier before you commit to a verdict. Wrong verdicts have consequences. Press ENTER to return to case selection.',
 
   // polygraph / UI
   POLY_HEADER: 'POLYGRAPH SIGNALS',
   POLY_FEAR: 'FEAR',
   POLY_PULSE: 'PULSE',
-  POLY_EEG: 'EEG',
+  POLY_BREATHING: 'BREATH',
   POLY_GSR: 'GSR',
   DIALOGUE_ANSWER_HEADER: '[ ANSWER ]',
   DIALOGUE_YOU_PREFIX: 'YOU: ',

@@ -13,6 +13,7 @@ import { getBiometricDrawData, updateWave } from '../game/waves.js';
 import { drawSceneBackground } from '../ui/background.js';
 import { drawNarrationBox } from '../ui/narrationBox.js';
 import { drawPortraitBadge } from '../ui/portraitBadge.js';
+import { classifyCctv } from '../ui/cctvEffect.js';
 import { drawPolygraph } from '../ui/polygraph.js';
 import { drawChoiceModal } from '../ui/choiceModal.js';
 import { drawDialogueModal } from '../ui/dialogueModal.js';
@@ -86,8 +87,12 @@ let tutorialPulseTime = 0;
 let tutorialPending = false;
 let lastAppliedEvidenceCount = 0;
 
-const laneFlash = { heartRate: 0, eeg: 0, gsr: 0 };
-const prevMetrics = { heartRate: '', eeg: '', gsr: '' };
+const laneFlash = { heartRate: 0, breathing: 0, gsr: 0 };
+const prevMetrics = { heartRate: '', breathing: '', gsr: '' };
+const CCTV_RISE_SPEED = 4;
+const CCTV_DECAY_SPEED = 1.4;
+let cctvStyle = 'NEUTRAL';
+let cctvIntensity = 0;
 
 function smoothstep(t) {
   return t * t * (3 - 2 * t);
@@ -141,7 +146,8 @@ function drawConversationPortraits(ctx) {
     LAYOUT.defendantBadge.w,
     LAYOUT.defendantBadge.h,
     'defendant',
-    getSuspectLabel()
+    getSuspectLabel(),
+    { style: cctvStyle, intensity: cctvIntensity, time: state.time }
   );
 }
 
@@ -511,10 +517,12 @@ export function registerPlayScene(_canvas, ctx) {
       choicesAnim = 0;
       polygraphSlide = 0;
       laneFlash.heartRate = 0;
-      laneFlash.eeg = 0;
+      laneFlash.breathing = 0;
       laneFlash.gsr = 0;
+      cctvStyle = 'NEUTRAL';
+      cctvIntensity = 0;
       prevMetrics.heartRate = state.metrics.heartRate;
-      prevMetrics.eeg = state.metrics.eeg;
+      prevMetrics.breathing = state.metrics.breathing;
       prevMetrics.gsr = state.metrics.gsr;
       displayedNodeId = state.currentNodeId;
       lastAppliedEvidenceCount = state.evidence.length;
@@ -557,7 +565,7 @@ export function registerPlayScene(_canvas, ctx) {
         narrationSlide = Math.min(1, narrationSlide + dt * NARRATION_SLIDE_SPEED);
       }
 
-      for (const key of ['heartRate', 'eeg', 'gsr']) {
+      for (const key of ['heartRate', 'breathing', 'gsr']) {
         if (state.metrics[key] !== prevMetrics[key]) {
           prevMetrics[key] = state.metrics[key];
           laneFlash[key] = 1;
@@ -581,7 +589,14 @@ export function registerPlayScene(_canvas, ctx) {
       if (state.evidence.length > lastAppliedEvidenceCount) {
         const latest = state.evidence[state.evidence.length - 1];
         applyDialogueAudio(latest, state.fearBar, state.maxFearBar);
+        cctvStyle = classifyCctv(state.metrics.cctvVisual);
         lastAppliedEvidenceCount = state.evidence.length;
+      }
+
+      if (state.responseMode && cctvStyle !== 'NEUTRAL') {
+        cctvIntensity = Math.min(1, cctvIntensity + dt * CCTV_RISE_SPEED);
+      } else {
+        cctvIntensity = Math.max(0, cctvIntensity - dt * CCTV_DECAY_SPEED);
       }
 
       if (narrationSlide >= 0.99 && narrationTextProgress < totalTextLen) {

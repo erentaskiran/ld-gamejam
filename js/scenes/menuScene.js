@@ -265,13 +265,19 @@ function drawMenuScene(ctx) {
   if (promptP > 0.01) {
     ctx.save();
     ctx.globalAlpha = promptP * 0.6;
-    drawText(ctx, t('MENU_SETTINGS_HINT'), DESIGN_W - 28, DESIGN_H - 28, {
-      align: 'right',
-      size: 10,
-      color: COLORS.creamDim,
-      font: UI_FONT,
-      baseline: 'middle',
-    });
+    drawText(
+      ctx,
+      `${t('MENU_BRIEFING_HINT')}  ·  ${t('MENU_SETTINGS_HINT')}`,
+      DESIGN_W - 28,
+      DESIGN_H - 28,
+      {
+        align: 'right',
+        size: 10,
+        color: COLORS.creamDim,
+        font: UI_FONT,
+        baseline: 'middle',
+      }
+    );
     ctx.restore();
 
     ctx.save();
@@ -361,6 +367,10 @@ export function registerMenuScene(_canvas, ctx) {
 
       if (wasKeyPressed('s')) {
         setScene('settings');
+        return;
+      }
+      if (wasKeyPressed('b')) {
+        setScene('briefing');
         return;
       }
       if (wasKeyPressed('enter') && state.gameData) {

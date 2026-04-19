@@ -117,7 +117,7 @@ function drawEvidenceEntry(ctx, x, y, w, h, index, evidence, marker) {
   const waveX = x + padX + waveLabelW;
   const waveW = textW - waveLabelW;
   const waveStartY = y + h - waveRowH * 3 - 4;
-  const samples = marker?.samples || { hr: [], eeg: [], gsr: [] };
+  const samples = marker?.samples || { hr: [], breathing: [], gsr: [] };
 
   drawText(ctx, t('VERDICT_WAVE_HR'), x + padX, waveStartY + waveRowH / 2, {
     size: 9,
@@ -127,13 +127,21 @@ function drawEvidenceEntry(ctx, x, y, w, h, index, evidence, marker) {
   });
   drawMiniWave(ctx, waveX, waveStartY, waveW, waveRowH, samples.hr, COLORS.pulse);
 
-  drawText(ctx, t('VERDICT_WAVE_EEG'), x + padX, waveStartY + waveRowH + waveRowH / 2, {
+  drawText(ctx, t('VERDICT_WAVE_BREATHING'), x + padX, waveStartY + waveRowH + waveRowH / 2, {
     size: 9,
-    color: COLORS.eeg,
+    color: COLORS.breathing,
     font: UI_FONT,
     baseline: 'middle',
   });
-  drawMiniWave(ctx, waveX, waveStartY + waveRowH, waveW, waveRowH, samples.eeg, COLORS.eeg);
+  drawMiniWave(
+    ctx,
+    waveX,
+    waveStartY + waveRowH,
+    waveW,
+    waveRowH,
+    samples.breathing,
+    COLORS.breathing
+  );
 
   drawText(ctx, t('VERDICT_WAVE_GSR'), x + padX, waveStartY + waveRowH * 2 + waveRowH / 2, {
     size: 9,

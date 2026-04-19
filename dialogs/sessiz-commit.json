@@ -11,7 +11,6 @@
       "max_fear_bar": 100,
       "fear_bar_description": "Elif'in kontrolu ne kadar kaybettigini gosterir. Dogru biyometrik okumalarla gercegin cekirdegine ulasirsin.",
       "heart_rate_baseline": 74,
-      "eeg_baseline": 26.4,
       "gsr_baseline": 7.2
     },
     "context": "Noxtera Biotech'in Klinik AI platformunda gece yarisi imzasiz bir model guncellemesi yapildi. Ertesi sabah yogun bakimda risk puani algoritmasi 14 hastayi dusuk oncelikledi. Elif, o gece binaya kart basan son kisiydi. Sunucu odasindan cikmadan once USB engel loglarinda 7 dakikalik bir kor nokta olustu.",
@@ -21,14 +20,28 @@
       "age": 34,
       "identity_summary": "Noxtera Biotech'te 5 yildir Klinik AI ekip lideri. Etik kurul uyesi. Kariyerinde tek kusuru yok, performans aldigi tek sirket icin hakem.",
       "family": [
-        { "relation": "Oglu", "name": "Kaan (7)", "note": "Ozel ogrenme ihtiyaclari var; pahali bir ozel okula yeni basladi." },
-        { "relation": "Esi", "name": "Arda", "note": "Uluslararasi ilac tedarik zincirinde calisiyor; is seyahatleri sik." }
+        {
+          "relation": "Oglu",
+          "name": "Kaan (7)",
+          "note": "Ozel ogrenme ihtiyaclari var; pahali bir ozel okula yeni basladi."
+        },
+        {
+          "relation": "Esi",
+          "name": "Arda",
+          "note": "Uluslararasi ilac tedarik zincirinde calisiyor; is seyahatleri sik."
+        }
       ],
       "medical": [
-        { "condition": "Kronik uyku bozuklugu (2 yildir)", "polygraph_effect": "EEG varyansi yuksek; FOCUSED durum beklemeyin, hafif ERRATIC seviyesi baseline olabilir." }
+        {
+          "condition": "Kronik uyku bozuklugu (2 yildir)",
+          "polygraph_effect": "Baseline nefesi genelde duzensiz; gecici SHALLOW atiklari tek basina deception anlamina gelmez."
+        }
       ],
       "habits": [
-        { "habit": "Antidepresan (SSRI) tedavisi", "polygraph_effect": "Kalp atisi tepkileri hafif baskilanmis; MAX_SPIKE zor gorulur. Kalp kaniti tek basina yeterli degil." }
+        {
+          "habit": "Antidepresan (SSRI) tedavisi",
+          "polygraph_effect": "Kalp atisi tepkileri hafif baskilanmis; MAX_SPIKE zor gorulur. Kalp kaniti tek basina yeterli degil."
+        }
       ],
       "priors": [
         "Kayda deger bir hukuki gecmisi yok. Ancak 3 ay once bir anonim e-posta tehdidi aldigini kurumsal guvenlige bildirdi, konu kapandi."
@@ -36,7 +49,14 @@
       "pressure_points": [
         "Oglu Kaan'in okul masraflari ve esinin seyahatleri yuzunden ekonomik kirilganlik var.",
         "Anonim tehdit e-postasi: supheli bunu dogrudan itiraf etmekten cekinebilir — dolayli sorularla acilabilir."
-      ]
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0.25,
+        "heart_rate_baseline_shift": 0,
+        "gsr_sensitivity": 1.0,
+        "gsr_baseline_shift": 0,
+        "breathing_instability": 0.05
+      }
     },
     "start_node": "node_01_midnight_push",
     "nodes": {
@@ -53,7 +73,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "INCREASE",
-              "eeg": "CHAOTIC",
               "cctv_visual": "LIP_PRESS",
               "korku_bari_delta": 12,
               "gameplay_note": "YALAN SINYALI: Teknik jargon hizlandi, EEG belirgin kaotik. Hazir bir savunma metni okutuyor."
@@ -68,7 +87,6 @@
               "heart_rate": "INCREASE",
               "breathing": "HOLDING_BREATH",
               "gsr": "SPIKE",
-              "eeg": "INCREASE",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": 16,
               "gameplay_note": "KISMEN DOGRU: Duygusal tetikleme koruma davranisini ortaya cikardi. Dogrudan yalan yerine saklama moduna gecti."
@@ -90,7 +108,6 @@
               "heart_rate": "DROP",
               "breathing": "DEEP",
               "gsr": "DECREASE",
-              "eeg": "BASELINE",
               "cctv_visual": "RELIEVED_EXHALE",
               "korku_bari_delta": -28,
               "gameplay_note": "YANLIS HAMLE: Supheli, sorgunun teknik detayla boguldugunu gordu ve kontrolu geri aldi."
@@ -105,7 +122,6 @@
               "heart_rate": "ERRATIC",
               "breathing": "HYPERVENTILATION",
               "gsr": "MAX",
-              "eeg": "BASELINE",
               "cctv_visual": "LOOK_DOWN",
               "korku_bari_delta": 30,
               "gameplay_note": "DOGRU HAMLE: Somut kayit celiskisi yalan katmanini kopardi. Uydurma azalirken yakalanma stresi tavana cikti."
@@ -127,7 +143,6 @@
               "heart_rate": "BASELINE",
               "breathing": "BASELINE",
               "gsr": "BASELINE",
-              "eeg": "BASELINE",
               "cctv_visual": "DEFENSIVE_CROSS_ARMS",
               "korku_bari_delta": -45,
               "gameplay_note": "YANLIS HAMLE: Erken suclama, supheliyi hukuki savunmaya gecirdi. Biyometrik pencere kapandi."
@@ -142,7 +157,6 @@
               "heart_rate": "MAX_SPIKE",
               "breathing": "HOLDING_BREATH",
               "gsr": "MAX",
-              "eeg": "INCREASE",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 24,
               "gameplay_note": "ILERLEME: Maddi cikardan cok tehdit motivasyonu belirdi. Hikayenin cekirdegi zorlamayla ilgili olabilir."
@@ -164,7 +178,6 @@
               "heart_rate": "DROP",
               "breathing": "DEEP",
               "gsr": "DECREASE",
-              "eeg": "BASELINE",
               "cctv_visual": "STONE_FACE",
               "korku_bari_delta": -35,
               "gameplay_note": "YANLIS HAMLE: Sert hukuki baski, hayatta kalma refleksini aktifleştirdi. Iletisim kanali koptu."
@@ -179,7 +192,6 @@
               "heart_rate": "ERRATIC",
               "breathing": "CRYING",
               "gsr": "SPIKE",
-              "eeg": "DROP",
               "cctv_visual": "BREAKDOWN",
               "korku_bari_delta": 28,
               "gameplay_note": "DOGRU YON: Etik cerceve, tehdit altindaki kisinin savunmasini indirdi. Ana fail hatti gorunur oldu."
@@ -201,7 +213,6 @@
               "heart_rate": "BASELINE",
               "breathing": "SHALLOW",
               "gsr": "INCREASE",
-              "eeg": "FLATLINE",
               "cctv_visual": "EMPTY_STARE",
               "korku_bari_delta": -10,
               "gameplay_note": "YANLIS OKUMA: Kopmus kabul ifadesi geldi; EEG flatline duygusal kapanmaya isaret ediyor. Gercek zincir kayboldu."
@@ -210,13 +221,12 @@
           },
           {
             "type": "SYSTEMIC_READ",
-            "question": "EEG'in su an kapanma modunda. Bu 'her seyi ben yaptim' ifadesi gercek degil, kendini feda refleksi. Arman'in talimat zincirini, kullanilan gecici kart sahibini ve tehdit kanalini tek tek ver. Seni degil yapinin failini alacagiz.",
+            "question": "Nefesin duzene girdi ama GSR'in cok yuksek. Bu 'her seyi ben yaptim' ifadesi gercek degil, kendini feda refleksi. Arman'in talimat zincirini, kullanilan gecici kart sahibini ve tehdit kanalini tek tek ver. Seni degil yapinin failini alacagiz.",
             "answer": "Gecici kart Onur adina acildi, ama kullanan Arman'in korumasi Erkut'tu. Tehdit mesajlari sirket ici kriz hattindan yonlendirildi. Loglari saklayan da altyapi yoneticisi Derya. Hepsi 00:30-01:10 arasinda aktifti. Dosya yollarini da veririm.",
             "mechanics": {
               "heart_rate": "DROP",
               "breathing": "CRYING",
               "gsr": "DECREASE",
-              "eeg": "DROP",
               "cctv_visual": "RELEASED_SHOULDERS",
               "korku_bari_delta": 45,
               "gameplay_note": "MUKEMMEL HAMLE: Biyometrik kapanmayi fark edip dogru psikolojik capayi attin. Supheliyi degil organizasyonu cozdun."

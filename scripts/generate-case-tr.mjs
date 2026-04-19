@@ -40,7 +40,14 @@ CIKTI:
       "medical": [ { "condition": string, "polygraph_effect": string } ],
       "habits": [ { "habit": string, "polygraph_effect": string } ],
       "priors": [ string ],
-      "pressure_points": [ string ]
+      "pressure_points": [ string ],
+      "modifiers": {
+        "heart_rate_suppression": number,
+        "heart_rate_baseline_shift": number,
+        "gsr_sensitivity": number,
+        "gsr_baseline_shift": number,
+        "breathing_instability": number
+      }
     }
   }
 }
@@ -82,6 +89,25 @@ DOSSIER (oyuncunun sorgudan ONCE okuyacagi arka plan):
 - pressure_points: 1-3 kisa bullet, duygusal veya durumsal leverage.
   Hangi taktigin (EMPATHIC, TRAP, EVIDENCE, vb.) supheliyi kiracagini
   veya bloklayacagini ima eder.
+- modifiers: medical+habits'i canli poligraf bozulmasina ceviren sayisal
+  ayarlar. polygraph_effect notlariyla TUTARLI olmali. Default 0/1; sadece
+  dossier'in destekledigi yerde sapma yap.
+  - heart_rate_suppression: 0.0-0.9. HR sicrama siddetinin ne kadar
+    bastirildigi. Beta-bloker (propranolol, bisoprolol) ~0.4-0.55;
+    hafif SSRI ~0.2; pacemaker ~0.6. Birden fazla HR-bastiran ajan varsa
+    toplayabilirsin (0.9'da tavan).
+  - heart_rate_baseline_shift: -12..+15 BPM eklemeli baseline kaymasi.
+    Hipertansiyon +4..+10; agir stimulan kullanimi +3..+8; bradikardi -5..-10.
+  - gsr_sensitivity: 0.7-1.8 carpan (ter tepki siddeti uzerinde).
+    Yuksek kafein 1.3-1.5; anksiyete bozuklugu 1.3-1.6; panik 1.5-1.8;
+    antikolinerjik ilaclar / agir antiperspirant 0.7-0.85.
+  - gsr_baseline_shift: -2..+4 uS eklemeli baseline kaymasi. Kronik
+    kafein/anksiyete desenleriyle uyumlu olsun.
+  - breathing_instability: 0.0-0.5 eklemeli nefes dalgasi jitter'i.
+    Anksiyete/panik 0.2-0.35; KOAH 0.25-0.4; astim gecmisi 0.1-0.2.
+  Not: migren, uykusuzluk gibi norolojik/bilissel durumlar medical[]
+  icinde narrative baglam olarak kalir — dogrudan bir sayisal knob almiyor,
+  cunku oyun sadece nabiz, nefes, GSR ve korku barini gosteriyor.
 - Dossier true_verdict'i SIZDIRMAMALI. Motif/firsat imalari olabilir ama
   bir operatorun sorgu oncesi arastirmasinda (kamu kayitlari, IK, saglik
   beyannameleri) makul olarak bulabilecegi bilgiler olmali.`;
@@ -144,7 +170,6 @@ CIKTI SEMASI:
             "heart_rate": string,
             "breathing": string,
             "gsr": string,
-            "eeg": string,
             "cctv_visual": string,
             "korku_bari_delta": number,
             "gameplay_note": string
@@ -169,24 +194,30 @@ TEMEL TASARIM ILKESI (KRITIK):
   ekranina gecer ve sorgu boyunca biriken poligraf verilerini okuyarak
   GUILTY / NOT_GUILTY kararini kendi verir. Son dugumler sorgu SONUCLARIDIR,
   oyunun sonu degildir.
-- Poligraf sinyalleri (heart_rate, gsr, eeg) oyuncunun tek somut kanitidir.
-  Sinyalleri suspect.true_verdict ile TUTARLI sekilde uret — oyuncu
-  biyometriden sucu ya da masumiyeti okuyabilmelidir.
+- Poligraf sinyalleri (heart_rate, breathing, gsr) oyuncunun tek somut
+  kanitidir. Sinyalleri suspect.true_verdict ile TUTARLI sekilde uret —
+  oyuncu biyometriden sucu ya da masumiyeti okuyabilmelidir.
 
 SINYAL-GERCEK UYUMU:
+- Oyuncuya canli gosterilen dort kanal: nabiz, nefes, GSR, korku bari.
+  Beseinci kanal olarak supheli portresindeki mikro-ifadeler (cctv_visual)
+  var. Bu kanallari suspect.true_verdict ile hizalayin.
 - Eger suspect.true_verdict == "GUILTY":
   - Sikistirici/suclayici sorularda supheli gercek aldatma tepkileri
-    gosterir (heart_rate SPIKE/MAX_SPIKE, gsr SURGE/MAX,
-    eeg CHAOTIC/ERRATIC) — sozel cevap sakin kalsa bile
+    gosterir (heart_rate SPIKE/MAX_SPIKE, gsr SURGE/MAX, breathing
+    HOLDING_BREATH veya HYPERVENTILATION, gergin cctv_visual) — sozel
+    cevap sakin kalsa bile
   - Yumusak/empatik cerceveleme taktigi ile sakin yanitlar mumkun
 - Eger suspect.true_verdict == "NOT_GUILTY":
   - Supheli gorunur biciminde gergin olabilir (masum insan da sorguda
     sicrayabilir) ama keskin aldatma sinyalleri seyrek ve dagilmis
-    olmali — cogunlukla RISE/INCREASE seviyesinde, MAX_SPIKE/SURGE degil
+    olmali — cogunlukla RISE/INCREASE seviyesinde ve SHALLOW/UNEVEN
+    nefes, MAX_SPIKE/SURGE/HOLDING_BREATH kumesi degil
   - Sert suclama sorulari savunmaci sicramalar yaratabilir ama surekli
-    CHAOTIC/FLATLINE EEG veya MAX GSR KALITIMI OLMAMALI
+    MAX GSR + HR MAX_SPIKE + HOLDING_BREATH birlikteligi OLMAMALI
 - NOT_GUILTY supheli icin asla sahte itiraf yazma; MAX_SPIKE + MAX GSR +
-  CHAOTIC/FLATLINE EEG kombinasyonunu sadece GUILTY gerceklere sakla
+  HOLDING_BREATH / HYPERVENTILATION kombinasyonunu sadece GUILTY gerceklere
+  sakla
 
 DUGUM SAYISI:
 - Toplam 5-7 dugum
@@ -228,7 +259,6 @@ SINYAL-GERCEK UYUMU bolumune bakin):
 - heart_rate: BASELINE | STABLE | RISE | INCREASE | SPIKE | MAX_SPIKE | DROP | ERRATIC
 - breathing: BASELINE | CALM | DEEP | SHALLOW | HOLDING_BREATH | UNEVEN | HYPERVENTILATION | CRYING
 - gsr: BASELINE | STABLE | INCREASE | SPIKE | SURGE | MAX | DECREASE
-- eeg: BASELINE | FOCUSED | INCREASE | CHAOTIC | ERRATIC | DROP | FLATLINE
 - cctv_visual: serbest UPPER_SNAKE_CASE mikro-ifade veya beden ipucu
   (LIP_PRESS, JAW_TIGHTEN, EYE_DART, TEAR_POOLING, STONE_FACE,
   BREAKDOWN, EMPTY_STARE, RELEASED_SHOULDERS, DEFENSIVE_CROSS_ARMS,
@@ -284,7 +314,6 @@ CIKTI:
       "max_fear_bar": 100,
       "fear_bar_description": string,
       "heart_rate_baseline": number,
-      "eeg_baseline": number,
       "gsr_baseline": number
     },
     "context": string,
@@ -316,11 +345,9 @@ KURALLAR:
 - fear_bar_description duygusal/psikolojik baski takibini Turkce aciklamali
 - Yalnizca system_config icine temel biyometrik alanlar ekle:
   - heart_rate_baseline
-  - eeg_baseline
   - gsr_baseline
 - Bu baseline degerleri SAYISAL olmali ve gercekci aralikta secilmeli:
   - heart_rate_baseline: BPM sayisi (genelde 60-90)
-  - eeg_baseline: mikrovolt sayisi (genelde 18-35)
   - gsr_baseline: microsiemens sayisi (genelde 4-10)
 - Degerler sakin/normale yakin olmali ve uretilen vakayla uyumlu secilmeli.
 - Ekstra alan ekleme

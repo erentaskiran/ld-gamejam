@@ -97,7 +97,6 @@ Each choice has `type` (UPPER_SNAKE_CASE tactic label — ANALYTICAL, EMPATHIC, 
 - `heart_rate`: BASELINE | STABLE | RISE | INCREASE | SPIKE | MAX_SPIKE | DROP | ERRATIC
 - `breathing`: BASELINE | CALM | DEEP | SHALLOW | HOLDING_BREATH | UNEVEN | HYPERVENTILATION | CRYING
 - `gsr`: BASELINE | STABLE | INCREASE | SPIKE | SURGE | MAX | DECREASE
-- `eeg`: BASELINE | FOCUSED | INCREASE | CHAOTIC | ERRATIC | DROP | FLATLINE
 - `cctv_visual`: free-form UPPER_SNAKE_CASE micro-expression (LIP_PRESS, TEAR_POOLING, BREAKDOWN, …)
 - `korku_bari_delta`: integer, roughly ±50 — negative = wrong move, positive = cracks facade
 - `gameplay_note`: analyst-facing note tagging the signal

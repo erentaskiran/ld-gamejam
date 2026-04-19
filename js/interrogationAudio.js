@@ -36,14 +36,17 @@ function stressFromEvidence(evidence) {
     SURGE: 0.58,
     MAX: 0.72,
   });
-  const eeg = mapMechanicLevel(evidence.eeg, {
+  const breathing = mapMechanicLevel(evidence.breathing, {
     BASELINE: 0,
-    FOCUSED: 0.05,
-    ERRATIC: 0.36,
-    CHAOTIC: 0.6,
-    FLATLINE: 0.7,
+    CALM: -0.05,
+    DEEP: -0.08,
+    SHALLOW: 0.18,
+    UNEVEN: 0.26,
+    HOLDING_BREATH: 0.45,
+    HYPERVENTILATION: 0.6,
+    CRYING: 0.55,
   });
-  return clamp01(0.45 * hr + 0.3 * gsr + 0.25 * eeg + 0.25);
+  return clamp01(0.45 * hr + 0.3 * gsr + 0.25 * breathing + 0.25);
 }
 
 const TYPE_SIGNAL = {
@@ -86,12 +89,15 @@ function parseDialogueSignals(evidence) {
     SURGE: 0.28,
     MAX: 0.34,
   });
-  fear += mapMechanicLevel(evidence.eeg, {
+  fear += mapMechanicLevel(evidence.breathing, {
     BASELINE: 0,
-    FOCUSED: 0.03,
-    ERRATIC: 0.14,
-    CHAOTIC: 0.24,
-    FLATLINE: 0.18,
+    CALM: -0.04,
+    DEEP: -0.06,
+    SHALLOW: 0.08,
+    UNEVEN: 0.14,
+    HOLDING_BREATH: 0.22,
+    HYPERVENTILATION: 0.28,
+    CRYING: 0.24,
   });
 
   excitement += mapMechanicLevel(evidence.heartRate, {
@@ -103,11 +109,14 @@ function parseDialogueSignals(evidence) {
     MAX_SPIKE: 0.16,
     DROP: -0.08,
   });
-  excitement += mapMechanicLevel(evidence.eeg, {
-    FOCUSED: 0.04,
-    ERRATIC: 0.08,
-    CHAOTIC: 0.16,
-    FLATLINE: -0.06,
+  excitement += mapMechanicLevel(evidence.breathing, {
+    CALM: -0.04,
+    DEEP: -0.02,
+    SHALLOW: 0.06,
+    UNEVEN: 0.1,
+    HOLDING_BREATH: 0.12,
+    HYPERVENTILATION: 0.16,
+    CRYING: 0.04,
   });
 
   if ((evidence.fearDelta || 0) > 18) fear += 0.18;
@@ -148,12 +157,15 @@ function scoreChoiceStress(choice) {
           MAX: 0.72,
         }) +
       0.25 *
-        mapMechanicLevel(mechanics.eeg, {
+        mapMechanicLevel(mechanics.breathing, {
           BASELINE: 0,
-          FOCUSED: 0.06,
-          ERRATIC: 0.38,
-          CHAOTIC: 0.58,
-          FLATLINE: 0.48,
+          CALM: -0.04,
+          DEEP: -0.06,
+          SHALLOW: 0.16,
+          UNEVEN: 0.28,
+          HOLDING_BREATH: 0.48,
+          HYPERVENTILATION: 0.58,
+          CRYING: 0.42,
         }) +
       (fearDelta / 100) * 0.3 +
       mapMechanicLevel(type, {

@@ -11,7 +11,6 @@
       "max_fear_bar": 100,
       "fear_bar_description": "Şüphelinin psikolojik baskı altında ne kadar kırılmaya yaklaştığını gösteren duygusal gerilim göstergesi. Yükseldikçe savunma duvarları incelir, düştükçe kontrolü geri alır.",
       "heart_rate_baseline": 82,
-      "eeg_baseline": 24,
       "gsr_baseline": 7
     },
     "context": "Kırk iki yaşındaki inşaat mühendisi Arda Keskin, Yıldız Özel Hastanesi'nde rutin bir bypass ameliyatının ardından yoğun bakımda hayatını kaybetti. Ameliyatı bizzat başhekim Dr. Cenk Aydoğan yönetmişti. Merhumun eşi Deniz Keskin, ameliyat öncesi değerlendirmenin aceleye getirildiğini, kocasının tansiyon ve kan değerlerinin yeterince izlenmediğini öne sürerek hastane ve Dr. Aydoğan hakkında hem cezai şikâyette bulundu hem de tazminat davası açtı. Aile avukatı, ameliyat notlarında sonradan değişiklik yapıldığı ve ameliyathaneye giriş-çıkış kayıtlarıyla yazılı raporlar arasında tutarsızlıklar bulunduğu iddiasını savcılığa iletti; bir hemşirenin verdiği ifadenin arşivden kaybolduğu da söylentiler arasında. Savcılık, ihmal sonucu ölüme neden olma şüphesiyle soruşturma başlattı ve Dr. Aydoğan'ı ifadeye çağırdı. Bu oturum, şüphelinin olayın gerçek seyri, kayıt tutarsızlıkları ve ekibindeki kişilerin rolü hakkında sorgulanacağı ön inceleme aşamasıdır.",
@@ -70,7 +69,14 @@
         "Annesinin bakımı ve tedavi masrafları sorulduğunda duygusal çözülme gösteriyor.",
         "Asistanı Mert'in adı üzerinden kurulan tuzak sorular onu savunmaya iter.",
         "Mesleki itibarı ve 'iyi hekim' imajı doğrudan saldırıya uğradığında öfke tepkisi veriyor."
-      ]
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0.55,
+        "heart_rate_baseline_shift": 0,
+        "gsr_sensitivity": 1.5,
+        "gsr_baseline_shift": 0,
+        "breathing_instability": 0.08
+      }
     },
     "start_node": "node_01_intro",
     "nodes": {
@@ -87,7 +93,6 @@
               "heart_rate": "STABLE",
               "breathing": "CALM",
               "gsr": "BASELINE",
-              "eeg": "FOCUSED",
               "cctv_visual": "PROFESSIONAL_COMPOSURE",
               "korku_bari_delta": 5,
               "gameplay_note": "BASELINE OKUMASI: Supheli teknik alanda rahat. Beta-bloker etkisi nedeniyle kalp sinyaline fazla guvenme."
@@ -102,7 +107,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "INCREASE",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": -10,
               "gameplay_note": "YANLIS HAMLE: Mesleki itibarina saldiri ofke tetikledi, kapandi. Ilk hamlede sertlik maliyetli."
@@ -117,7 +121,6 @@
               "heart_rate": "RISE",
               "breathing": "DEEP",
               "gsr": "INCREASE",
-              "eeg": "BASELINE",
               "cctv_visual": "BRIEF_EYE_GLASS",
               "korku_bari_delta": 12,
               "gameplay_note": "DOGRU HAMLE: Duygusal kanal acildi, supheli kismen indirgendi. Empatik baslangic guvenli tunel."
@@ -139,7 +142,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "INCREASE",
               "cctv_visual": "MICRO_TWITCH",
               "korku_bari_delta": 18,
               "gameplay_note": "ILERLEME: Kayit tutarsizligi supheliyi zorladi ama aciklamasi savunulabilir. Tremor + kafein + hipertansiyon filtrele."
@@ -154,7 +156,6 @@
               "heart_rate": "RISE",
               "breathing": "HOLDING_BREATH",
               "gsr": "SPIKE",
-              "eeg": "FOCUSED",
               "cctv_visual": "PROTECTIVE_LEAN",
               "korku_bari_delta": 8,
               "gameplay_note": "LEVERAGE ACILDI: Mert adinin gecmesi koruyuculuk refleksini harekete gecirdi. Sonraki hamlelerde kullanilabilir."
@@ -169,7 +170,6 @@
               "heart_rate": "SPIKE",
               "breathing": "UNEVEN",
               "gsr": "SURGE",
-              "eeg": "CHAOTIC",
               "cctv_visual": "DEFENSIVE_CROSS_ARMS",
               "korku_bari_delta": -18,
               "gameplay_note": "YANLIS HAMLE: Erken tehdit supheliyi kilitledi. Sinyaller yukseldi ama bunlar SAVUNMA gerginligi, itiraf degil."
@@ -191,7 +191,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "INCREASE",
               "cctv_visual": "LIP_PRESS",
               "korku_bari_delta": 15,
               "gameplay_note": "KISMEN DOGRU: Supheli kayit dokunusunu KABUL etti ama olume bagli degil. Sinyaller yuksek ama FLATLINE/MAX yok."
@@ -206,7 +205,6 @@
               "heart_rate": "RISE",
               "breathing": "CALM",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "STEADY_GAZE",
               "korku_bari_delta": 6,
               "gameplay_note": "BASELINE CIVARI: Aciklama tutarli, uyku aliskanligi dosyayla uyumlu. Zayif ipucu."
@@ -221,7 +219,6 @@
               "heart_rate": "SPIKE",
               "breathing": "UNEVEN",
               "gsr": "SURGE",
-              "eeg": "CHAOTIC",
               "cctv_visual": "EYE_DART",
               "korku_bari_delta": 22,
               "gameplay_note": "GUCLU SINYAL: Kayip dokuman suphelinin beklemedigi bir bilgi; gercek bir gerginlik dalgasi. Bu secret'a yakin bolge."
@@ -243,7 +240,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SURGE",
-              "eeg": "INCREASE",
               "cctv_visual": "SWALLOW_HARD",
               "korku_bari_delta": 28,
               "gameplay_note": "KRITIK ITIRAF KISMI: Supheli ifadenin varligini kabul etti ama olumle baglantiyi reddetti. Sinyaller yuksek ama FLATLINE yok — savunma degil, utanc."
@@ -258,7 +254,6 @@
               "heart_rate": "SPIKE",
               "breathing": "CRYING",
               "gsr": "SURGE",
-              "eeg": "ERRATIC",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 32,
               "gameplay_note": "CIDDI COZULME: Koruma refleksi kirildi. Supheli bir seyi saklamis ama bu SUC degil. FLATLINE yok, yani olume dair degil."
@@ -273,7 +268,6 @@
               "heart_rate": "STABLE",
               "breathing": "CALM",
               "gsr": "DECREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "RELIEVED_EXHALE",
               "korku_bari_delta": -25,
               "gameplay_note": "YANLIS HAMLE: Supheliye kacis rampasi sundunuz. Tam kilit anda gevsetildi, sinyaller normale dondu."

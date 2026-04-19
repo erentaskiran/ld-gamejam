@@ -7,7 +7,14 @@ const SWEEP_RATE = 28;
 
 const SEVERITY = {
   heart: { MAX_SPIKE: 3, SPIKE: 2, MAX: 3, ERRATIC: 2, INCREASE: 1, RISE: 1 },
-  eeg: { FLATLINE: 3, CHAOTIC: 3, ERRATIC: 2, INCREASE: 2, DROP: 2, DECREASE: 2, BASELINE: 2 },
+  breathing: {
+    HOLDING_BREATH: 3,
+    HYPERVENTILATION: 3,
+    CRYING: 3,
+    UNEVEN: 2,
+    SHALLOW: 2,
+    DEEP: 1,
+  },
   gsr: { MAX: 3, SURGE: 3, SPIKE: 2, INCREASE: 1 },
 };
 
@@ -21,7 +28,7 @@ function severityAlpha(score, active, fade) {
 
 function categoryForLane(marker, type) {
   if (type === 'heart') return marker.hrCategory;
-  if (type === 'eeg') return marker.eegCategory;
+  if (type === 'breathing') return marker.breathingCategory;
   return marker.gsrCategory;
 }
 
@@ -63,9 +70,7 @@ function drawLaneMarkers(ctx, waveX, y, waveW, h, type, time, sharedCursor, mark
 
     const cat = normalizeCategory(categoryForLane(m, type));
     let sev = SEVERITY[type][cat] || 0;
-    if (type === 'eeg' && sev === 0 && cat) {
-      // EEG band should always render for captured reactions,
-      // even if case data contains unexpected labels.
+    if (type === 'breathing' && sev === 0 && cat) {
       sev = 1;
     }
     if (sev <= 0) continue;
@@ -93,7 +98,7 @@ function drawLaneMarkers(ctx, waveX, y, waveW, h, type, time, sharedCursor, mark
 
 const TRACE_STATE = {
   heart: { samples: null, width: 0, lastCursor: -1, bufferRef: null },
-  eeg: { samples: null, width: 0, lastCursor: -1, bufferRef: null },
+  breathing: { samples: null, width: 0, lastCursor: -1, bufferRef: null },
   gsr: { samples: null, width: 0, lastCursor: -1, bufferRef: null },
 };
 
@@ -171,7 +176,7 @@ function drawLaneWave(ctx, x, y, w, h, color, buffer, sampleRate, type, sampleAt
   }
 
   const midY = y + h / 2;
-  const gain = type === 'heart' ? h * 0.4 : type === 'eeg' ? h * 0.43 : h * 0.72;
+  const gain = type === 'heart' ? h * 0.4 : type === 'breathing' ? h * 0.48 : h * 0.72;
   const lane = TRACE_STATE[type];
   updateTraceLane(lane, buffer, w, sharedCursor, sampleAt);
   if (!lane.samples) {
@@ -202,8 +207,8 @@ function readout(type, profile, biometricReadout) {
     if (type === 'heart') {
       return `${Math.round(biometricReadout.bpm)} BPM`;
     }
-    if (type === 'eeg') {
-      return `${biometricReadout.eegUv.toFixed(1)} uV`;
+    if (type === 'breathing') {
+      return `${Math.round(biometricReadout.breathingRpm ?? 14)} RPM`;
     }
     return `${biometricReadout.gsrUs.toFixed(1)} uS`;
   }
@@ -211,8 +216,8 @@ function readout(type, profile, biometricReadout) {
   if (type === 'heart') {
     return `${Math.round(40 + profile.freq * 22)} BPM`;
   }
-  if (type === 'eeg') {
-    return `${(0.05 + profile.amp * 0.35).toFixed(2)} mV`;
+  if (type === 'breathing') {
+    return `${Math.round(6 + profile.freq * 14)} RPM`;
   }
   return `${Math.round(8 + profile.amp * 42)} uS`;
 }
@@ -229,7 +234,6 @@ function drawLane(
     profile,
     type,
     time,
-    metric,
     flash = 0,
     buffer,
     sampleRate,
@@ -283,7 +287,7 @@ function drawLane(
     baseline: 'middle',
   });
 
-  drawText(ctx, `${readout(type, profile, biometricReadout)} ${metric}`, x + w - 4, y + h / 2, {
+  drawText(ctx, `${readout(type, profile, biometricReadout)}`, x + w - 4, y + h / 2, {
     size: 11,
     color: COLORS.cream,
     align: 'right',
@@ -296,7 +300,6 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
   const {
     waves,
     time,
-    metrics,
     fearBar,
     maxFearBar,
     fearFlash = 0,
@@ -379,7 +382,6 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     profile: waves.heartRate,
     type: 'heart',
     time,
-    metric: metrics.heartRate,
     flash: laneFlash.heartRate || 0,
     buffer: bioBuffers.heartRate,
     sampleRate: bioRate.heartRate || 250,
@@ -391,17 +393,16 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
   });
 
   drawLane(ctx, x, lanesY + laneH, w, laneH, {
-    label: t('POLY_EEG'),
-    color: COLORS.eeg,
-    profile: waves.eeg,
-    type: 'eeg',
+    label: t('POLY_BREATHING'),
+    color: COLORS.breathing,
+    profile: waves.breathing,
+    type: 'breathing',
     time,
-    metric: metrics.eeg,
-    flash: laneFlash.eeg || 0,
-    buffer: bioBuffers.eeg,
-    sampleRate: bioRate.eeg || 256,
+    flash: laneFlash.breathing || 0,
+    buffer: bioBuffers.breathing,
+    sampleRate: bioRate.breathing || 32,
     biometricReadout: bioReadout,
-    sampleAt: bioSampleAt ? (offsetFloat) => bioSampleAt('eeg', offsetFloat) : null,
+    sampleAt: bioSampleAt ? (offsetFloat) => bioSampleAt('breathing', offsetFloat) : null,
     sharedCursor,
     drawSweep: true,
     markers: allMarkers,
@@ -413,7 +414,6 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
     profile: waves.gsr,
     type: 'gsr',
     time,
-    metric: metrics.gsr,
     flash: laneFlash.gsr || 0,
     buffer: bioBuffers.gsr,
     sampleRate: bioRate.gsr || 64,

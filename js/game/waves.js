@@ -3,8 +3,18 @@ import { clamp } from '../math.js';
 const WINDOW_SECONDS = 8;
 const SAMPLE_RATE = {
   heartRate: 256,
-  eeg: 256,
   gsr: 64,
+  breathing: 32,
+};
+
+const BREATHING_PROFILES = {
+  BASELINE: { rpm: 14, amp: 0.42, style: 'sine', jitter: 0.04 },
+  DEEP: { rpm: 8, amp: 0.92, style: 'sine', jitter: 0.02 },
+  SHALLOW: { rpm: 28, amp: 0.16, style: 'sine', jitter: 0.06 },
+  UNEVEN: { rpm: 20, amp: 0.5, style: 'uneven', jitter: 0.22 },
+  HOLDING_BREATH: { rpm: 6, amp: 0.2, style: 'hold', jitter: 0.02 },
+  HYPERVENTILATION: { rpm: 48, amp: 0.34, style: 'sine', jitter: 0.1 },
+  CRYING: { rpm: 22, amp: 0.58, style: 'cry', jitter: 0.35 },
 };
 
 const RELAX_BASELINE = {
@@ -24,8 +34,6 @@ const METRIC_TO_DELTA = {
   ERRATIC: { arousal: 0.36, cognitive: 0.28, pain: 0.16, control: -0.22, fatigue: 0.04 },
   MAX_SPIKE: { arousal: 0.5, cognitive: 0.24, pain: 0.24, control: -0.28, fatigue: 0.05 },
   MAX: { arousal: 0.55, cognitive: 0.2, pain: 0.34, control: -0.32, fatigue: 0.06 },
-  CHAOTIC: { arousal: 0.18, cognitive: 0.48, pain: 0.1, control: -0.2, fatigue: 0.05 },
-  FLATLINE: { arousal: -0.08, cognitive: -0.45, pain: 0.34, control: -0.08, fatigue: 0.1 },
 };
 
 function createRingBuffer(rate) {
@@ -84,9 +92,35 @@ function ecgTemplate(phase) {
   return p + q + r + s + t;
 }
 
+const DEFAULT_MODIFIERS = {
+  heart_rate_suppression: 0,
+  heart_rate_baseline_shift: 0,
+  gsr_sensitivity: 1,
+  gsr_baseline_shift: 0,
+  breathing_instability: 0,
+};
+
+function normalizeModifiers(raw) {
+  const m = { ...DEFAULT_MODIFIERS };
+  if (!raw || typeof raw !== 'object') {
+    return m;
+  }
+  for (const key of Object.keys(DEFAULT_MODIFIERS)) {
+    const num = toFiniteNumber(raw[key]);
+    if (num !== null) {
+      m[key] = num;
+    }
+  }
+  m.heart_rate_suppression = clamp(m.heart_rate_suppression, 0, 0.9);
+  m.gsr_sensitivity = clamp(m.gsr_sensitivity, 0.4, 2.2);
+  m.breathing_instability = clamp(m.breathing_instability, 0, 0.6);
+  return m;
+}
+
 function createBiometricState() {
   return {
     time: 0,
+    modifiers: { ...DEFAULT_MODIFIERS },
     latent: {
       ...RELAX_BASELINE,
     },
@@ -104,40 +138,44 @@ function createBiometricState() {
       qrsGain: 1,
       twaveGain: 1,
     },
-    eeg: {
-      phase: { d: 0, t: 0, a: 0, b: 0, g: 0 },
-      pink: 0,
-      blink: 0,
-      emg: 0,
-    },
     gsr: {
       tonic: 0.26,
       events: [],
       eventCooldown: 0,
     },
+    breathing: {
+      state: 'BASELINE',
+      phase: 0,
+      rpm: 14,
+      amp: 0.42,
+      style: 'sine',
+      jitter: 0.04,
+      holdTimer: 0,
+      gaspEnvelope: 0,
+      cycleJitter: 0,
+    },
     readout: {
       bpm: 72,
-      eegUv: 24.5,
       gsrUs: 6.8,
+      breathingRpm: 14,
     },
     baseline: {
       bpm: 72,
-      eegUv: 24.5,
       gsrUs: 6.8,
+      breathingRpm: 14,
     },
     buffers: {
       heartRate: createRingBuffer(SAMPLE_RATE.heartRate),
-      eeg: createRingBuffer(SAMPLE_RATE.eeg),
       gsr: createRingBuffer(SAMPLE_RATE.gsr),
+      breathing: createRingBuffer(SAMPLE_RATE.breathing),
     },
     accum: {
       heart: 0,
-      eeg: 0,
       gsr: 0,
+      breathing: 0,
     },
     transient: {
       heartExcite: 0,
-      eegExcite: 0,
     },
   };
 }
@@ -179,10 +217,11 @@ function toFiniteNumber(value) {
 }
 
 function triggerGsrEvent(model, intensity = 0.5) {
+  const sensitivity = model.modifiers?.gsr_sensitivity ?? 1;
   const delay = 0.7 + Math.random() * 1.3;
   model.gsr.events.push({
     start: model.time + delay,
-    amp: clamp(0.03 + intensity * 0.15, 0.02, 0.3),
+    amp: clamp(0.03 + intensity * 0.15 * sensitivity, 0.02, 0.45),
     riseTau: 0.35,
     decayTau: 2.6,
   });
@@ -212,7 +251,6 @@ function updateLatentAndDrive(model, dt) {
   latent.control += (RELAX_BASELINE.control - latent.control) * Math.min(1, dt * 0.26);
 
   model.transient.heartExcite = Math.max(0, model.transient.heartExcite - dt * 0.55);
-  model.transient.eegExcite = Math.max(0, model.transient.eegExcite - dt * 0.7);
 }
 
 function updateEcgParams(model, dt) {
@@ -280,66 +318,6 @@ function emitEcgSamples(model, dt) {
   model.readout.bpm += (model.ecg.bpm - model.readout.bpm) * 0.22;
 }
 
-function emitEegSamples(model, dt) {
-  model.accum.eeg += dt;
-  const step = 1 / SAMPLE_RATE.eeg;
-  let guard = 0;
-  while (model.accum.eeg >= step && guard < 2048) {
-    guard += 1;
-    model.accum.eeg -= step;
-    const t = model.time - model.accum.eeg;
-
-    const stress = model.drive.sympathetic;
-    const cLoad = model.latent.cognitiveLoad;
-
-    const ampDelta = 0.16 + model.latent.fatigue * 0.22;
-    const ampTheta = 0.2 + model.latent.fatigue * 0.25 + (1 - model.latent.control) * 0.1;
-    const ampAlpha = clamp(0.38 - stress * 0.22 - cLoad * 0.12, 0.08, 0.45);
-    const ampBeta = clamp(0.18 + stress * 0.36 + cLoad * 0.3, 0.12, 0.85);
-    const ampGamma = clamp(0.05 + cLoad * 0.16 + stress * 0.08, 0.02, 0.28);
-
-    model.eeg.phase.d += Math.PI * 2 * 2.2 * step;
-    model.eeg.phase.t += Math.PI * 2 * 5.8 * step;
-    model.eeg.phase.a += Math.PI * 2 * 9.8 * step;
-    model.eeg.phase.b += Math.PI * 2 * 19.5 * step;
-    model.eeg.phase.g += Math.PI * 2 * 34 * step;
-
-    const delta = Math.sin(model.eeg.phase.d) * ampDelta;
-    const theta = Math.sin(model.eeg.phase.t + 0.9) * ampTheta;
-    const alpha = Math.sin(model.eeg.phase.a + 0.4) * ampAlpha;
-    const beta = Math.sin(model.eeg.phase.b + 1.1) * ampBeta;
-    const gamma = Math.sin(model.eeg.phase.g + 0.2) * ampGamma;
-
-    const white = (Math.random() * 2 - 1) * 0.1;
-    model.eeg.pink = model.eeg.pink * 0.985 + white * 0.09;
-
-    const emgTarget = clamp(stress * 0.22 + model.latent.painManipulation * 0.3, 0, 0.6);
-    model.eeg.emg += (emgTarget - model.eeg.emg) * 0.08;
-    const emg = pseudoNoise(t * 18.3, 44) * model.eeg.emg * 0.22;
-    const line = Math.sin(t * Math.PI * 2 * 50) * 0.02;
-
-    if (Math.random() < step * (0.15 + (1 - model.latent.control) * 0.45)) {
-      model.eeg.blink = clamp(model.eeg.blink + 0.7, 0, 1.6);
-    }
-    model.eeg.blink *= 0.93;
-    const blinkArtifact = model.eeg.blink * 0.23;
-
-    const exciteGain = 1 + model.transient.eegExcite * 1.15;
-    const sample =
-      (delta + theta + alpha + beta + gamma + model.eeg.pink + emg + line + blinkArtifact) *
-      0.26 *
-      exciteGain;
-    pushRing(model.buffers.eeg, sample);
-  }
-
-  const rms = rmsRecent(model.buffers.eeg, SAMPLE_RATE.eeg, 1.2);
-  const uvFromRms = clamp(16 + rms * 130, 9, 95);
-  const baseUv = model.baseline?.eegUv ?? 24.5;
-  const uvDrift = (uvFromRms - 26) * 0.72 + (model.drive.sympathetic - 0.3) * 6;
-  const uv = clamp(baseUv + uvDrift + model.transient.eegExcite * 7, 8, 120);
-  model.readout.eegUv += (uv - model.readout.eegUv) * 0.18;
-}
-
 function emitGsrSamples(model, dt) {
   model.accum.gsr += dt;
   const step = 1 / SAMPLE_RATE.gsr;
@@ -389,30 +367,71 @@ function emitGsrSamples(model, dt) {
   model.readout.gsrUs += (us - model.readout.gsrUs) * 0.16;
 }
 
-function rmsRecent(buffer, sampleRate, seconds) {
-  if (!buffer || buffer.count <= 0) {
-    return 0;
+function emitBreathingSamples(model, dt) {
+  model.accum.breathing += dt;
+  const step = 1 / SAMPLE_RATE.breathing;
+  const br = model.breathing;
+  const profile = BREATHING_PROFILES[br.state] || BREATHING_PROFILES.BASELINE;
+
+  br.rpm += (profile.rpm - br.rpm) * Math.min(1, dt * 1.4);
+  br.amp += (profile.amp - br.amp) * Math.min(1, dt * 1.6);
+  br.jitter += (profile.jitter - br.jitter) * Math.min(1, dt * 1.2);
+  br.style = profile.style;
+
+  let guard = 0;
+  while (model.accum.breathing >= step && guard < 256) {
+    guard += 1;
+    model.accum.breathing -= step;
+    const t = model.time - model.accum.breathing;
+    const freq = br.rpm / 60;
+
+    br.phase += freq * step * Math.PI * 2;
+    if (br.phase > Math.PI * 2) br.phase -= Math.PI * 2;
+
+    let sample = 0;
+    if (br.style === 'sine') {
+      sample = Math.sin(br.phase) * br.amp;
+    } else if (br.style === 'uneven') {
+      const skew = Math.sin(br.phase) + Math.sin(br.phase * 2.3 + 1.1) * 0.4;
+      sample = skew * br.amp * 0.72;
+    } else if (br.style === 'hold') {
+      br.holdTimer += step;
+      const cycle = 60 / Math.max(br.rpm, 1);
+      if (br.holdTimer < cycle * 0.78) {
+        sample = br.amp * 0.82;
+        sample += (Math.random() - 0.5) * 0.02;
+      } else {
+        const gaspT = (br.holdTimer - cycle * 0.78) / Math.max(cycle * 0.22, 0.05);
+        if (gaspT < 1) {
+          sample = br.amp * (0.82 - gaspT * 2.2);
+        } else {
+          br.holdTimer = 0;
+          sample = br.amp * 0.82;
+        }
+      }
+    } else if (br.style === 'cry') {
+      const base = Math.sin(br.phase) * br.amp;
+      const tremor = Math.sin(br.phase * 7.3 + t * 11) * br.amp * 0.18;
+      const hitch = Math.sin(br.phase * 3.1) > 0.6 ? pseudoNoise(t * 4.2, 19) * br.amp * 0.35 : 0;
+      sample = base + tremor + hitch;
+    }
+
+    const instability = model.modifiers?.breathing_instability ?? 0;
+    const jitter = (Math.random() - 0.5) * (br.jitter + instability * 0.4);
+    pushRing(model.buffers.breathing, sample + jitter);
   }
-  const n = Math.max(1, Math.min(buffer.count, Math.floor(seconds * sampleRate)));
-  let sum = 0;
-  for (let i = 0; i < n; i += 1) {
-    const v = ringAtOffset(buffer, i);
-    sum += v * v;
-  }
-  return Math.sqrt(sum / n);
+
+  model.readout.breathingRpm += (br.rpm - model.readout.breathingRpm) * 0.18;
 }
 
 function syncLegacyWave(state) {
   const heart = Math.abs(ringAtOffset(state.biometric.buffers.heartRate, 0));
-  const eeg = Math.abs(ringAtOffset(state.biometric.buffers.eeg, 0));
   const gsr = Math.abs(ringAtOffset(state.biometric.buffers.gsr, 0));
 
   state.wave.heartRate.amp = clamp(0.05 + heart * 0.82, 0.02, 1);
-  state.wave.eeg.amp = clamp(0.08 + eeg * 1.3, 0.02, 1);
   state.wave.gsr.amp = clamp(0.04 + gsr * 0.45, 0.02, 1);
 
   state.wave.heartRate.freq = clamp(state.biometric.readout.bpm / 55, 0.6, 3.8);
-  state.wave.eeg.freq = clamp(1.2 + state.biometric.latent.cognitiveLoad * 4.5, 1, 6.6);
   state.wave.gsr.freq = clamp(0.35 + state.biometric.drive.sympathetic * 0.8, 0.35, 1.8);
 
   state.wave.heartRate.noise = clamp(
@@ -420,7 +439,6 @@ function syncLegacyWave(state) {
     0.01,
     0.2
   );
-  state.wave.eeg.noise = clamp(0.03 + state.biometric.eeg.emg * 0.2, 0.02, 0.3);
   state.wave.gsr.noise = clamp(0.006 + state.biometric.latent.painManipulation * 0.04, 0.005, 0.09);
 }
 
@@ -432,21 +450,23 @@ function warmupModel(model, seconds = 4) {
     updateLatentAndDrive(model, dt);
     updateEcgParams(model, dt);
     emitEcgSamples(model, dt);
-    emitEegSamples(model, dt);
     emitGsrSamples(model, dt);
+    emitBreathingSamples(model, dt);
   }
 }
 
 function applyBaselineMetricsToModel(model, baseline = {}) {
   const latent = model.latent;
+  const hrShift = model.modifiers?.heart_rate_baseline_shift ?? 0;
+  const gsrShift = model.modifiers?.gsr_baseline_shift ?? 0;
 
-  const heartNumeric = toFiniteNumber(baseline.heartRate);
-  const eegNumeric = toFiniteNumber(baseline.eeg);
-  const gsrNumeric = toFiniteNumber(baseline.gsr);
+  const heartRaw = toFiniteNumber(baseline.heartRate);
+  const gsrRaw = toFiniteNumber(baseline.gsr);
+  const heartNumeric = heartRaw !== null ? heartRaw + hrShift : null;
+  const gsrNumeric = gsrRaw !== null ? gsrRaw + gsrShift : null;
 
-  if (heartNumeric !== null || eegNumeric !== null || gsrNumeric !== null) {
+  if (heartNumeric !== null || gsrNumeric !== null) {
     const bpm = clamp(heartNumeric ?? 72, 48, 170);
-    const eegUv = clamp(eegNumeric ?? 24.5, 8, 120);
     const gsrUs = clamp(gsrNumeric ?? 6.8, 1.5, 25);
 
     model.ecg.bpm = bpm;
@@ -454,33 +474,22 @@ function applyBaselineMetricsToModel(model, baseline = {}) {
     model.readout.bpm = bpm;
     model.baseline.bpm = bpm;
 
-    const eegNorm = (eegUv - 8) / (120 - 8);
-    model.eeg.phase = { d: 0, t: 0, a: 0, b: 0, g: 0 };
-    model.eeg.pink = 0;
-    model.eeg.blink = 0;
-    model.eeg.emg = clamp(0.04 + eegNorm * 0.14, 0, 0.4);
-    model.readout.eegUv = eegUv;
-    model.baseline.eegUv = eegUv;
-
     const gsrNorm = (gsrUs - 1.5) / (25 - 1.5);
     model.gsr.tonic = clamp((gsrUs - 2) / 13.5, 0.08, 1.1);
     model.readout.gsrUs = gsrUs;
     model.baseline.gsrUs = gsrUs;
 
     latent.arousal = clamp(0.16 + gsrNorm * 0.52 + (bpm - 55) / 140, 0, 1);
-    latent.cognitiveLoad = clamp(0.2 + eegNorm * 0.42, 0, 1);
+    latent.cognitiveLoad = clamp(0.2 + gsrNorm * 0.28, 0, 1);
     latent.painManipulation = clamp(0.02 + gsrNorm * 0.08, 0, 1);
-    latent.control = clamp(0.7 - eegNorm * 0.22, 0, 1);
-    latent.fatigue = clamp(0.1 + (1 - eegNorm) * 0.22, 0, 1);
+    latent.control = clamp(0.7 - gsrNorm * 0.18, 0, 1);
+    latent.fatigue = clamp(0.1 + (1 - gsrNorm) * 0.18, 0, 1);
   } else {
     const heart = normalizedMetric(baseline.heartRate);
-    const eeg = normalizedMetric(baseline.eeg);
     const gsr = normalizedMetric(baseline.gsr);
     applyMechanicMetric(latent, heart, 0.6);
-    applyMechanicMetric(latent, eeg, 0.66);
     applyMechanicMetric(latent, gsr, 0.54);
     model.baseline.bpm = model.readout.bpm;
-    model.baseline.eegUv = model.readout.eegUv;
     model.baseline.gsrUs = model.readout.gsrUs;
   }
 
@@ -490,19 +499,21 @@ function applyBaselineMetricsToModel(model, baseline = {}) {
     updateLatentAndDrive(model, dt);
     updateEcgParams(model, dt);
     emitEcgSamples(model, dt);
-    emitEegSamples(model, dt);
     emitGsrSamples(model, dt);
+    emitBreathingSamples(model, dt);
   }
 }
 
-export function initBiometricsOnState(state, baseline) {
+export function initBiometricsOnState(state, baseline, modifiers) {
   state.biometric = createBiometricState();
+  state.biometric.modifiers = normalizeModifiers(modifiers);
   warmupModel(state.biometric, 4);
   applyBaselineMetricsToModel(state.biometric, baseline);
 }
 
-export function resetBiometricsOnState(state, baseline) {
+export function resetBiometricsOnState(state, baseline, modifiers) {
   state.biometric = createBiometricState();
+  state.biometric.modifiers = normalizeModifiers(modifiers);
   warmupModel(state.biometric, 4);
   applyBaselineMetricsToModel(state.biometric, baseline);
   syncLegacyWave(state);
@@ -516,7 +527,6 @@ export function applyMechanicsToBiometrics(state, mechanics) {
 
   const latent = state.biometric.latent;
   applyMechanicMetric(latent, mechanics.heart_rate, 0.84);
-  applyMechanicMetric(latent, mechanics.eeg, 0.92);
   applyMechanicMetric(latent, mechanics.gsr, 0.72);
 
   const heartExciteMap = {
@@ -529,20 +539,11 @@ export function applyMechanicsToBiometrics(state, mechanics) {
     MAX_SPIKE: 0.95,
     MAX: 1,
   };
-  const eegExciteMap = {
-    DROP: 0,
-    BASELINE: 0.16,
-    INCREASE: 0.48,
-    CHAOTIC: 0.92,
-    FLATLINE: 0.05,
-  };
+  const heartSuppress = state.biometric.modifiers?.heart_rate_suppression ?? 0;
+  const heartExciteRaw = heartExciteMap[mechanics.heart_rate] ?? 0.2;
   state.biometric.transient.heartExcite = Math.max(
     state.biometric.transient.heartExcite,
-    heartExciteMap[mechanics.heart_rate] ?? 0.2
-  );
-  state.biometric.transient.eegExcite = Math.max(
-    state.biometric.transient.eegExcite,
-    eegExciteMap[mechanics.eeg] ?? 0.2
+    heartExciteRaw * (1 - heartSuppress)
   );
 
   const breathingMap = {
@@ -554,6 +555,10 @@ export function applyMechanicsToBiometrics(state, mechanics) {
     CRYING: { arousal: 0.2, control: -0.24, fatigue: 0.08, cognitive: -0.05 },
   };
   applyDelta(latent, breathingMap[mechanics.breathing], 1);
+  if (mechanics.breathing && BREATHING_PROFILES[mechanics.breathing]) {
+    state.biometric.breathing.state = mechanics.breathing;
+    state.biometric.breathing.holdTimer = 0;
+  }
 
   const cctvMap = {
     EYE_DART: { arousal: 0.19, cognitive: 0.22, control: -0.11 },
@@ -590,8 +595,8 @@ export function updateWave(state, dt) {
   updateLatentAndDrive(model, dt);
   updateEcgParams(model, dt);
   emitEcgSamples(model, dt);
-  emitEegSamples(model, dt);
   emitGsrSamples(model, dt);
+  emitBreathingSamples(model, dt);
   syncLegacyWave(state);
 }
 

@@ -14,7 +14,7 @@ export const COLORS = {
   panelFillLight: 'rgba(20, 14, 8, 0.6)',
   panelSolid: '#140e08',
   pulse: '#e04848',
-  eeg: '#e3c13a',
+  breathing: '#6fc3d1',
   gsr: '#5ccf7d',
   fear: '#ff5d73',
   fearTrack: '#2d1b22',

@@ -9,9 +9,8 @@
     "system_config": {
       "initial_fear_bar": 20,
       "max_fear_bar": 100,
-      "fear_bar_description": "Korku Bari, suphelinin psikolojik baski altinda maskesinin ne kadar coztugunu olcer. Operatorun her hamlesi bari yukseltir ya da dusurur; biyometrik sinyaller (kalp atisi, GSR, EEG) ve mikro-ifadeler bu degeri besler. Bar yuksek tutuldugunda supheli savunma duvarlarini birakir ve itirafa yaklasir; bar dustugunde ise kontrolu geri alir, hukuki kalkanin ardina cekilir.",
+      "fear_bar_description": "Korku Bari, suphelinin psikolojik baski altinda maskesinin ne kadar coztugunu olcer. Operatorun her hamlesi bari yukseltir ya da dusurur; biyometrik sinyaller (kalp atisi, nefes, GSR) ve mikro-ifadeler bu degeri besler. Bar yuksek tutuldugunda supheli savunma duvarlarini birakir ve itirafa yaklasir; bar dustugunde ise kontrolu geri alir, hukuki kalkanin ardina cekilir.",
       "heart_rate_baseline": 70,
-      "eeg_baseline": 22.8,
       "gsr_baseline": 6.3
     },
     "context": "Bakırköy'deki Yıldıztepe Rezidans şantiyesinde yapımı süren istinat duvarı, Mart ayındaki şiddetli yağışların ardından alt kottaki bitişik apartmanın bahçesine çökerek zemin kat dairesinde oturan Yücel ailesinin ağır şekilde yaralanmasına yol açtı. Yücel ailesi, projenin yüklenicisi Arslaner İnşaat A.Ş. ve şirketin sahibi Selim Arslaner aleyhine hem maddi-manevi tazminat hem de taksirle yaralama suçlamasıyla şikâyetçi oldu; Cumhuriyet Savcılığı bilirkişi raporu doğrultusunda soruşturmayı derinleştirdi. İddiaya göre duvarda kullanılan beton ve demir donatı, onaylı statik projede öngörülen sınıfın altında kalıyor ve zemin etüdündeki uyarılar yeterince dikkate alınmamış. Selim Arslaner, malzeme seçiminin tamamen taşeron firmanın inisiyatifinde olduğunu, kendisinin teknik ayrıntılardan haberdar edilmediğini öne sürüyor. Ancak firma içi yazışmaların bir kısmının silindiğine dair ihbar ve eski şantiye şefinin aniden başka bir ile tayin edilmesi, savcılığın Arslaner'in bilgisi ve talimatı olup olmadığını sorgulamasına neden oluyor. Ruhsat sürecinde belediyeyle olan yakın ilişkiler de ayrı bir ön soruşturma dosyasına konu edildi.",
@@ -21,18 +20,45 @@
       "age": 46,
       "identity_summary": "Arslaner Insaat A.S. kurucusu ve yuzde 100 hissedari. Istanbul Avrupa yakasinda uc aktif rezidans projesi yonetiyor. Insaat muhendisi, MBA'li.",
       "family": [
-        { "relation": "Kizi", "name": "Ezgi (10)", "note": "Bosanmis eski esinde. Her hafta sonu sehir disindan ucakla gorumeye gidiyor. Ofisinde cizimlerini sergiliyor." },
-        { "relation": "Eski Esi", "name": "Nihal Arslaner", "note": "Velayet Nihal'de. Iliski medeni ama gergin." },
-        { "relation": "Kardesi", "name": "Murat Arslaner", "note": "Sirketin mali isler muduru. Bir sorusturmada ismi gecmisti." }
+        {
+          "relation": "Kizi",
+          "name": "Ezgi (10)",
+          "note": "Bosanmis eski esinde. Her hafta sonu sehir disindan ucakla gorumeye gidiyor. Ofisinde cizimlerini sergiliyor."
+        },
+        {
+          "relation": "Eski Esi",
+          "name": "Nihal Arslaner",
+          "note": "Velayet Nihal'de. Iliski medeni ama gergin."
+        },
+        {
+          "relation": "Kardesi",
+          "name": "Murat Arslaner",
+          "note": "Sirketin mali isler muduru. Bir sorusturmada ismi gecmisti."
+        }
       ],
       "medical": [
-        { "condition": "Hafif hipertansiyon (Grade 1)", "polygraph_effect": "Baseline kalp atisi yuksek olabilir; stres spikelari normalden erken gorulebilir." },
-        { "condition": "Kronik migren", "polygraph_effect": "Yogun sorguda EEG'de beklenmedik geciciliklere yol acabilir." }
+        {
+          "condition": "Hafif hipertansiyon (Grade 1)",
+          "polygraph_effect": "Baseline kalp atisi yuksek olabilir; stres spikelari normalden erken gorulebilir."
+        },
+        {
+          "condition": "Kronik migren",
+          "polygraph_effect": "Yogun sorguda aniden deri iletkenliginde geciciliklere ve nefes ritim bozukluklarina yol acabilir."
+        }
       ],
       "habits": [
-        { "habit": "Beta-bloker (10mg Bisoprolol, gunluk)", "polygraph_effect": "Kalp atisi tepkilerini kismen baskilar; tam MAX_SPIKE zorlasir. Kalp uzerinden YALANLARI ELE VERMEZ." },
-        { "habit": "Gunde 4-5 espresso", "polygraph_effect": "GSR baseline yuksek; terleme kolaylikla tetiklenir, tek basina deception gostermez." },
-        { "habit": "Duzenli gece 2'ye kadar mesai", "polygraph_effect": "Uyku yoksunluklu; EEG varyansi normalden yuksek baslayabilir." }
+        {
+          "habit": "Beta-bloker (10mg Bisoprolol, gunluk)",
+          "polygraph_effect": "Kalp atisi tepkilerini kismen baskilar; tam MAX_SPIKE zorlasir. Kalp uzerinden YALANLARI ELE VERMEZ."
+        },
+        {
+          "habit": "Gunde 4-5 espresso",
+          "polygraph_effect": "GSR baseline yuksek; terleme kolaylikla tetiklenir, tek basina deception gostermez."
+        },
+        {
+          "habit": "Duzenli gece 2'ye kadar mesai",
+          "polygraph_effect": "Uyku yoksunluklu; mikro-ifadelerinin kontrolu zayiflar, nefes duzensizligi kolay tetiklenir."
+        }
       ],
       "priors": [
         "2019: Ihaleye fesat karistirma iddiasiyla sorgulandi, kovusturmasizlik karari verildi.",
@@ -42,7 +68,14 @@
         "Kizi Ezgi'nin adi veya imaji yanlis zamanlanirsa avukatlar uzerinden BLOK atiyor — direkt kisisel soru kacak yolu yaratabilir.",
         "Santiye sefi Hakan Demirel'i ani tayinle Erzurum'a gonderdi. Hakan'in adi agir kanit olarak ortaya cikarilirsa supheli kontrolu kaybediyor.",
         "Kendi emegini, 'bursla okudum, babam marangozdu' anlatisini bir kimlik kalkani olarak kullaniyor. Empati capasi olarak dogru kullanilirsa maskeyi cozer; yaninda saldiri varsa savunma duvarina doner."
-      ]
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0.5,
+        "heart_rate_baseline_shift": 0,
+        "gsr_sensitivity": 1.35,
+        "gsr_baseline_shift": 0,
+        "breathing_instability": 0.1
+      }
     },
     "start_node": "node_01_intro",
     "nodes": {
@@ -59,7 +92,6 @@
               "heart_rate": "STABLE",
               "breathing": "DEEP",
               "gsr": "BASELINE",
-              "eeg": "FOCUSED",
               "cctv_visual": "REHEARSED_SOFTENING",
               "korku_bari_delta": 5,
               "gameplay_note": "ILERLEME: Supheli ezberli bir duygusal cerceveye geciyor ama sinyaller temiz. Guven kuruldu, simdi zemini kaydirma zamani."
@@ -74,7 +106,6 @@
               "heart_rate": "RISE",
               "breathing": "SHALLOW",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "DEFENSIVE_CROSS_ARMS",
               "korku_bari_delta": -15,
               "gameplay_note": "YANLIS HAMLE: Erken saldiri, supheliyi avukatin arkasina itti. Bundan sonraki her soru hukuki filtreden gececek."
@@ -89,7 +120,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "EYE_DART",
               "korku_bari_delta": 10,
               "gameplay_note": "YALAN SINYALI: 'Onaylarim' derken goz kaciyor. Teknik olayin detayini biliyor ama kagit uzerinde kendini koruyor."
@@ -111,7 +141,6 @@
               "heart_rate": "INCREASE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "ERRATIC",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": 15,
               "gameplay_note": "KISMEN DOGRU: Savunma kagit uzerinde tutarli ama GSR sicrayisi sinif degisikliginin bilincli oldugunu ima ediyor."
@@ -126,7 +155,6 @@
               "heart_rate": "SPIKE",
               "breathing": "HOLDING_BREATH",
               "gsr": "SURGE",
-              "eeg": "CHAOTIC",
               "cctv_visual": "MICRO_TWITCH",
               "korku_bari_delta": 20,
               "gameplay_note": "DOGRU HAMLE: Supheli blok hamlesini atlayamiyor. Savundugu kisinin olmadigi bir an - bu asistan belki de hic onaylamadi."
@@ -141,7 +169,6 @@
               "heart_rate": "DROP",
               "breathing": "DEEP",
               "gsr": "DECREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "RELIEVED_EXHALE",
               "korku_bari_delta": -25,
               "gameplay_note": "YANLIS HAMLE: Supheliye kacis rampasi verdiniz. Rahatlamis omuzlari ve nefes verisi, elinizden kaydigini gosteriyor."
@@ -163,7 +190,6 @@
               "heart_rate": "MAX_SPIKE",
               "breathing": "HYPERVENTILATION",
               "gsr": "MAX",
-              "eeg": "CHAOTIC",
               "cctv_visual": "FROZEN",
               "korku_bari_delta": 30,
               "gameplay_note": "ILERLEME: Biyometrik zirve. Ses 'hatirlamiyorum' diyor ama vucut 'yakalandim' diyor. Sahantiye sefini masaya cek."
@@ -178,7 +204,6 @@
               "heart_rate": "SPIKE",
               "breathing": "UNEVEN",
               "gsr": "SURGE",
-              "eeg": "ERRATIC",
               "cctv_visual": "LIP_PRESS",
               "korku_bari_delta": -10,
               "gameplay_note": "YANLIS HAMLE: Ahlaki baski yerine itiraz refleksi tetiklediniz. Supheli simdi yeniden toparlaniyor, elinizdeki ivmeyi kaybettiniz."
@@ -193,7 +218,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SURGE",
-              "eeg": "CHAOTIC",
               "cctv_visual": "LOOK_DOWN",
               "korku_bari_delta": 35,
               "gameplay_note": "DOGRU HAMLE: Yari itiraf geldi. 'Icinde durdurun yazmiyordu' cumlesi, okudugunu dolayli olarak kabul ediyor."
@@ -215,7 +239,6 @@
               "heart_rate": "MAX_SPIKE",
               "breathing": "CRYING",
               "gsr": "MAX",
-              "eeg": "FLATLINE",
               "cctv_visual": "BREAKDOWN",
               "korku_bari_delta": 45,
               "gameplay_note": "ITIRAF: Maske cozuldu. Dogrudan talimat olmasa da sozlu yonlendirmeyi ve raporu bildigini kabul etti. Taksirli sorumluluk kesinlesti."
@@ -230,7 +253,6 @@
               "heart_rate": "RISE",
               "breathing": "DEEP",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "STONE_FACE",
               "korku_bari_delta": -20,
               "gameplay_note": "YANLIS HAMLE: Blof hamlesi erken geldi. Supheli Hakan'a olan guvenini test ederken kendini toparladi. Sorgu kilitlendi."
@@ -245,7 +267,6 @@
               "heart_rate": "INCREASE",
               "breathing": "UNEVEN",
               "gsr": "SPIKE",
-              "eeg": "ERRATIC",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 40,
               "gameplay_note": "ITIRAF: Empati capasi calisti. Raporu okudugunu, sildigini ve sahantiye sefinin istifa isteyecek kadar itiraz ettigini dogruladi."

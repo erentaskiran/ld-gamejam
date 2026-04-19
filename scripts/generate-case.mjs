@@ -37,7 +37,14 @@ OUTPUT:
       "medical": [ { "condition": string, "polygraph_effect": string } ],
       "habits": [ { "habit": string, "polygraph_effect": string } ],
       "priors": [ string ],
-      "pressure_points": [ string ]
+      "pressure_points": [ string ],
+      "modifiers": {
+        "heart_rate_suppression": number,
+        "heart_rate_baseline_shift": number,
+        "gsr_sensitivity": number,
+        "gsr_baseline_shift": number,
+        "breathing_instability": number
+      }
     }
   }
 }
@@ -78,6 +85,25 @@ DOSSIER (background the player reads BEFORE interrogation):
 - pressure_points: 1-3 short bullets describing emotional or situational
   leverage. These telegraph which tactics (EMPATHIC, TRAP, EVIDENCE, etc.)
   will unlock or block the suspect.
+- modifiers: numeric knobs that translate medical+habits into live polygraph
+  distortion. MUST be consistent with the polygraph_effect notes. Defaults
+  are 0/1; only deviate where the dossier justifies it.
+  - heart_rate_suppression: 0.0-0.9. How much HR spike amplitude is muted.
+    Beta-blockers (propranolol, bisoprolol) ~0.4-0.55; SSRI mild ~0.2;
+    pacemaker ~0.6. Raise for each HR-suppressing agent (cap at 0.9).
+  - heart_rate_baseline_shift: -12..+15 BPM additive shift on baseline.
+    Hypertension +4..+10; heavy stimulant use +3..+8; bradycardia -5..-10.
+  - gsr_sensitivity: 0.7-1.8 multiplier on sweat response amplitude.
+    High caffeine 1.3-1.5; anxiety disorder 1.3-1.6; panic 1.5-1.8;
+    anticholinergic meds / antiperspirant 0.7-0.85.
+  - gsr_baseline_shift: -2..+4 uS additive shift on baseline skin
+    conductance. Match chronic caffeine/anxiety patterns.
+  - breathing_instability: 0.0-0.5 additive jitter on breath waveform.
+    Anxiety/panic 0.2-0.35; COPD 0.25-0.4; asthma history 0.1-0.2.
+  Note: medical conditions that mostly affect cognitive/neurological state
+  (migraine, insomnia) still belong in medical[] for narrative context —
+  they just don't get a direct numeric knob here, because the game only
+  surfaces pulse, breathing, GSR, and fear to the player.
 - Dossier MUST NOT spoil true_verdict. It can hint at motive/opportunity
   but must be believably available to an operator doing pre-interrogation
   research (public records, HR, medical disclosure forms).`;
@@ -135,7 +161,6 @@ OUTPUT SHAPE:
             "heart_rate": string,
             "breathing": string,
             "gsr": string,
-            "eeg": string,
             "cctv_visual": string,
             "korku_bari_delta": number,
             "gameplay_note": string
@@ -160,25 +185,30 @@ CORE DESIGN PRINCIPLE (CRITICAL):
   player is taken to a verdict screen and must call GUILTY / NOT_GUILTY based
   on polygraph readings accumulated throughout the session. End nodes are
   interrogation OUTCOMES, not game endings.
-- The polygraph signals (heart_rate, gsr, eeg) are the player's only hard
-  evidence of deception. Align signals honestly with the suspect's
+- The polygraph signals (heart_rate, breathing, gsr) are the player's only
+  hard evidence of deception. Align signals honestly with the suspect's
   true_verdict: the player must be able to read guilt or innocence from the
   biometrics.
 
 SIGNAL TRUTH ALIGNMENT:
+- The player sees four live channels: pulse, breathing, GSR, and a fear bar.
+  Micro-expressions on the defendant portrait (cctv_visual) are the fifth.
+  Align these around suspect.true_verdict.
 - If suspect.true_verdict == "GUILTY":
   - On accusing/probing questions, suspect shows real deception tells
-    (heart_rate SPIKE/MAX_SPIKE, gsr SURGE/MAX, eeg CHAOTIC/ERRATIC) even when
-    the verbal answer stays composed.
+    (heart_rate SPIKE/MAX_SPIKE, gsr SURGE/MAX, breathing HOLDING_BREATH or
+    HYPERVENTILATION, tense cctv_visual) even when the verbal answer stays
+    composed.
   - Calm answers are available on empathy or soft-framing tactics.
 - If suspect.true_verdict == "NOT_GUILTY":
   - Suspect may be visibly stressed (innocent people under interrogation
     spike too) but sharp deception signals should be sparse and diffuse —
-    mostly RISE/INCREASE levels, not MAX_SPIKE/SURGE.
+    mostly RISE/INCREASE levels and SHALLOW/UNEVEN breathing, not
+    MAX_SPIKE/SURGE/HOLDING_BREATH clusters.
   - Hard accusation questions may produce defensive spikes but NO sustained
-    CHAOTIC/FLATLINE EEG patterns or MAX GSR surges.
+    MAX GSR surges paired with HR MAX_SPIKE + HOLDING_BREATH.
 - Never fake a confession for a NOT_GUILTY suspect; reserve MAX_SPIKE + MAX
-  GSR + CHAOTIC/FLATLINE EEG clusters for GUILTY truths only.
+  GSR + HOLDING_BREATH / HYPERVENTILATION clusters for GUILTY truths only.
 
 NODE COUNT:
 - 5 to 7 total nodes
@@ -221,7 +251,6 @@ true_verdict — see SIGNAL TRUTH ALIGNMENT above):
 - heart_rate: BASELINE | STABLE | RISE | INCREASE | SPIKE | MAX_SPIKE | DROP | ERRATIC
 - breathing: BASELINE | CALM | DEEP | SHALLOW | HOLDING_BREATH | UNEVEN | HYPERVENTILATION | CRYING
 - gsr: BASELINE | STABLE | INCREASE | SPIKE | SURGE | MAX | DECREASE
-- eeg: BASELINE | FOCUSED | INCREASE | CHAOTIC | ERRATIC | DROP | FLATLINE
 - cctv_visual: free-form UPPER_SNAKE_CASE descriptive micro-expression or body
   cue (LIP_PRESS, JAW_TIGHTEN, EYE_DART, TEAR_POOLING, STONE_FACE,
   BREAKDOWN, EMPTY_STARE, RELEASED_SHOULDERS, DEFENSIVE_CROSS_ARMS,
@@ -277,7 +306,6 @@ OUTPUT:
       "max_fear_bar": 100,
       "fear_bar_description": string,
       "heart_rate_baseline": number,
-      "eeg_baseline": number,
       "gsr_baseline": number
     },
     "context": string,
@@ -308,11 +336,9 @@ RULES:
 - fear_bar_description should explain emotional/psychological pressure tracking
 - Add baseline biometric values to system_config only:
   - heart_rate_baseline
-  - eeg_baseline
   - gsr_baseline
 - Baseline values must be NUMERIC and realistic:
   - heart_rate_baseline: BPM number (typical calm range 60-90)
-  - eeg_baseline: microvolt level number (typical calm range 18-35)
   - gsr_baseline: microsiemens number (typical calm range 4-10)
 - These baseline values should be calm/neutral defaults that match your
   generated case.

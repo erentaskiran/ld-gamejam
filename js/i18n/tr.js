@@ -52,7 +52,7 @@ export const TR = {
   VERDICT_INSTRUCTIONS: '1 / 2 / MOUSE: HUKUM VER',
   VERDICT_NO_RECORD: 'Sorgu kaydi yok.',
   VERDICT_WAVE_HR: 'HR',
-  VERDICT_WAVE_EEG: 'EG',
+  VERDICT_WAVE_BREATHING: 'NF',
   VERDICT_WAVE_GSR: 'GS',
 
   // result
@@ -78,12 +78,43 @@ export const TR = {
   SETTINGS_LANGUAGE_TR: 'TURKCE',
   SETTINGS_BACK: 'ESC: Menuye Don',
   MENU_SETTINGS_HINT: 'S: Ayarlar',
+  MENU_BRIEFING_HINT: 'B: Brifing',
+
+  // briefing
+  BRIEFING_TITLE: '[ OPERATOR BRIFINGI ]',
+  BRIEFING_HINT_NEXT: 'ENTER / → : Ileri',
+  BRIEFING_HINT_BACK: '← : Geri',
+  BRIEFING_HINT_EXIT: 'ESC : Menu',
+  BRIEFING_INTRO_TITLE: 'ODAYI OKUMAK',
+  BRIEFING_INTRO_BODY:
+    'Ekranda dort canli kanalin ve bir beden-dili kanalin var: nabiz, nefes, GSR, korku bari ve kosedeki supheli portresi. Hicbir okuma sana "yaliyor" demez — dalgayi kendin okursun. Bu brifing her sinyali durum durum tanitir, neye dikkat edecegini gosterir.',
+  BRIEFING_PULSE_TITLE: 'NABIZ',
+  BRIEFING_PULSE_BODY:
+    'Kalp atisi stresle yukselir, supheli guvende hissettiginde duser. QRS sicramasinin yuksekligine ve atim sikligina bak. Beta-blokerler acikca koseye sikismis bir supheliyi bile sakin gosterebilir — sakin nabza guvenmeden once dosyayi oku.',
+  BRIEFING_BREATHING_TITLE: 'NEFES',
+  BRIEFING_BREATHING_BODY:
+    'Nefesin sekli kontrolu ele verir. Derin sinus = sakin. Yuzeysel ve hizli = savunmada. Uzun duz plato ve ardindan ani nefes = supheli bilinçli nefes tutuyor, manipulasyon denemesi. Aglama durumunda hizli sinuslere titreme biner.',
+  BRIEFING_GSR_TITLE: 'GSR (DERI ILETKENLIGI)',
+  BRIEFING_GSR_BODY:
+    'Ter tepkisi duygusal sicramadan 1-3 saniye sonra gelir. Baseline neredeyse duz cizgi; SPIKE veya SURGE marker penceresi icinde net bir zirve yapar. Yuksek kafein ve anksiyete baseline\'i yukseltir ve tepkileri abartir — yine once dosya.',
+  BRIEFING_FEAR_TITLE: 'KORKU BARI',
+  BRIEFING_FEAR_BODY:
+    'Toplam baski gostergesi. Gercek celiskiler veya empatik isabetlerde yukselir; yanlis hamlede (sakin supheliye erken saldiri, zamansiz hukuki tehdit) sert duser. Yuksek korku = maske kayiyor. Sifir korku = supheli kontrolu geri aldi.',
+  BRIEFING_CCTV_TITLE: 'SUPHELI PORTRESI',
+  BRIEFING_CCTV_BODY:
+    'Mikro-ifadeler ve beden ipuclari her cevap sirasinda portre uzerinde gorsel efekt olarak cikar. Kirmizi titrek ton = gergin, kirmizi nabiz + sallanma = cokmus, mavimsi mor cokme = savunmaci kollar, sessiz desatur = kontrollu tas yuz, sicak parilti = rahatlama. Metin etiketi yok — portreyi oku.',
+  BRIEFING_MODIFIERS_TITLE: 'SAGLIK VE ALISKANLIK',
+  BRIEFING_MODIFIERS_BODY:
+    'Her dosya medical ve habits listesinde "polygraph_effect" notu tasir. Bunlar gercek: beta-bloker gercekten nabiz sicramasini azaltir, kafein GSR\'yi buyutur, anksiyete nefesi dengesiz yapar. Grafigi okumadan once dosyayi oku — sinyal modeli bu degerleri zaten hesaba katiyor.',
+  BRIEFING_CLOSE_TITLE: 'OPERATOR SENSIN',
+  BRIEFING_CLOSE_BODY:
+    'Hicbir sinyal tek basina kanit degildir. Hukum vermeden once iki kanali dosya ile dogrula. Yanlis hukum bedel odetir. Dava secimine donmek icin ENTER\'a bas.',
 
   // polygraph / UI
   POLY_HEADER: 'POLIGRAF SINYALLERI',
   POLY_FEAR: 'KORKU',
   POLY_PULSE: 'NABIZ',
-  POLY_EEG: 'EEG',
+  POLY_BREATHING: 'NEFES',
   POLY_GSR: 'GSR',
   DIALOGUE_ANSWER_HEADER: '[ CEVAP ]',
   DIALOGUE_YOU_PREFIX: 'SEN: ',

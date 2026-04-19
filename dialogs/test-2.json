@@ -11,7 +11,6 @@
       "max_fear_bar": 100,
       "fear_bar_description": "Suphelinin psikolojik baski seviyesi. Dusuk degerler supheli hala kontrolde oldugunu, yuksek degerler maskesinin cozulmeye basladigini gosterir. Operatorun taktik secimlerine gore artar veya azalir; kritik esiklerde supheli ya kilitlenir ya da itirafa yaklasir.",
       "heart_rate_baseline": 82,
-      "eeg_baseline": 24,
       "gsr_baseline": 7
     },
     "context": "Gecen yil Bodrum'daki butik otelde cikan yanginda hayatini kaybeden 22 yasindaki stajyer resepsiyonist Elif Demir'in ailesi, otel sahibi Mert Kayacan aleyhine agir ihmal ve taksirle olume sebebiyet iddiasiyla tazminat davasi acti. Itfaiye raporuna gore yangin alarm sistemi olay aninda devre disiydi ve personel kullanimindaki acil cikis kapisi disaridan kilitli bulundu. Davaci taraf, bu iki unsurun isletmenin kasitli maliyet kisma politikasinin sonucu oldugunu one suruyor; Kayacan ise olayi teknik bir ariza ve vardiya calisanlarinin ihmali olarak sunuyor. Sigorta sirketi odemeyi askiya aldi, belediye ise isletme ruhsatinin iptali icin ayri bir idari sorusturma baslatti. Bakim kayitlarinda tutarsizliklar ve vardiya tanikliklarindaki celiskiler nedeniyle savcilik, Kayacan'i resmi ifade icin cagirdi. Sorumlulugun ihmal mi, kasit mi yoksa beklenmedik bir kazanin sonucu mu oldugu hala netlesmis degil.",
@@ -70,7 +69,14 @@
         "Annesinin saglik durumu konusunda empatik yaklasim onu duygusal olarak acabilir.",
         "Eski esi ile olan mali cekismeden bahsedilmesi savunmaciligini tetikler ve onu kapatir.",
         "Bakim kayitlariyla ilgili somut belge gosterildiginde tutarsizliga dusme olasiligi yuksektir."
-      ]
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0.55,
+        "heart_rate_baseline_shift": 0,
+        "gsr_sensitivity": 1.4,
+        "gsr_baseline_shift": 0,
+        "breathing_instability": 0.25
+      }
     },
     "start_node": "node_01_intro",
     "nodes": {
@@ -87,7 +93,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 8,
               "gameplay_note": "ILERLEME: Duygusal savunma dustu, supheli konusmaya acik. Baseline olcumu icin iyi firsat."
@@ -102,7 +107,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "INCREASE",
-              "eeg": "ERRATIC",
               "cctv_visual": "DEFENSIVE_CROSS_ARMS",
               "korku_bari_delta": -12,
               "gameplay_note": "YANLIS HAMLE: Erken saldiri supheliyi kapatti. Avukat talebine yaklasti."
@@ -117,7 +121,6 @@
               "heart_rate": "STABLE",
               "breathing": "BASELINE",
               "gsr": "BASELINE",
-              "eeg": "FOCUSED",
               "cctv_visual": "STONE_FACE",
               "korku_bari_delta": 4,
               "gameplay_note": "BASELINE: Olgusal sorulara temiz tepki. Referans noktasi alindi."
@@ -139,7 +142,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "EYE_DART",
               "korku_bari_delta": 10,
               "gameplay_note": "KISMEN DOGRU: Panel konusunda tedirgin ama kasit iddiasina tepkisi normal. Dikkat: 'sik sik ariza' ifadesi kritik."
@@ -154,7 +156,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "FOCUSED",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": -8,
               "gameplay_note": "DIKKAT: Yuksek tepki ama EEG kaotik degil — dogru soyluyor olabilir ya da haksiz suclama ofkesi. Kendi biyometrik bagimliliklarini (anksiyete, kafein) unutmayin."
@@ -169,7 +170,6 @@
               "heart_rate": "SPIKE",
               "breathing": "HOLDING_BREATH",
               "gsr": "SPIKE",
-              "eeg": "ERRATIC",
               "cctv_visual": "LIP_PRESS",
               "korku_bari_delta": 18,
               "gameplay_note": "YALAN SINYALI: Bakim tarihinde guclu aldatma tepkisi. 'Hatirlamiyorum' cevabi fizyolojiyle celisiyor. Bu cekirdek konuya yaklasildi."
@@ -191,7 +191,6 @@
               "heart_rate": "MAX_SPIKE",
               "breathing": "HYPERVENTILATION",
               "gsr": "SURGE",
-              "eeg": "CHAOTIC",
               "cctv_visual": "MICRO_TWITCH",
               "korku_bari_delta": 30,
               "gameplay_note": "YALAN SINYALI (GUCLU): Bakim kayitlari uzerinde agir aldatma. Ancak bu SADECE bakim iptalini gizleme tepkisi olabilir — alarm kasti sorusuna tepkisiyle karsilastirin."
@@ -206,7 +205,6 @@
               "heart_rate": "SPIKE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "LOOK_DOWN",
               "korku_bari_delta": 5,
               "gameplay_note": "KISMEN DOGRU: Duygusal basinca tepki veriyor ama dagilmiyor. Aldatma sinyali yok — pismanlik sinyali var."
@@ -221,7 +219,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "ERRATIC",
               "cctv_visual": "STONE_FACE",
               "korku_bari_delta": -20,
               "gameplay_note": "YANLIS HAMLE: Yasal tehdit erken yapildi. Supheli kapisini kapatti; kritik itiraf penceresi kaciriliyor."
@@ -243,7 +240,6 @@
               "heart_rate": "RISE",
               "breathing": "DEEP",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "AVOIDANCE",
               "korku_bari_delta": 6,
               "gameplay_note": "BASELINE'A YAKIN: Anne cevabinda temiz fizyoloji — dogru olabilir. Bakim borclarina gelen imada ise hafif sicrama var."
@@ -258,7 +254,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 22,
               "gameplay_note": "KRITIK ITIRAF: 'Bakimi erteletmeseydim' ifadesi kendiligiden geldi. Kasit VE ihmal arasindaki farki supheli kendi agziyla koyuyor. EEG stabil — dogru soyluyor."
@@ -273,7 +268,6 @@
               "heart_rate": "MAX_SPIKE",
               "breathing": "HYPERVENTILATION",
               "gsr": "SURGE",
-              "eeg": "ERRATIC",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": -25,
               "gameplay_note": "YANLIS HAMLE: Uydurma kanit blofu supheliyi oldurdu. Bu noktadan sonra isbirligi olasiligi dustu."

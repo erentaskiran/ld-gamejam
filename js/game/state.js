@@ -35,19 +35,16 @@ export const state = {
   markerCapture: null,
   metrics: {
     heartRate: 'BASELINE',
-    eeg: 'BASELINE',
     gsr: 'BASELINE',
     breathing: 'BASELINE',
     cctvVisual: 'NEUTRAL',
   },
   wave: {
     heartRate: { amp: 0.25, freq: 1.5, noise: 0.04 },
-    eeg: { amp: 0.35, freq: 2.4, noise: 0.07 },
     gsr: { amp: 0.2, freq: 0.8, noise: 0.03 },
   },
   waveTarget: {
     heartRate: { amp: 0.25, freq: 1.5, noise: 0.04 },
-    eeg: { amp: 0.35, freq: 2.4, noise: 0.07 },
     gsr: { amp: 0.2, freq: 0.8, noise: 0.03 },
   },
   time: 0,
@@ -93,14 +90,14 @@ function finalizeMarkerCapture() {
     startTime: m.startTime,
     endTime,
     hrPeak: m.peakHr,
-    eegPeak: m.peakEeg,
+    breathingPeak: m.peakBreathing,
     gsrPeak: m.peakGsr,
     hrCategory: m.hrCategory,
-    eegCategory: m.eegCategory,
+    breathingCategory: m.breathingCategory,
     gsrCategory: m.gsrCategory,
     samples: {
       hr: m.samples.hr.slice(),
-      eeg: m.samples.eeg.slice(),
+      breathing: m.samples.breathing.slice(),
       gsr: m.samples.gsr.slice(),
     },
   });
@@ -151,17 +148,17 @@ export function updateMarkerCapture() {
   }
 
   const hrDelta = Math.abs((readout.bpm ?? 0) - (baseline.bpm ?? 0));
-  const eegDelta = Math.abs((readout.eegUv ?? 0) - (baseline.eegUv ?? 0));
+  const breathingDelta = Math.abs((readout.breathingRpm ?? 0) - (baseline.breathingRpm ?? 0));
   const gsrDelta = Math.abs((readout.gsrUs ?? 0) - (baseline.gsrUs ?? 0));
   if (hrDelta > m.peakHr) m.peakHr = hrDelta;
-  if (eegDelta > m.peakEeg) m.peakEeg = eegDelta;
+  if (breathingDelta > m.peakBreathing) m.peakBreathing = breathingDelta;
   if (gsrDelta > m.peakGsr) m.peakGsr = gsrDelta;
 
   m.samples.hr.push(latestRingSample(buffers.heartRate));
-  m.samples.eeg.push(latestRingSample(buffers.eeg));
+  m.samples.breathing.push(latestRingSample(buffers.breathing));
   m.samples.gsr.push(latestRingSample(buffers.gsr));
   if (m.samples.hr.length > MARKER_MAX_SAMPLES) m.samples.hr.shift();
-  if (m.samples.eeg.length > MARKER_MAX_SAMPLES) m.samples.eeg.shift();
+  if (m.samples.breathing.length > MARKER_MAX_SAMPLES) m.samples.breathing.shift();
   if (m.samples.gsr.length > MARKER_MAX_SAMPLES) m.samples.gsr.shift();
 
   const answerLen = state.lastAnswer.length;
@@ -188,11 +185,14 @@ export function resetRun() {
   state.interrogationOutcome = null;
   state.polygraphMarkers = [];
   state.markerCapture = null;
-  resetBiometricsOnState(state, {
-    heartRate: config.heart_rate_baseline,
-    eeg: config.eeg_baseline,
-    gsr: config.gsr_baseline,
-  });
+  resetBiometricsOnState(
+    state,
+    {
+      heartRate: config.heart_rate_baseline,
+      gsr: config.gsr_baseline,
+    },
+    state.gameData.dossier?.modifiers
+  );
   pushLog(state.gameData.context);
   return setNode(state.gameData.start_node);
 }
@@ -212,20 +212,21 @@ const STRESS_TIER = {
     SPIKE: 2,
     INCREASE: 1,
   },
-  eeg: {
-    FLATLINE: 3,
-    CHAOTIC: 3,
-    ERRATIC: 2,
-    INCREASE: 1,
+  breathing: {
+    HOLDING_BREATH: 3,
+    HYPERVENTILATION: 3,
+    CRYING: 3,
+    UNEVEN: 2,
+    SHALLOW: 2,
   },
 };
 
 function classifyDeception(mechanics) {
   const hr = STRESS_TIER.heartRate[mechanics.heart_rate] || 0;
   const gsr = STRESS_TIER.gsr[mechanics.gsr] || 0;
-  const eeg = STRESS_TIER.eeg[mechanics.eeg] || 0;
-  const score = hr + gsr + eeg;
-  return { score, hr, gsr, eeg };
+  const breathing = STRESS_TIER.breathing[mechanics.breathing] || 0;
+  const score = hr + gsr + breathing;
+  return { score, hr, gsr, breathing };
 }
 
 export function pickChoice(index) {
@@ -255,7 +256,7 @@ export function pickChoice(index) {
     question: choice.question,
     answer: choice.answer,
     heartRate: mechanics.heart_rate || 'BASELINE',
-    eeg: mechanics.eeg || 'BASELINE',
+    breathing: mechanics.breathing || 'BASELINE',
     gsr: mechanics.gsr || 'BASELINE',
     fearDelta: mechanics.korku_bari_delta || 0,
     score: deception.score,
@@ -265,17 +266,16 @@ export function pickChoice(index) {
     qIndex: state.evidence.length,
     startTime: state.time,
     peakHr: 0,
-    peakEeg: 0,
+    peakBreathing: 0,
     peakGsr: 0,
     hrCategory: mechanics.heart_rate || 'BASELINE',
-    eegCategory: mechanics.eeg || 'BASELINE',
+    breathingCategory: mechanics.breathing || 'BASELINE',
     gsrCategory: mechanics.gsr || 'BASELINE',
     sampleAccum: 0,
-    samples: { hr: [], eeg: [], gsr: [] },
+    samples: { hr: [], breathing: [], gsr: [] },
   };
 
   state.metrics.heartRate = mechanics.heart_rate || state.metrics.heartRate;
-  state.metrics.eeg = mechanics.eeg || state.metrics.eeg;
   state.metrics.gsr = mechanics.gsr || state.metrics.gsr;
   state.metrics.breathing = mechanics.breathing || state.metrics.breathing;
   state.metrics.cctvVisual = mechanics.cctv_visual || state.metrics.cctvVisual;
