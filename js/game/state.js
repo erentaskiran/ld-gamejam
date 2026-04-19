@@ -1,6 +1,10 @@
 import { clamp } from '../math.js';
 import { CASES } from './cases.js';
-import { applyMechanicsToBiometrics, resetBiometricsOnState } from './waves.js';
+import {
+  applyMechanicsToBiometrics,
+  resetBiometricsOnState,
+  settleBiometricsForNextQuestion,
+} from './waves.js';
 import { t } from '../i18n/index.js';
 
 export const state = {
@@ -33,6 +37,8 @@ export const state = {
   interrogationOutcome: null,
   polygraphMarkers: [],
   markerCapture: null,
+  pendingMechanics: null,
+  pendingSignalApplyAt: 0,
   metrics: {
     heartRate: 'BASELINE',
     gsr: 'BASELINE',
@@ -49,6 +55,24 @@ export const state = {
   },
   time: 0,
 };
+
+function hashTextTo01(text) {
+  let h = 2166136261;
+  const s = String(text || '');
+  for (let i = 0; i < s.length; i += 1) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  const u = h >>> 0;
+  return (u % 10000) / 10000;
+}
+
+function deriveInitialStressFromPersonality(gameData) {
+  const suspect = gameData?.suspect || {};
+  const source = `${suspect.name || ''}|${suspect.role || ''}|${suspect.profile || ''}`;
+  const ratio = hashTextTo01(source);
+  return Math.round(40 + ratio * 20);
+}
 
 export function getSuspectLabel() {
   const name = state.gameData?.suspect?.name;
@@ -195,8 +219,9 @@ export function updateMarkerCapture() {
 export function resetRun() {
   const config = state.gameData.system_config;
   state.maxFearBar = config.max_fear_bar;
-  state.fearBar = config.initial_fear_bar;
-  state.fearBarDisplay = config.initial_fear_bar;
+  const personalityStress = deriveInitialStressFromPersonality(state.gameData);
+  state.fearBar = personalityStress;
+  state.fearBarDisplay = personalityStress;
   state.fearFlash = 0;
   state.topLog = [];
   state.lastQuestion = '';
@@ -210,6 +235,8 @@ export function resetRun() {
   state.interrogationOutcome = null;
   state.polygraphMarkers = [];
   state.markerCapture = null;
+  state.pendingMechanics = null;
+  state.pendingSignalApplyAt = 0;
   resetBiometricsOnState(
     state,
     {
@@ -220,6 +247,16 @@ export function resetRun() {
   );
   pushLog(state.gameData.context);
   return setNode(state.gameData.start_node);
+}
+
+export function resetSignalsToBaseline() {
+  settleBiometricsForNextQuestion(state);
+  state.metrics.heartRate = 'BASELINE';
+  state.metrics.gsr = 'BASELINE';
+  state.metrics.breathing = 'BASELINE';
+  state.metrics.cctvVisual = 'NEUTRAL';
+  state.pendingMechanics = null;
+  state.pendingSignalApplyAt = 0;
 }
 
 const STRESS_TIER = {
@@ -266,6 +303,8 @@ export function pickChoice(index) {
 
   const mechanics = choice.mechanics || {};
 
+  resetSignalsToBaseline();
+
   state.prompt = `${t('DIALOGUE_YOU_PREFIX')}${choice.question}`;
   state.lastQuestion = choice.question;
   state.lastAnswer = choice.answer;
@@ -301,18 +340,14 @@ export function pickChoice(index) {
     samples: { hr: [], breathing: [], gsr: [] },
   };
 
-  state.metrics.heartRate = mechanics.heart_rate || state.metrics.heartRate;
-  state.metrics.gsr = mechanics.gsr || state.metrics.gsr;
-  state.metrics.breathing = mechanics.breathing || state.metrics.breathing;
-  state.metrics.cctvVisual = mechanics.cctv_visual || state.metrics.cctvVisual;
+  state.pendingMechanics = mechanics;
+  state.pendingSignalApplyAt = state.time + 0.35;
 
   const prevFear = state.fearBar;
   state.fearBar = clamp(state.fearBar + (mechanics.korku_bari_delta || 0), 0, state.maxFearBar);
   if (state.fearBar !== prevFear) {
     state.fearFlash = 1;
   }
-  applyMechanicsToBiometrics(state, mechanics);
-
   state.responseMode = true;
   state.responseTimer = 1.2;
   state.pendingNodeId = choice.next_node;
@@ -320,4 +355,25 @@ export function pickChoice(index) {
   state.answerProgress = 0;
 
   return true;
+}
+
+export function applyPendingResponseSignals(force = false) {
+  const mechanics = state.pendingMechanics;
+  if (!mechanics) {
+    return;
+  }
+  if (!force && state.time < state.pendingSignalApplyAt) {
+    return;
+  }
+
+  state.metrics.heartRate = mechanics.heart_rate || state.metrics.heartRate;
+  state.metrics.gsr = mechanics.gsr || state.metrics.gsr;
+  state.metrics.breathing = mechanics.breathing || state.metrics.breathing;
+  state.metrics.cctvVisual = mechanics.cctv_visual || state.metrics.cctvVisual;
+  applyMechanicsToBiometrics(state, mechanics);
+  state.pendingMechanics = null;
+}
+
+export function flushPendingResponseSignals() {
+  applyPendingResponseSignals(true);
 }

@@ -41,7 +41,7 @@ export const TR = {
   VERDICT_SUMMARY_HEADER: 'SORGU OZETI',
   VERDICT_EVIDENCE_HEADER: 'POLIGRAF KANITLARI',
   VERDICT_HEART: 'KALP',
-  VERDICT_STATS_FEAR: 'KORKU BARI SON:',
+  VERDICT_STATS_FEAR: 'STRES METRESI SON:',
   VERDICT_STATS_QUESTIONS: 'SORU:',
   VERDICT_STATS_STRESS: 'STRES PUANI:',
   VERDICT_PROMPT: 'POLIGRAFI OKUYUN. SANIGIN SUCLU OLDUGUNA KANI GETIRDINIZ MI?',
@@ -92,7 +92,7 @@ export const TR = {
   BRIEFING_HINT_EXIT: 'ESC : Menu',
   BRIEFING_INTRO_TITLE: 'ODAYI OKUMAK',
   BRIEFING_INTRO_BODY:
-    'Ekranda dort canli kanalin ve bir beden-dili kanalin var: nabiz, nefes, GSR, korku bari ve kosedeki supheli portresi. Hicbir okuma sana "yaliyor" demez — dalgayi kendin okursun. Bu brifing her sinyali durum durum tanitir, neye dikkat edecegini gosterir.',
+    'Ekranda dort canli kanalin ve bir beden-dili kanalin var: nabiz, nefes, GSR, stres metresi ve kosedeki supheli portresi. Hicbir okuma sana "yaliyor" demez — dalgayi kendin okursun. Bu brifing her sinyali durum durum tanitir, neye dikkat edecegini gosterir.',
   BRIEFING_PULSE_TITLE: 'NABIZ',
   BRIEFING_PULSE_BODY:
     'Kalp atisi stresle yukselir, supheli guvende hissettiginde duser. QRS sicramasinin yuksekligine ve atim sikligina bak. Beta-blokerler acikca koseye sikismis bir supheliyi bile sakin gosterebilir — sakin nabza guvenmeden once dosyayi oku.',
@@ -102,9 +102,9 @@ export const TR = {
   BRIEFING_GSR_TITLE: 'GSR (DERI ILETKENLIGI)',
   BRIEFING_GSR_BODY:
     "Ter tepkisi duygusal sicramadan 1-3 saniye sonra gelir. Baseline neredeyse duz cizgi; SPIKE veya SURGE marker penceresi icinde net bir zirve yapar. Yuksek kafein ve anksiyete baseline'i yukseltir ve tepkileri abartir — yine once dosya.",
-  BRIEFING_FEAR_TITLE: 'KORKU BARI',
+  BRIEFING_FEAR_TITLE: 'STRES METRESI',
   BRIEFING_FEAR_BODY:
-    'Toplam baski gostergesi. Gercek celiskiler veya empatik isabetlerde yukselir; yanlis hamlede (sakin supheliye erken saldiri, zamansiz hukuki tehdit) sert duser. Yuksek korku = maske kayiyor. Sifir korku = supheli kontrolu geri aldi.',
+    'Toplam baski gostergesi. Gercek celiskiler veya empatik isabetlerde yukselir; yanlis hamlede (sakin supheliye erken saldiri, zamansiz hukuki tehdit) sert duser. Yuksek stres = maske kayiyor. Dusuk stres = supheli kontrolu geri aldi.',
   BRIEFING_CCTV_TITLE: 'SUPHELI PORTRESI',
   BRIEFING_CCTV_BODY:
     'Mikro-ifadeler ve beden ipuclari her cevap sirasinda portre uzerinde gorsel efekt olarak cikar. Kirmizi titrek ton = gergin, kirmizi nabiz + sallanma = cokmus, mavimsi mor cokme = savunmaci kollar, sessiz desatur = kontrollu tas yuz, sicak parilti = rahatlama. Metin etiketi yok — portreyi oku.',
@@ -117,7 +117,7 @@ export const TR = {
 
   // polygraph / UI
   POLY_HEADER: 'POLIGRAF SINYALLERI',
-  POLY_FEAR: 'KORKU',
+  POLY_FEAR: 'STRES',
   POLY_PULSE: 'NABIZ',
   POLY_BREATHING: 'NEFES',
   POLY_GSR: 'GSR',

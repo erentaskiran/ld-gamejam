@@ -519,6 +519,44 @@ export function resetBiometricsOnState(state, baseline, modifiers) {
   syncLegacyWave(state);
 }
 
+export function settleBiometricsForNextQuestion(state) {
+  if (!state.biometric) {
+    return;
+  }
+
+  const model = state.biometric;
+
+  model.latent.arousal = RELAX_BASELINE.arousal;
+  model.latent.cognitiveLoad = RELAX_BASELINE.cognitiveLoad;
+  model.latent.painManipulation = RELAX_BASELINE.painManipulation;
+  model.latent.fatigue = RELAX_BASELINE.fatigue;
+  model.latent.control = RELAX_BASELINE.control;
+
+  model.drive.sympathetic = 0.26;
+  model.drive.parasympathetic = 0.54;
+
+  model.transient.heartExcite = 0;
+  model.ecg.artifactBurst = 0;
+
+  model.gsr.events = [];
+  model.gsr.eventCooldown = 0;
+
+  model.breathing.state = 'BASELINE';
+  const baseBreathing = BREATHING_PROFILES.BASELINE;
+  model.breathing.rpm = baseBreathing.rpm;
+  model.breathing.amp = baseBreathing.amp;
+  model.breathing.style = baseBreathing.style;
+  model.breathing.jitter = baseBreathing.jitter;
+  model.breathing.phase = 0;
+  model.breathing.holdTimer = 0;
+  model.breathing.gaspEnvelope = 0;
+  model.breathing.cycleJitter = 0;
+
+  model.readout.breathingRpm = baseBreathing.rpm;
+
+  model.accum.breathing = 0;
+}
+
 export function applyMechanicsToBiometrics(state, mechanics) {
   if (!state.biometric) {
     state.biometric = createBiometricState();

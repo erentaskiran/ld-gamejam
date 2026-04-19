@@ -10,9 +10,12 @@ import {
 } from '../input.js';
 import { clamp, lerp } from '../math.js';
 import {
+  applyPendingResponseSignals,
+  flushPendingResponseSignals,
   getDefendantImageKey,
   getSuspectLabel,
   pickChoice,
+  resetSignalsToBaseline,
   resetRun,
   setNode,
   state,
@@ -481,6 +484,10 @@ function tickFearAnimation(dt) {
   state.fearFlash = Math.max(0, state.fearFlash - dt * FEAR_FLASH_DECAY);
 }
 
+function shouldForceVerdictByStress() {
+  return state.fearBar <= 10 || state.fearBar >= 90;
+}
+
 function handleResponseMode(dt) {
   const qLen = state.lastQuestion.length;
   const aLen = state.lastAnswer.length;
@@ -490,10 +497,12 @@ function handleResponseMode(dt) {
   if (wasKeyPressed('enter')) {
     if (!qDone) {
       state.questionProgress = qLen;
+      flushPendingResponseSignals();
       return;
     }
     if (!aDone) {
       state.answerProgress = aLen;
+      flushPendingResponseSignals();
       return;
     }
     advanceToPendingNode();
@@ -564,9 +573,15 @@ export function registerPlayScene(_canvas, ctx) {
     },
     update(dt) {
       state.time += dt;
+      applyPendingResponseSignals();
       updateWave(state, dt);
       tickFearAnimation(dt);
       updateMarkerCapture();
+
+      if (shouldForceVerdictByStress()) {
+        setScene('verdict');
+        return;
+      }
 
       if (tutorialStep >= 0) {
         tutorialPulseTime += dt;
@@ -610,6 +625,7 @@ export function registerPlayScene(_canvas, ctx) {
 
       if (state.currentNodeId !== displayedNodeId) {
         displayedNodeId = state.currentNodeId;
+        resetSignalsToBaseline();
         applyNodeAtmosphere(state.currentNode, state.currentNodeId);
         narrationTextProgress = 0;
         choicesAnim = 0;

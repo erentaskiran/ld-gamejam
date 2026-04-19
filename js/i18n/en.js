@@ -41,7 +41,7 @@ export const EN = {
   VERDICT_SUMMARY_HEADER: 'INTERROGATION SUMMARY',
   VERDICT_EVIDENCE_HEADER: 'POLYGRAPH EVIDENCE',
   VERDICT_HEART: 'HEART',
-  VERDICT_STATS_FEAR: 'FEAR BAR FINAL:',
+  VERDICT_STATS_FEAR: 'STRESS METER FINAL:',
   VERDICT_STATS_QUESTIONS: 'QUESTIONS:',
   VERDICT_STATS_STRESS: 'STRESS SCORE:',
   VERDICT_PROMPT: 'READ THE POLYGRAPH. ARE YOU CONVINCED THE DEFENDANT IS GUILTY?',
@@ -92,7 +92,7 @@ export const EN = {
   BRIEFING_HINT_EXIT: 'ESC : Menu',
   BRIEFING_INTRO_TITLE: 'READING THE ROOM',
   BRIEFING_INTRO_BODY:
-    'You have four live channels and one body-language channel. Pulse, breathing, GSR, the fear bar on screen, and the defendant portrait in the corner. No readout ever tells you "liar" — you read the waveforms yourself. This briefing walks each signal through its states so you know what to look for.',
+    'You have four live channels and one body-language channel. Pulse, breathing, GSR, the stress meter on screen, and the defendant portrait in the corner. No readout ever tells you "liar" — you read the waveforms yourself. This briefing walks each signal through its states so you know what to look for.',
   BRIEFING_PULSE_TITLE: 'PULSE',
   BRIEFING_PULSE_BODY:
     'Heart rate rises with stress and drops when the suspect feels safe. Watch QRS spike height and beat density. Beta-blockers flatten the response even when the suspect is clearly cornered — always check the dossier before trusting a calm pulse.',
@@ -102,9 +102,9 @@ export const EN = {
   BRIEFING_GSR_TITLE: 'GSR (SKIN CONDUCTANCE)',
   BRIEFING_GSR_BODY:
     'Sweat response fires 1-3 seconds after emotional spikes. Baseline is a near-flat line; a SPIKE or SURGE jumps visibly within the marker window. Heavy caffeine and anxiety raise baseline and amplify reactions — again, dossier first.',
-  BRIEFING_FEAR_TITLE: 'FEAR BAR',
+  BRIEFING_FEAR_TITLE: 'STRESS METER',
   BRIEFING_FEAR_BODY:
-    'Aggregate pressure. It rises when you land true contradictions or empathy hits, and falls hard when you misfire (aggressive attack on a calm suspect, legal threats too early). High fear = mask slipping. Zero fear = they are back in control.',
+    'Aggregate pressure. It rises when you land true contradictions or empathy hits, and falls hard when you misfire (aggressive attack on a calm suspect, legal threats too early). High stress = mask slipping. Low stress = they are back in control.',
   BRIEFING_CCTV_TITLE: 'DEFENDANT PORTRAIT',
   BRIEFING_CCTV_BODY:
     'Micro-expressions and body cues render as visual effects on the portrait during each answer. A red jittery tint = tense, warm red pulse + wobble = breakdown, cool purple sag = defensive cross-arms, desaturated stillness = controlled stone face, warm glow = relief. No text label — read the portrait.',
@@ -117,7 +117,7 @@ export const EN = {
 
   // polygraph / UI
   POLY_HEADER: 'POLYGRAPH SIGNALS',
-  POLY_FEAR: 'FEAR',
+  POLY_FEAR: 'STRESS',
   POLY_PULSE: 'PULSE',
   POLY_BREATHING: 'BREATH',
   POLY_GSR: 'GSR',
