@@ -8,11 +8,7 @@ import { drawPortraitBadge } from '../ui/portraitBadge.js';
 import { classifyCctv } from '../ui/cctvEffect.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
 import { t } from '../i18n/index.js';
-import {
-  getBiometricDrawData,
-  resetBiometricsOnState,
-  updateWave,
-} from '../game/waves.js';
+import { getBiometricDrawData, resetBiometricsOnState, updateWave } from '../game/waves.js';
 import { applyAmbientProfile } from '../interrogationAudio.js';
 import { clamp } from '../math.js';
 
@@ -46,12 +42,7 @@ const SIGNAL_CYCLES = {
     { mechanics: { gsr: 'SURGE' } },
     { mechanics: { gsr: 'MAX' } },
   ],
-  fear: [
-    { fearDelta: 0 },
-    { fearDelta: 14 },
-    { fearDelta: 28 },
-    { fearDelta: -22 },
-  ],
+  fear: [{ fearDelta: 0 }, { fearDelta: 14 }, { fearDelta: 28 }, { fearDelta: -22 }],
   cctv: [
     { cue: 'STONE_FACE' },
     { cue: 'EYE_DART' },
@@ -224,9 +215,7 @@ function currentStateLabel() {
   const entry = currentCycleEntry();
   if (!entry) return '';
   if (entry.mechanics) {
-    return (
-      entry.mechanics.heart_rate || entry.mechanics.breathing || entry.mechanics.gsr || ''
-    );
+    return entry.mechanics.heart_rate || entry.mechanics.breathing || entry.mechanics.gsr || '';
   }
   if (entry.cue) return entry.cue;
   if (entry.fearDelta != null) {

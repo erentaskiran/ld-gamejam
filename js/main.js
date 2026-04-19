@@ -124,6 +124,9 @@ async function boot() {
         operator: './assets/operator.png',
         defendant: './assets/defendant.png',
       },
+      audio: {
+        'case-slam': './assets/audio/case-slam.wav',
+      },
     }),
     loadCustomFonts(),
   ]);

@@ -155,6 +155,147 @@ export function playTypewriterKey(volume = 1) {
   noise.stop(now + 0.05);
 }
 
+export function playCaseCloseHit(intensity = 1) {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+
+  const now = ctx.currentTime;
+  const k = Math.max(0.8, Math.min(2, intensity));
+
+  const master = ctx.createGain();
+  master.gain.value = 0.88;
+
+  const comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = -30;
+  comp.knee.value = 18;
+  comp.ratio.value = 9;
+  comp.attack.value = 0.001;
+  comp.release.value = 0.16;
+
+  const finalLp = ctx.createBiquadFilter();
+  finalLp.type = 'lowpass';
+  finalLp.frequency.value = 5200;
+
+  master.connect(comp);
+  comp.connect(finalLp);
+  finalLp.connect(ctx.destination);
+
+  const latch = ctx.createBufferSource();
+  latch.buffer = makeNoiseBuffer(ctx, 0.03);
+  const latchHp = ctx.createBiquadFilter();
+  latchHp.type = 'highpass';
+  latchHp.frequency.value = 3200;
+  const latchPk = ctx.createBiquadFilter();
+  latchPk.type = 'peaking';
+  latchPk.frequency.value = 2200;
+  latchPk.Q.value = 1.8;
+  latchPk.gain.value = 5;
+  const latchGain = ctx.createGain();
+  latchGain.gain.setValueAtTime(0.0001, now);
+  latchGain.gain.exponentialRampToValueAtTime(0.35 * k, now + 0.0009);
+  latchGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
+  latch.connect(latchHp).connect(latchPk).connect(latchGain).connect(master);
+  latch.start(now);
+  latch.stop(now + 0.013);
+
+  const shove = ctx.createBufferSource();
+  shove.buffer = makeNoiseBuffer(ctx, 0.08);
+  const shoveBp = ctx.createBiquadFilter();
+  shoveBp.type = 'bandpass';
+  shoveBp.frequency.value = 900;
+  shoveBp.Q.value = 0.75;
+  const shoveGain = ctx.createGain();
+  shoveGain.gain.setValueAtTime(0.0001, now + 0.002);
+  shoveGain.gain.exponentialRampToValueAtTime(0.26 * k, now + 0.014);
+  shoveGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+  shove.connect(shoveBp).connect(shoveGain).connect(master);
+  shove.start(now + 0.002);
+  shove.stop(now + 0.062);
+
+  const slam = ctx.createBufferSource();
+  slam.buffer = makeNoiseBuffer(ctx, 0.2);
+  const slamLp = ctx.createBiquadFilter();
+  slamLp.type = 'lowpass';
+  slamLp.frequency.value = 2200;
+  const slamHp = ctx.createBiquadFilter();
+  slamHp.type = 'highpass';
+  slamHp.frequency.value = 80;
+  const slamPk = ctx.createBiquadFilter();
+  slamPk.type = 'peaking';
+  slamPk.frequency.value = 520;
+  slamPk.Q.value = 0.9;
+  slamPk.gain.value = 6;
+  const slamGain = ctx.createGain();
+  slamGain.gain.setValueAtTime(0.0001, now + 0.012);
+  slamGain.gain.exponentialRampToValueAtTime(1.08 * k, now + 0.02);
+  slamGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.13);
+  slam.connect(slamLp).connect(slamHp).connect(slamPk).connect(slamGain).connect(master);
+  slam.start(now + 0.012);
+  slam.stop(now + 0.132);
+
+  const thud = ctx.createOscillator();
+  thud.type = 'sine';
+  thud.frequency.setValueAtTime(78, now + 0.013);
+  thud.frequency.exponentialRampToValueAtTime(45, now + 0.12);
+  const thudHp = ctx.createBiquadFilter();
+  thudHp.type = 'highpass';
+  thudHp.frequency.value = 62;
+  const thudGain = ctx.createGain();
+  thudGain.gain.setValueAtTime(0.0001, now + 0.013);
+  thudGain.gain.exponentialRampToValueAtTime(0.45 * k, now + 0.022);
+  thudGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+  thud.connect(thudHp).connect(thudGain).connect(master);
+  thud.start(now + 0.013);
+  thud.stop(now + 0.145);
+
+  const panel1 = ctx.createOscillator();
+  panel1.type = 'triangle';
+  panel1.frequency.setValueAtTime(260, now + 0.018);
+  panel1.frequency.exponentialRampToValueAtTime(185, now + 0.09);
+  const panel1Gain = ctx.createGain();
+  panel1Gain.gain.setValueAtTime(0.0001, now + 0.018);
+  panel1Gain.gain.exponentialRampToValueAtTime(0.33 * k, now + 0.028);
+  panel1Gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
+  panel1.connect(panel1Gain).connect(master);
+  panel1.start(now + 0.018);
+  panel1.stop(now + 0.112);
+
+  const panel2 = ctx.createOscillator();
+  panel2.type = 'triangle';
+  panel2.frequency.setValueAtTime(430, now + 0.02);
+  panel2.frequency.exponentialRampToValueAtTime(300, now + 0.08);
+  const panel2Gain = ctx.createGain();
+  panel2Gain.gain.setValueAtTime(0.0001, now + 0.02);
+  panel2Gain.gain.exponentialRampToValueAtTime(0.23 * k, now + 0.028);
+  panel2Gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.095);
+  panel2.connect(panel2Gain).connect(master);
+  panel2.start(now + 0.02);
+  panel2.stop(now + 0.097);
+
+  const frameRattle = ctx.createBufferSource();
+  frameRattle.buffer = makeNoiseBuffer(ctx, 0.14);
+  const frameHp = ctx.createBiquadFilter();
+  frameHp.type = 'highpass';
+  frameHp.frequency.value = 1700;
+  const frameGain = ctx.createGain();
+  frameGain.gain.setValueAtTime(0.0001, now + 0.048);
+  frameGain.gain.exponentialRampToValueAtTime(0.2 * k, now + 0.058);
+  frameGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+  frameRattle.connect(frameHp).connect(frameGain).connect(master);
+  frameRattle.start(now + 0.048);
+  frameRattle.stop(now + 0.142);
+}
+
+export function playCaseCloseSlam(intensity = 1) {
+  const sample = getAudio('case-slam');
+  if (sample) {
+    playSfx('case-slam', Math.max(0, Math.min(1, 0.9 * intensity)));
+    return;
+  }
+  playCaseCloseHit(intensity);
+}
+
 export function playSfx(name, volume = 1) {
   const source = getAudio(name);
   if (!source) {

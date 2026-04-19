@@ -97,7 +97,7 @@ export const TR = {
     'Nefesin sekli kontrolu ele verir. Derin sinus = sakin. Yuzeysel ve hizli = savunmada. Uzun duz plato ve ardindan ani nefes = supheli bilinçli nefes tutuyor, manipulasyon denemesi. Aglama durumunda hizli sinuslere titreme biner.',
   BRIEFING_GSR_TITLE: 'GSR (DERI ILETKENLIGI)',
   BRIEFING_GSR_BODY:
-    'Ter tepkisi duygusal sicramadan 1-3 saniye sonra gelir. Baseline neredeyse duz cizgi; SPIKE veya SURGE marker penceresi icinde net bir zirve yapar. Yuksek kafein ve anksiyete baseline\'i yukseltir ve tepkileri abartir — yine once dosya.',
+    "Ter tepkisi duygusal sicramadan 1-3 saniye sonra gelir. Baseline neredeyse duz cizgi; SPIKE veya SURGE marker penceresi icinde net bir zirve yapar. Yuksek kafein ve anksiyete baseline'i yukseltir ve tepkileri abartir — yine once dosya.",
   BRIEFING_FEAR_TITLE: 'KORKU BARI',
   BRIEFING_FEAR_BODY:
     'Toplam baski gostergesi. Gercek celiskiler veya empatik isabetlerde yukselir; yanlis hamlede (sakin supheliye erken saldiri, zamansiz hukuki tehdit) sert duser. Yuksek korku = maske kayiyor. Sifir korku = supheli kontrolu geri aldi.',
@@ -109,7 +109,7 @@ export const TR = {
     'Her dosya medical ve habits listesinde "polygraph_effect" notu tasir. Bunlar gercek: beta-bloker gercekten nabiz sicramasini azaltir, kafein GSR\'yi buyutur, anksiyete nefesi dengesiz yapar. Grafigi okumadan once dosyayi oku — sinyal modeli bu degerleri zaten hesaba katiyor.',
   BRIEFING_CLOSE_TITLE: 'OPERATOR SENSIN',
   BRIEFING_CLOSE_BODY:
-    'Hicbir sinyal tek basina kanit degildir. Hukum vermeden once iki kanali dosya ile dogrula. Yanlis hukum bedel odetir. Dava secimine donmek icin ENTER\'a bas.',
+    "Hicbir sinyal tek basina kanit degildir. Hukum vermeden once iki kanali dosya ile dogrula. Yanlis hukum bedel odetir. Dava secimine donmek icin ENTER'a bas.",
 
   // polygraph / UI
   POLY_HEADER: 'POLIGRAF SINYALLERI',
