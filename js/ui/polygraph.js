@@ -168,8 +168,8 @@ function drawLane(
     drawSweep,
   }
 ) {
-  const labelW = 48;
-  const valueW = 130;
+  const labelW = 40;
+  const valueW = 96;
 
   const waveX = x + labelW;
   const waveW = w - labelW - valueW;
@@ -211,7 +211,7 @@ function drawLane(
   });
 
   drawText(ctx, `${readout(type, profile, biometricReadout)} ${metric}`, x + w - 4, y + h / 2, {
-    size: 16,
+    size: 11,
     color: COLORS.cream,
     align: 'right',
     font: UI_FONT,
@@ -291,8 +291,8 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
   const lanesY = y + headerH + 2;
   const lanesH = h - headerH - 4;
   const laneH = Math.floor(lanesH / 3);
-  const labelW = 48;
-  const valueW = 130;
+  const labelW = 40;
+  const valueW = 96;
   const waveW = w - labelW - valueW;
   const sharedCursor = Math.floor((time * 28) % Math.max(1, waveW));
 

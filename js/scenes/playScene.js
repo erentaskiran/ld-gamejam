@@ -22,11 +22,11 @@ import { DESIGN_H, DESIGN_W } from '../ui/theme.js';
 const LAYOUT = {
   narration: { x: 8, y: 8, w: 518, h: 48 },
   operatorBadge: { x: 530, y: 4, w: 62, h: 56 },
-  defendantBadge: { x: 8, y: 192, w: 62, h: 56 },
-  modal: { x: 82, y: 116, w: 434, h: 132 },
+  defendantBadge: { x: 8, y: 230, w: 62, h: 56 },
+  modal: { x: 82, y: 154, w: 434, h: 132 },
   logTab: { x: DESIGN_W - 14, y: 94, w: 12, h: 84 },
   logPanel: { x: DESIGN_W - 196, y: 64, w: 192, h: 170 },
-  polygraph: { x: 0, y: 252, w: 600, h: 148 },
+  polygraph: { x: 0, y: 290, w: 600, h: 110 },
 };
 
 const QUESTION_CPS = 80;
