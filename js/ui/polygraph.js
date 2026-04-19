@@ -239,7 +239,7 @@ export function drawPolygraph(ctx, x, y, w, h, data) {
   drawRect(ctx, x, y, w, 1, COLORS.amber);
 
   const headerH = 16;
-  drawText(ctx, 'POLYGRAPH ANALYSIS', x + 6, y + headerH / 2 + 1, {
+  drawText(ctx, 'POLYGRAPH SIGNALS', x + 6, y + headerH / 2 + 1, {
     size: 12,
     color: COLORS.amberBright,
     font: UI_FONT,
