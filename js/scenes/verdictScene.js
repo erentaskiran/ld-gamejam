@@ -8,7 +8,12 @@ import {
   wasKeyPressed,
   wasMousePressed,
 } from '../input.js';
-import { getSelectedCaseDef, getSuspectLabel, state } from '../game/state.js';
+import {
+  finalizeCurrentMarkerCapture,
+  getSelectedCaseDef,
+  getSuspectLabel,
+  state,
+} from '../game/state.js';
 import { recordAttempt } from '../game/caseStats.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
 import { drawSceneBackground } from '../ui/background.js';
@@ -568,6 +573,7 @@ function submitVerdict(verdict) {
 export function registerVerdictScene(_canvas, ctx) {
   registerScene('verdict', {
     enter() {
+      finalizeCurrentMarkerCapture();
       anim = 0;
       buttonRects = [];
       listScrollOffset = 0;

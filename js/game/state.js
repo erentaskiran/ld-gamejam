@@ -114,6 +114,17 @@ function finalizeMarkerCapture() {
     return;
   }
 
+  const buffers = state.biometric?.buffers || null;
+  while (m.samples.hr.length < 2) {
+    m.samples.hr.push(buffers ? latestRingSample(buffers.heartRate) : 0);
+  }
+  while (m.samples.breathing.length < 2) {
+    m.samples.breathing.push(buffers ? latestRingSample(buffers.breathing) : 0);
+  }
+  while (m.samples.gsr.length < 2) {
+    m.samples.gsr.push(buffers ? latestRingSample(buffers.gsr) : 0);
+  }
+
   const minMarkerDuration = 0.12;
   const endTime = Math.max(state.time, (m.startTime ?? state.time) + minMarkerDuration);
 
@@ -134,6 +145,10 @@ function finalizeMarkerCapture() {
     },
   });
   state.markerCapture = null;
+}
+
+export function finalizeCurrentMarkerCapture() {
+  finalizeMarkerCapture();
 }
 
 export function setNode(nodeId) {

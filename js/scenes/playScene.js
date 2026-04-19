@@ -11,6 +11,7 @@ import {
 import { clamp, lerp } from '../math.js';
 import {
   applyPendingResponseSignals,
+  finalizeCurrentMarkerCapture,
   flushPendingResponseSignals,
   getDefendantImageKey,
   getSuspectLabel,
@@ -579,6 +580,7 @@ export function registerPlayScene(_canvas, ctx) {
       updateMarkerCapture();
 
       if (shouldForceVerdictByStress()) {
+        finalizeCurrentMarkerCapture();
         setScene('verdict');
         return;
       }
