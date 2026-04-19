@@ -75,7 +75,7 @@
               "gsr": "INCREASE",
               "cctv_visual": "LIP_PRESS",
               "korku_bari_delta": 12,
-              "gameplay_note": "YALAN SINYALI: Teknik jargon hizlandi, EEG belirgin kaotik. Hazir bir savunma metni okutuyor."
+              "gameplay_note": "YALAN SINYALI: Teknik jargon hizlandi; nabiz SPIKE + nefes SHALLOW kombinasyonu hazir savunma metnini ele veriyor."
             },
             "next_node": "node_02_badge_clash"
           },
@@ -215,7 +215,7 @@
               "gsr": "INCREASE",
               "cctv_visual": "EMPTY_STARE",
               "korku_bari_delta": -10,
-              "gameplay_note": "YANLIS OKUMA: Kopmus kabul ifadesi geldi; EEG flatline duygusal kapanmaya isaret ediyor. Gercek zincir kayboldu."
+              "gameplay_note": "YANLIS OKUMA: Kopmus kabul ifadesi geldi; portrede EMPTY_STARE duygusal kapanmaya isaret ediyor. Gercek zincir kayboldu."
             },
             "next_node": "node_fail_scapegoat"
           },

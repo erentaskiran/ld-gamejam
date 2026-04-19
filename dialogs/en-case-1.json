@@ -11,7 +11,6 @@
       "max_fear_bar": 100,
       "fear_bar_description": "Tracks the cumulative psychological pressure on Marcus. Rises when the operator lands tactics that pierce his composure (empathic openings, precise evidence, forensic specificity) and falls when the operator overreaches with legal threats, aggressive moral framing, or attacks on his family. A high fear bar cracks his meticulous facade; a low fear bar lets him retreat into procurement-speak.",
       "heart_rate_baseline": 82,
-      "eeg_baseline": 28,
       "gsr_baseline": 7.5
     },
     "context": "Two patients, Helena Ortiz and Raymond Chu, have filed a joint civil suit against St. Benedict Regional Medical Center alleging grievous internal injuries from defective surgical mesh manufactured by Veritex Medical. Their attorneys claim the hospital knowingly procured substandard mesh despite documented defect complaints circulating in industry bulletins eighteen months before the $3.2M contract was signed. A hospital whistleblower — believed to be a disgruntled staffer close to Marcus Deline's ex-wife — has alleged that Deline, as Procurement Director, accepted kickbacks from Veritex to steer the contract. Forensic auditors have flagged a $46,000 transfer from Deline's account to his sister three weeks before the audit, and vendor social media shows Deline attending a Veritex-sponsored 'consulting retreat' in Portugal during contract negotiations. Deline maintains the mesh met all clinical equivalence standards at time of signing and that his personal finances are unrelated, but the optics — prior gift-disclosure reprimand, undisclosed travel, suspicious transfer — have triggered a formal interrogation to determine whether the hospital should settle, countersue Veritex, or surrender Deline to criminal referral. The operator must determine whether Deline is a corrupt fixer or a meticulous administrator caught in a compromising pattern.",
@@ -65,7 +64,14 @@
         "Mother's care costs — EMPATHIC approach may unlock candor about the $46,000 transfer.",
         "Portugal retreat photos exist on a vendor's social feed — EVIDENCE tactic is potent.",
         "Ex-wife's cooperation with auditors — TRAP questions about who knew what could destabilize him."
-      ]
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0.5,
+        "heart_rate_baseline_shift": 0,
+        "gsr_sensitivity": 1.6,
+        "gsr_baseline_shift": 1.5,
+        "breathing_instability": 0.2
+      }
     },
     "start_node": "node_01_intro",
     "nodes": {
@@ -82,7 +88,6 @@
               "heart_rate": "BASELINE",
               "breathing": "CALM",
               "gsr": "STABLE",
-              "eeg": "FOCUSED",
               "cctv_visual": "STEADY_EYE_CONTACT",
               "korku_bari_delta": 5,
               "gameplay_note": "PROGRESS: Suspect comfortable on procedural ground. Baseline established."
@@ -97,7 +102,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "INCREASE",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": -10,
               "gameplay_note": "WRONG MOVE: Moral framing triggers defensive posture. Remember elevated baseline from GAD."
@@ -112,7 +116,6 @@
               "heart_rate": "STABLE",
               "breathing": "DEEP",
               "gsr": "DECREASE",
-              "eeg": "BASELINE",
               "cctv_visual": "RELEASED_SHOULDERS",
               "korku_bari_delta": 10,
               "gameplay_note": "CORRECT MOVE: Lowering his guard. Opens pathway to financial disclosure."
@@ -134,7 +137,6 @@
               "heart_rate": "INCREASE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "INCREASE",
               "cctv_visual": "LIP_PRESS",
               "korku_bari_delta": 15,
               "gameplay_note": "PARTIAL TRUTH: Real admission of gift violation. Note: no MAX_SPIKE on kickback denial — signal consistent with disclosure failure, not bribery."
@@ -149,7 +151,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "INCREASE",
               "cctv_visual": "EYE_DART",
               "korku_bari_delta": 8,
               "gameplay_note": "PROGRESS: Mild stress but no cluster deception tells. Narrowing the window of wrongdoing."
@@ -164,7 +165,6 @@
               "heart_rate": "SPIKE",
               "breathing": "HOLDING_BREATH",
               "gsr": "SPIKE",
-              "eeg": "ERRATIC",
               "cctv_visual": "DEFENSIVE_CROSS_ARMS",
               "korku_bari_delta": -20,
               "gameplay_note": "WRONG MOVE: Legal threat activates lawyer reflex. Closing off candor."
@@ -186,7 +186,6 @@
               "heart_rate": "STABLE",
               "breathing": "DEEP",
               "gsr": "DECREASE",
-              "eeg": "FOCUSED",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 25,
               "gameplay_note": "CORRECT MOVE: Truthful disclosure. Clean biometric signature — genuine emotional load, no deception cluster."
@@ -201,7 +200,6 @@
               "heart_rate": "INCREASE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "INCREASE",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": 5,
               "gameplay_note": "PARTIAL TRUTH: Defensive but specific. No MAX surge — consistent with clean explanation under pressure."
@@ -216,7 +214,6 @@
               "heart_rate": "SPIKE",
               "breathing": "SHALLOW",
               "gsr": "SPIKE",
-              "eeg": "ERRATIC",
               "cctv_visual": "MICRO_TWITCH",
               "korku_bari_delta": -15,
               "gameplay_note": "WRONG MOVE: Family threat burns rapport. Spike reads as protective anger, not guilt."
@@ -238,7 +235,6 @@
               "heart_rate": "STABLE",
               "breathing": "CALM",
               "gsr": "STABLE",
-              "eeg": "FOCUSED",
               "cctv_visual": "STEADY_EYE_CONTACT",
               "korku_bari_delta": 15,
               "gameplay_note": "PROGRESS: Technical answer delivered without stress markers. Strong exculpatory detail."
@@ -253,7 +249,6 @@
               "heart_rate": "BASELINE",
               "breathing": "CALM",
               "gsr": "STABLE",
-              "eeg": "FOCUSED",
               "cctv_visual": "RELIEVED_EXHALE",
               "korku_bari_delta": 20,
               "gameplay_note": "CORRECT MOVE: No hesitation on corroboration — not the tell of a man who steered a contract."
@@ -268,7 +263,6 @@
               "heart_rate": "RISE",
               "breathing": "UNEVEN",
               "gsr": "INCREASE",
-              "eeg": "INCREASE",
               "cctv_visual": "LOOK_DOWN",
               "korku_bari_delta": -5,
               "gameplay_note": "AMBIGUOUS: Emotional load without deception cluster. Guilt-of-outcome, not guilt-of-act."

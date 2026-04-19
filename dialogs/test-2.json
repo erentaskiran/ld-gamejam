@@ -158,7 +158,7 @@
               "gsr": "SPIKE",
               "cctv_visual": "JAW_TIGHTEN",
               "korku_bari_delta": -8,
-              "gameplay_note": "DIKKAT: Yuksek tepki ama EEG kaotik degil — dogru soyluyor olabilir ya da haksiz suclama ofkesi. Kendi biyometrik bagimliliklarini (anksiyete, kafein) unutmayin."
+              "gameplay_note": "DIKKAT: Nabiz ve GSR yuksek ama nefes HYPERVENTILATION veya HOLDING_BREATH gibi manipulasyon imzasi vermiyor — dogru soyluyor olabilir ya da haksiz suclama ofkesi. Kendi biyometrik bagimliliklarini (anksiyete, kafein) unutmayin."
             },
             "next_node": "node_04_financial_pressure"
           },
@@ -256,7 +256,7 @@
               "gsr": "INCREASE",
               "cctv_visual": "TEAR_POOLING",
               "korku_bari_delta": 22,
-              "gameplay_note": "KRITIK ITIRAF: 'Bakimi erteletmeseydim' ifadesi kendiligiden geldi. Kasit VE ihmal arasindaki farki supheli kendi agziyla koyuyor. EEG stabil — dogru soyluyor."
+              "gameplay_note": "KRITIK ITIRAF: 'Bakimi erteletmeseydim' ifadesi kendiligiden geldi. Kasit VE ihmal arasindaki farki supheli kendi agziyla koyuyor. Nefes UNEVEN ama HOLDING_BREATH yok, portre TEAR_POOLING — gercek duygusal yuk, manipulasyon degil."
             },
             "next_node": "node_success_partial_admission"
           },

@@ -79,7 +79,7 @@
               "gsr": "INCREASE",
               "cctv_visual": "EYE_DART",
               "korku_bari_delta": 10,
-              "gameplay_note": "YALAN TESPİTİ: EEG (Beyin Dalgaları) aşırı dalgalı (CHAOTIC). Şüpheli şu an yeni bir hikaye uyduruyor ve beyni yoğun çalışıyor."
+              "gameplay_note": "YALAN TESPİTİ: Nabız SPIKE, nefes yüzeyselleşti, GSR yükseldi — üç kanal birden strese geçti. Şüpheli yeni bir hikaye uyduruyor."
             },
             "next_node": "node_02_lie_reaction"
           }
@@ -114,7 +114,7 @@
               "gsr": "SPIKE",
               "cctv_visual": "LOOK_DOWN",
               "korku_bari_delta": 30,
-              "gameplay_note": "DOĞRU HAMLE: Yalanı yakaladın. Uydurmayı bıraktığı için EEG düzeldi ama yakalandığı için EKG ve GSR (Terleme) fırladı."
+              "gameplay_note": "DOĞRU HAMLE: Yalanı yakaladın. Nabız ERRATIC, nefes HYPERVENTILATION, GSR SPIKE — yakalanmanın şokuyla üç kanal birden patladı."
             },
             "next_node": "node_03_the_bag"
           }
@@ -136,7 +136,7 @@
               "gsr": "MAX",
               "cctv_visual": "HAND_PINCH_UNDER_TABLE",
               "korku_bari_delta": 10,
-              "gameplay_note": "MANİPÜLASYON TESPİTİ: Kalp ve Terleme tavan yaptı ama Beyin (EEG) tamamen düz! Masanın altında eline tırnaklarını geçirerek fiziksel acıyla sensörleri şaşırtmaya çalışıyor."
+              "gameplay_note": "MANİPÜLASYON TESPİTİ: Nabız MAX_SPIKE, nefes HOLDING_BREATH, GSR MAX — sinyaller tavan yaptı. Masanın altında elini tırnaklıyor, fiziksel acıyla sensörleri bulandırmaya çalışıyor. Dosyadaki 'hand pinch' ipucuyla örtüş."
             },
             "next_node": "node_04_manipulation_reaction"
           }
