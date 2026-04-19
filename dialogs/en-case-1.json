@@ -1,0 +1,294 @@
+{
+  "game_data": {
+    "title": "Patients v. St. Benedict Regional Medical Center: The Veritex Mesh Contract",
+    "suspect": {
+      "name": "Marcus Deline",
+      "role": "Hospital Procurement Director",
+      "profile": "Raised in Cleveland by a single mother who worked as a surgical nurse, Marcus worked his way through a state MBA program and spent fifteen years climbing the administrative ladder at St. Benedict Regional Medical Center. Known for being precise, soft-spoken, and relentlessly organized, he negotiates every vendor contract personally. Colleagues describe him as 'the man who reads every footnote.' Suspicious detail: three weeks before the audit flagged irregular pricing on surgical mesh, he quietly transferred $46,000 from a joint account to his sister's name. Humanizing detail: he visits his mother, now in early-stage dementia, every Sunday and brings her lemon cake from her favorite bakery."
+    },
+    "system_config": {
+      "initial_fear_bar": 20,
+      "max_fear_bar": 100,
+      "fear_bar_description": "Tracks the cumulative psychological pressure on Marcus. Rises when the operator lands tactics that pierce his composure (empathic openings, precise evidence, forensic specificity) and falls when the operator overreaches with legal threats, aggressive moral framing, or attacks on his family. A high fear bar cracks his meticulous facade; a low fear bar lets him retreat into procurement-speak.",
+      "heart_rate_baseline": 82,
+      "eeg_baseline": 28,
+      "gsr_baseline": 7.5
+    },
+    "context": "Two patients, Helena Ortiz and Raymond Chu, have filed a joint civil suit against St. Benedict Regional Medical Center alleging grievous internal injuries from defective surgical mesh manufactured by Veritex Medical. Their attorneys claim the hospital knowingly procured substandard mesh despite documented defect complaints circulating in industry bulletins eighteen months before the $3.2M contract was signed. A hospital whistleblower — believed to be a disgruntled staffer close to Marcus Deline's ex-wife — has alleged that Deline, as Procurement Director, accepted kickbacks from Veritex to steer the contract. Forensic auditors have flagged a $46,000 transfer from Deline's account to his sister three weeks before the audit, and vendor social media shows Deline attending a Veritex-sponsored 'consulting retreat' in Portugal during contract negotiations. Deline maintains the mesh met all clinical equivalence standards at time of signing and that his personal finances are unrelated, but the optics — prior gift-disclosure reprimand, undisclosed travel, suspicious transfer — have triggered a formal interrogation to determine whether the hospital should settle, countersue Veritex, or surrender Deline to criminal referral. The operator must determine whether Deline is a corrupt fixer or a meticulous administrator caught in a compromising pattern.",
+    "true_verdict": "NOT_GUILTY",
+    "verdict_truth_text": "Marcus Deline did not steer the contract in exchange for a kickback. The $46,000 transfer was a legitimate prepayment to his sister for their mother's memory-care facility, and the Veritex mesh was signed off on clinical equivalence grounds by a committee of surgeons. His real misconduct — accepting the lavish Portugal retreat without filing disclosure — is a genuine ethics violation, but it is not the bribery charged; responsibility for the patient injuries lies with Veritex's defective product and the hospital's inadequate post-market surveillance.",
+    "dossier": {
+      "age": 47,
+      "identity_summary": "Director of Procurement at St. Benedict Regional Medical Center since 2018; MBA, CPSM-certified supply chain professional.",
+      "family": [
+        {
+          "relation": "mother",
+          "name": "Eleanor Deline",
+          "note": "Early-stage dementia; memory-care costs create acute financial pressure."
+        },
+        {
+          "relation": "sister",
+          "name": "Renata Deline-Kowalski",
+          "note": "Recently received a $46,000 transfer from Marcus; co-signer on mother's care."
+        },
+        {
+          "relation": "ex-wife",
+          "name": "Joanna Pryce",
+          "note": "Bitter 2021 divorce; rumored to have spoken to hospital auditors."
+        }
+      ],
+      "medical": [
+        {
+          "condition": "Generalized anxiety disorder (diagnosed 2019)",
+          "polygraph_effect": "Elevated baseline GSR and respiratory rate; discount mild spikes on neutral questions."
+        },
+        {
+          "condition": "Mild hypertension",
+          "polygraph_effect": "Slightly elevated resting blood pressure; baseline cardiovascular readings run high."
+        }
+      ],
+      "habits": [
+        {
+          "habit": "Propranolol (beta-blocker) taken daily for anxiety-related tremor",
+          "polygraph_effect": "Suppresses heart-rate response to stress; cardiovascular spikes will be dampened."
+        },
+        {
+          "habit": "Heavy coffee drinker (6+ cups daily)",
+          "polygraph_effect": "Elevated baseline GSR and jitter; expect noisy skin-conductance readings."
+        }
+      ],
+      "priors": [
+        "2016: Internal reprimand at previous employer for accepting vendor gifts above disclosure limit (settled, no termination).",
+        "2022: Named in a civil deposition regarding a competing hospital's bid-rigging case; not charged."
+      ],
+      "pressure_points": [
+        "Mother's care costs — EMPATHIC approach may unlock candor about the $46,000 transfer.",
+        "Portugal retreat photos exist on a vendor's social feed — EVIDENCE tactic is potent.",
+        "Ex-wife's cooperation with auditors — TRAP questions about who knew what could destabilize him."
+      ]
+    },
+    "start_node": "node_01_intro",
+    "nodes": {
+      "node_01_intro": {
+        "theme": "Opening The File",
+        "description": "Marcus Deline sits across the table in a pressed grey suit, a folder of contract summaries squared neatly in front of him. He has already declined coffee twice. The operator opens the session.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "ANALYTICAL",
+            "question": "Walk me through your role in the Veritex mesh procurement. Start from the RFP.",
+            "answer": "The RFP went out in March 2023. Veritex was one of four bidders. I ran the clinical equivalence review with two surgeons on the committee and the pricing came in 11% under the incumbent. I signed off in August. Every footnote is in the file.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "CALM",
+              "gsr": "STABLE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "STEADY_EYE_CONTACT",
+              "korku_bari_delta": 5,
+              "gameplay_note": "PROGRESS: Suspect comfortable on procedural ground. Baseline established."
+            },
+            "next_node": "node_02_portugal"
+          },
+          {
+            "type": "AGGRESSIVE",
+            "question": "Two patients are in pain because of the mesh YOU picked. How does that sit with you?",
+            "answer": "I am aware of the litigation and I am deeply sorry for what those patients are experiencing. But I will not be goaded into accepting a framing that presumes I personally caused their harm. The clinical review was collective.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "INCREASE",
+              "eeg": "INCREASE",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": -10,
+              "gameplay_note": "WRONG MOVE: Moral framing triggers defensive posture. Remember elevated baseline from GAD."
+            },
+            "next_node": "node_02_portugal"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "This has to be an exhausting month. Your mother's care, the audit, the press. How are you holding up?",
+            "answer": "I... appreciate that. It's been difficult. My mother's decline has been harder than I expected and this investigation on top of it... I'm trying to keep my focus where it belongs.",
+            "mechanics": {
+              "heart_rate": "STABLE",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "eeg": "BASELINE",
+              "cctv_visual": "RELEASED_SHOULDERS",
+              "korku_bari_delta": 10,
+              "gameplay_note": "CORRECT MOVE: Lowering his guard. Opens pathway to financial disclosure."
+            },
+            "next_node": "node_03_transfer"
+          }
+        ]
+      },
+      "node_02_portugal": {
+        "theme": "The Portugal Retreat",
+        "description": "The operator slides a printout across the table: a Veritex social-media post showing Marcus at a vineyard dinner in the Douro Valley during the contract negotiation window.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EVIDENCE",
+            "question": "This is you. Veritex's hashtag, their CEO's arm around your shoulder, three days before you signed. Explain.",
+            "answer": "That was a vendor-hosted education symposium. I'll be honest — the accommodations were more lavish than I should have accepted, and I failed to file a disclosure form. That was an ethics lapse. It was not a quid pro quo. The contract terms were set before I boarded the plane.",
+            "mechanics": {
+              "heart_rate": "INCREASE",
+              "breathing": "SHALLOW",
+              "gsr": "SPIKE",
+              "eeg": "INCREASE",
+              "cctv_visual": "LIP_PRESS",
+              "korku_bari_delta": 15,
+              "gameplay_note": "PARTIAL TRUTH: Real admission of gift violation. Note: no MAX_SPIKE on kickback denial — signal consistent with disclosure failure, not bribery."
+            },
+            "next_node": "node_04_mesh_quality"
+          },
+          {
+            "type": "TRAP",
+            "question": "Did anyone from Veritex ever discuss the contract, directly or indirectly, while you were in Portugal?",
+            "answer": "There was a dinner conversation where their VP mentioned looking forward to a 'long partnership.' I considered it aspirational sales talk. I did not negotiate terms in Portugal. I have no notes, no emails, no commitments from that trip.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "INCREASE",
+              "eeg": "INCREASE",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": 8,
+              "gameplay_note": "PROGRESS: Mild stress but no cluster deception tells. Narrowing the window of wrongdoing."
+            },
+            "next_node": "node_04_mesh_quality"
+          },
+          {
+            "type": "LEGAL_THREAT",
+            "question": "Under FCPA and the hospital's vendor policy, that trip alone is enough to send this to criminal referral. You know that.",
+            "answer": "I'd like to consult counsel before answering further questions framed as criminal exposure. I'm willing to continue cooperating on procurement facts, but I won't speculate on statutes.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SPIKE",
+              "eeg": "ERRATIC",
+              "cctv_visual": "DEFENSIVE_CROSS_ARMS",
+              "korku_bari_delta": -20,
+              "gameplay_note": "WRONG MOVE: Legal threat activates lawyer reflex. Closing off candor."
+            },
+            "next_node": "node_fail_lockdown"
+          }
+        ]
+      },
+      "node_03_transfer": {
+        "theme": "The $46,000 Question",
+        "description": "The operator places a bank statement on the table — the $46,000 transfer to his sister Renata, timestamped three weeks before the audit began.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EMPATHIC",
+            "question": "Tell me what this money was really for. Not what it looks like — what it was.",
+            "answer": "[long pause] That was for my mother. Sunrise Memory Care requires a quarterly prepayment and my sister is the primary co-signer on the facility. I moved it to her account because she handles the billing. I have the invoice. I can show you the invoice right now.",
+            "mechanics": {
+              "heart_rate": "STABLE",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "TEAR_POOLING",
+              "korku_bari_delta": 25,
+              "gameplay_note": "CORRECT MOVE: Truthful disclosure. Clean biometric signature — genuine emotional load, no deception cluster."
+            },
+            "next_node": "node_04_mesh_quality"
+          },
+          {
+            "type": "FORENSIC_CALL_OUT",
+            "question": "Forty-six thousand dollars. Three weeks before the audit. Your sister's account. That's textbook layering, Marcus.",
+            "answer": "It is not layering. It is a tuition-sized check for a memory-care facility that demanded payment on a specific date. If you pull the receiving account you will see an immediate debit to Sunrise Care Services. This is not hidden money.",
+            "mechanics": {
+              "heart_rate": "INCREASE",
+              "breathing": "UNEVEN",
+              "gsr": "INCREASE",
+              "eeg": "INCREASE",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": 5,
+              "gameplay_note": "PARTIAL TRUTH: Defensive but specific. No MAX surge — consistent with clean explanation under pressure."
+            },
+            "next_node": "node_04_mesh_quality"
+          },
+          {
+            "type": "PRESSURE",
+            "question": "Your sister will be subpoenaed by end of week. Whatever story you two rehearsed, it breaks there. Talk now.",
+            "answer": "My sister and I didn't rehearse anything because there's nothing to rehearse. If you're going to insinuate conspiracy between me and the person helping me care for our dying mother, I think this conversation should pause.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "SHALLOW",
+              "gsr": "SPIKE",
+              "eeg": "ERRATIC",
+              "cctv_visual": "MICRO_TWITCH",
+              "korku_bari_delta": -15,
+              "gameplay_note": "WRONG MOVE: Family threat burns rapport. Spike reads as protective anger, not guilt."
+            },
+            "next_node": "node_fail_lockdown"
+          }
+        ]
+      },
+      "node_04_mesh_quality": {
+        "theme": "The Clinical Equivalence Claim",
+        "description": "The operator pivots to the heart of the civil suit: the defect bulletins that circulated before the contract signing. Did Marcus see them, and if so, did he ignore them?",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "NARROW_TARGET",
+            "question": "The MDSA defect bulletin went out eighteen months before your signature. Were those bulletins in your review packet?",
+            "answer": "The March 2022 bulletin was in the committee appendix. I read it. At the time it referenced a single batch lot that Veritex had already recalled, and their updated manufacturing attestation was in the RFP response. Two surgeons on the committee signed off on clinical equivalence. I did not override clinical judgment — I followed it.",
+            "mechanics": {
+              "heart_rate": "STABLE",
+              "breathing": "CALM",
+              "gsr": "STABLE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "STEADY_EYE_CONTACT",
+              "korku_bari_delta": 15,
+              "gameplay_note": "PROGRESS: Technical answer delivered without stress markers. Strong exculpatory detail."
+            },
+            "next_node": "node_success_candor"
+          },
+          {
+            "type": "SYSTEMIC_READ",
+            "question": "If I pulled the committee surgeons into this room right now, would their story match yours?",
+            "answer": "Dr. Halvorsen and Dr. Patel. Yes. Their signatures are on the equivalence memo. Pull them in. I'd prefer it, frankly.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "CALM",
+              "gsr": "STABLE",
+              "eeg": "FOCUSED",
+              "cctv_visual": "RELIEVED_EXHALE",
+              "korku_bari_delta": 20,
+              "gameplay_note": "CORRECT MOVE: No hesitation on corroboration — not the tell of a man who steered a contract."
+            },
+            "next_node": "node_success_candor"
+          },
+          {
+            "type": "MORAL_PRESSURE",
+            "question": "Helena Ortiz is 34. She can't lift her daughter anymore. That's on the paper you signed.",
+            "answer": "I hear you. I think about those patients. But you're asking me to confess to a decision I made with the best clinical information available at the time, and I won't do that just because the outcome was tragic. Hindsight is not evidence of intent.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "INCREASE",
+              "eeg": "INCREASE",
+              "cctv_visual": "LOOK_DOWN",
+              "korku_bari_delta": -5,
+              "gameplay_note": "AMBIGUOUS: Emotional load without deception cluster. Guilt-of-outcome, not guilt-of-act."
+            },
+            "next_node": "node_success_candor"
+          }
+        ]
+      },
+      "node_success_candor": {
+        "theme": "Interrogation Closes — Candid",
+        "description": "Marcus has given a coherent, specific, corroboration-inviting account. He admitted a disclosure violation on the Portugal trip, documented the $46,000 transfer, and named the committee surgeons who co-signed clinical equivalence. He is visibly drained but composed.",
+        "is_end_state": true,
+        "result_text": "Suspect cooperated through most of the session. Admitted one clear ethics violation (undisclosed vendor hospitality) and offered verifiable documentation for the flagged financial transfer. Provided two named witnesses willing to corroborate the clinical review. Polygraph log is rich — review it carefully for deception clusters versus baseline anxiety elevation before calling your verdict."
+      },
+      "node_fail_lockdown": {
+        "theme": "Interrogation Closes — Locked",
+        "description": "Marcus has invoked counsel language and pulled his posture tight. He will answer nothing further of substance in this session. The operator has what they have.",
+        "is_end_state": true,
+        "result_text": "Suspect has effectively ended cooperation. Key questions on clinical equivalence and corroborating witnesses went unasked. Polygraph record is thin and heavily weighted toward defensive spikes — interpret carefully, as elevated readings here may reflect procedural threat rather than deception. Call your verdict on partial evidence."
+      }
+    }
+  }
+}

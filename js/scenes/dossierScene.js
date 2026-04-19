@@ -7,7 +7,8 @@ import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
 import { drawSceneBackground } from '../ui/background.js';
 import { drawPanel } from '../ui/panel.js';
 import { drawPortraitBadge } from '../ui/portraitBadge.js';
-import { t } from '../i18n/index.js';
+import { t, getLanguage } from '../i18n/index.js';
+import { CASES } from '../game/cases.js';
 
 let scroll = 0;
 let maxScroll = 0;
@@ -262,6 +263,19 @@ function drawDossierScene(ctx) {
     const thumbH = Math.max(12, trackH * (contentH / totalHeight));
     const thumbY = trackY + (trackH - thumbH) * (scroll / maxScroll);
     drawRect(ctx, trackX, thumbY, 3, thumbH, COLORS.amberBright);
+  }
+
+  const caseDef = CASES[state.caseIndex];
+  if (caseDef?.language && caseDef.language !== getLanguage()) {
+    const warnY = panelY + panelH - 52;
+    drawRect(ctx, panelX + 2, warnY - 7, panelW - 4, 14, 'rgba(14, 0, 0, 0.8)');
+    drawText(ctx, t('WARN_LANG_MISMATCH'), DESIGN_W / 2, warnY, {
+      align: 'center',
+      size: 9,
+      color: COLORS.fail,
+      font: UI_FONT,
+      baseline: 'middle',
+    });
   }
 
   const btnW = 240;

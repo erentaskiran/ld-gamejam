@@ -8,13 +8,30 @@ import { getSelectedCaseData, setSelectedCase, state } from '../game/state.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
 import { drawSceneBackground } from '../ui/background.js';
 import { drawPanel } from '../ui/panel.js';
-import { t } from '../i18n/index.js';
+import { t, getLanguage } from '../i18n/index.js';
 import { applyAmbientProfile } from '../interrogationAudio.js';
 
 let menuAnim = 0;
 let infoScrollOffset = 0;
 let infoMaxScroll = 0;
 let lastCaseIndex = -1;
+
+function getVisibleCases() {
+  const lang = getLanguage();
+  return CASES.filter((c) => !c.language || c.language === lang);
+}
+
+function getVisibleIdx(visibleCases) {
+  const currentDef = CASES[state.caseIndex];
+  const idx = visibleCases.indexOf(currentDef);
+  return idx >= 0 ? idx : 0;
+}
+
+function selectVisibleCase(visibleCases, visibleIdx) {
+  const clamped = clamp(visibleIdx, 0, visibleCases.length - 1);
+  const caseDef = visibleCases[clamped];
+  if (caseDef) setSelectedCase(CASES.indexOf(caseDef));
+}
 
 function smoothstep(t) {
   return t * t * (3 - 2 * t);
@@ -174,7 +191,27 @@ function drawMenuScene(ctx) {
   const listStartY = 96;
   const mouse = getMousePos();
 
-  for (let i = 0; i < CASES.length; i += 1) {
+  const visibleCases = getVisibleCases();
+  const visibleIdx = getVisibleIdx(visibleCases);
+
+  if (visibleCases.length === 0) {
+    const noP = smoothstep(clamp((menuAnim - 0.5) / 0.35, 0, 1));
+    if (noP > 0.01) {
+      ctx.save();
+      ctx.globalAlpha = noP;
+      drawText(ctx, t('MENU_NO_CASES'), listX + cardW / 2, listStartY + 24, {
+        align: 'center',
+        size: 11,
+        color: COLORS.creamDim,
+        font: UI_FONT,
+        baseline: 'middle',
+      });
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < visibleCases.length; i += 1) {
+    const caseDef = visibleCases[i];
     const y = listStartY + i * (cardH + cardGap);
     const rect = { x: listX, y, w: cardW, h: cardH, index: i };
     state.menuCaseRects.push(rect);
@@ -186,11 +223,11 @@ function drawMenuScene(ctx) {
     }
 
     const xOffset = (1 - cardP) * 16;
-    const selected = i === state.caseIndex;
+    const selected = i === visibleIdx;
     const interactive = cardP > 0.6;
     const hovered = interactive && inRect(mouse, rect);
 
-    const { prefix, suffix } = parseLabel(CASES[i].label);
+    const { prefix, suffix } = parseLabel(caseDef.label);
     const numberStr = String(i + 1).padStart(2, '0');
 
     ctx.save();
@@ -202,7 +239,7 @@ function drawMenuScene(ctx) {
       selected,
       hovered,
       pulseT: menuAnim,
-      stats: getStats(CASES[i].id),
+      stats: getStats(caseDef.id),
     });
     ctx.restore();
   }
@@ -278,7 +315,7 @@ function drawMenuScene(ctx) {
     ctx.globalAlpha = promptP;
     drawText(
       ctx,
-      `1-${CASES.length} / ${t('MENU_KEY_INSTRUCTIONS')}`,
+      `1-${visibleCases.length} / ${t('MENU_KEY_INSTRUCTIONS')}`,
       DESIGN_W / 2,
       DESIGN_H - 44,
       {
@@ -313,6 +350,11 @@ export function registerMenuScene(_canvas, ctx) {
       infoMaxScroll = 0;
       lastCaseIndex = -1;
       applyAmbientProfile('menu');
+
+      const visible = getVisibleCases();
+      if (visible.length > 0 && !visible.includes(CASES[state.caseIndex])) {
+        setSelectedCase(CASES.indexOf(visible[0]));
+      }
     },
     update(dt) {
       menuAnim += dt;
@@ -327,9 +369,12 @@ export function registerMenuScene(_canvas, ctx) {
         infoScrollOffset = clamp(infoScrollOffset + wheel / 30, 0, infoMaxScroll);
       }
 
-      for (let i = 0; i < Math.min(CASES.length, 9); i += 1) {
+      const visible = getVisibleCases();
+      const vIdx = getVisibleIdx(visible);
+
+      for (let i = 0; i < Math.min(visible.length, 9); i += 1) {
         if (wasKeyPressed(String(i + 1))) {
-          setSelectedCase(i);
+          selectVisibleCase(visible, i);
         }
       }
       if (
@@ -338,7 +383,7 @@ export function registerMenuScene(_canvas, ctx) {
         wasKeyPressed('a') ||
         wasKeyPressed('w')
       ) {
-        setSelectedCase(state.caseIndex - 1);
+        selectVisibleCase(visible, vIdx - 1);
       }
       if (
         wasKeyPressed('arrowright') ||
@@ -346,14 +391,14 @@ export function registerMenuScene(_canvas, ctx) {
         wasKeyPressed('d') ||
         wasKeyPressed('s')
       ) {
-        setSelectedCase(state.caseIndex + 1);
+        selectVisibleCase(visible, vIdx + 1);
       }
 
       if (wasMousePressed(0) && state.menuCaseRects.length > 0) {
         const mouse = getMousePos();
         for (const rect of state.menuCaseRects) {
           if (inRect(mouse, rect)) {
-            setSelectedCase(rect.index);
+            selectVisibleCase(visible, rect.index);
             break;
           }
         }

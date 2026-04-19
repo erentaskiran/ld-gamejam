@@ -25,8 +25,10 @@ import {
   isTutorialDone,
   markTutorialDone,
 } from '../ui/tutorial.js';
-import { DESIGN_H, DESIGN_W } from '../ui/theme.js';
-import { t } from '../i18n/index.js';
+import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
+import { drawText, drawRect } from '../draw.js';
+import { t, getLanguage } from '../i18n/index.js';
+import { CASES } from '../game/cases.js';
 import { playTypewriterKey } from '../audio.js';
 import {
   applyDialogueAudio,
@@ -317,6 +319,24 @@ function drawPlayScene(ctx) {
   if (tutorialStep >= 0) {
     const pulse = 0.5 + 0.5 * Math.sin(tutorialPulseTime * 4);
     drawTutorial(ctx, LAYOUT, tutorialStep, pulse);
+  }
+
+  const caseDef = CASES[state.caseIndex];
+  if (caseDef?.language && caseDef.language !== getLanguage()) {
+    const warnBlink = 0.55 + 0.45 * Math.abs(Math.sin(state.time * 2.2));
+    const warnH = 14;
+    ctx.save();
+    ctx.globalAlpha = warnBlink * 0.9;
+    drawRect(ctx, 0, 0, DESIGN_W, warnH, 'rgba(14, 0, 0, 0.85)');
+    ctx.globalAlpha = warnBlink;
+    drawText(ctx, t('WARN_LANG_MISMATCH'), DESIGN_W / 2, warnH / 2, {
+      align: 'center',
+      size: 9,
+      color: COLORS.fail,
+      font: UI_FONT,
+      baseline: 'middle',
+    });
+    ctx.restore();
   }
 }
 
