@@ -19,3 +19,4 @@ Source file: `js/debug.js`
 ## Notes
 
 - `drawFPS` and `drawHitbox` render only when debug mode is enabled.
+- Current scene flow does not import this module yet; it is available for instrumentation.

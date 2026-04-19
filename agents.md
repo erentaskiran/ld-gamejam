@@ -1,38 +1,47 @@
 # Agents Index
 
-This file is the entry point for AI agents. Goal: read only the relevant file instead of scanning the entire codebase.
+This file is the entry point for AI agents. Read only relevant docs instead of scanning the entire repo.
 
 ## Usage Flow
 
 1. Read this file first.
-2. Pick one module that matches the task.
-3. Read a second module only if needed.
-4. If full app flow is required, read `agents/core-main-flow.md` last.
+2. Pick one focused module doc.
+3. Read a second doc only if needed.
+4. For full gameplay flow, read `agents/core-main-flow.md` last.
+
+## Current App Shape (Quick)
+
+- Engine helpers live in `js/*.js` (input, draw, loop, scene manager, audio, assets).
+- Main game logic is scene-driven in `js/scenes/*.js`.
+- Domain state/mechanics live in `js/game/*.js`.
+- UI drawing components live in `js/ui/*.js`.
+- Localization is in `js/i18n/*.js`.
 
 ## Module Index
 
-- Input / keyboard / mouse: `agents/input.md`
-- Rendering helpers (canvas): `agents/rendering.md`
-- Animation systems: `agents/animations.md`
-- Asset loading (image/audio): `agents/assets.md`
-- Audio / music playback: `agents/audio.md`
+- Input (keyboard, mouse, wheel, scroll invert): `agents/input.md`
+- Rendering utilities (text wrap, sprites, scrollable text): `agents/rendering.md`
+- Animation controllers: `agents/animations.md`
+- Asset preloading and lookup: `agents/assets.md`
+- Runtime audio + synth SFX: `agents/audio.md`
 - Math helpers: `agents/math.md`
-- Collision (AABB / point): `agents/collision.md`
-- Scene management: `agents/scene-manager.md`
-- Game loop (fixed timestep): `agents/game-loop.md`
-- Timer / cooldown: `agents/timer.md`
-- Debug helpers: `agents/debug.md`
-- Tilemap and tile collision: `agents/tilemap.md`
-- Object pool: `agents/pool.md`
-- Game asset config (asset keys, animation frames): `agents/game-assets.md`
-- Core flow (main.js): `agents/core-main-flow.md`
+- Basic collision helpers (AABB / point): `agents/collision.md`
+- Scene registry and fade transitions: `agents/scene-manager.md`
+- Fixed timestep loop: `agents/game-loop.md`
+- Timer utilities (available, currently not wired in scene flow): `agents/timer.md`
+- Debug overlays (available, currently not wired in scene flow): `agents/debug.md`
+- Tilemap collision helpers (available, currently not used by active scenes): `agents/tilemap.md`
+- Object pool helper (utility module): `agents/pool.md`
+- Legacy static game asset constants (not used by current scene flow): `agents/game-assets.md`
+- Main boot + scene graph + gameplay flow: `agents/core-main-flow.md`
 
 ## Quick Task -> File
 
-- "Input bug": `agents/input.md`
-- "FPS / loop issue": `agents/game-loop.md`, then `agents/debug.md` if needed
-- "Scene transition": `agents/scene-manager.md`
-- "Sprite not rendering": `agents/rendering.md`, `agents/assets.md`
-- "Animation not playing": `agents/animations.md`
-- "Map collision is wrong": `agents/tilemap.md`, `agents/collision.md`
-- "Score / player behavior": `agents/core-main-flow.md`
+- "Title/menu/play/verdict behavior": `agents/core-main-flow.md`
+- "Scene transition bug": `agents/scene-manager.md`
+- "Case selection or verdict stats": `agents/core-main-flow.md`
+- "Dialogue typing / choice click issue": `agents/core-main-flow.md`, `agents/input.md`
+- "Canvas text/wrapping/scroll render issue": `agents/rendering.md`
+- "Wheel / inverted scroll behavior": `agents/input.md`
+- "Ambient interrogation sound behavior": `agents/audio.md`, `agents/core-main-flow.md`
+- "Loading failure / missing assets": `agents/assets.md`, `agents/core-main-flow.md`

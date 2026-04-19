@@ -1020,7 +1020,7 @@
             t = null;
           function note() {
             if (!self._playing && !oneshot) return;
-            if (Math.random() > 0.45) {
+            if (oneshot || Math.random() > 0.45) {
               const f = seq[idx % seq.length];
               [1, 2, 3].forEach((harm, hi) => {
                 const o = AC.createOscillator(),

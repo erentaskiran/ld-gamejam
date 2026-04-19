@@ -484,7 +484,7 @@ export function registerPlayScene(_canvas, ctx) {
     enter() {
       resetRun();
       enterInterrogationAudio();
-      applyNodeAtmosphere(state.currentNode);
+      applyNodeAtmosphere(state.currentNode, state.currentNodeId);
       pauseOpen = false;
       pauseRects = [];
       pauseSelectedIndex = 0;
@@ -567,7 +567,7 @@ export function registerPlayScene(_canvas, ctx) {
 
       if (state.currentNodeId !== displayedNodeId) {
         displayedNodeId = state.currentNodeId;
-        applyNodeAtmosphere(state.currentNode);
+        applyNodeAtmosphere(state.currentNode, state.currentNodeId);
         narrationTextProgress = 0;
         choicesAnim = 0;
         answerScrollOffset = 0;

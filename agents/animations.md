@@ -4,9 +4,9 @@ Source file: `js/animations.js`
 
 ## Responsibilities
 
-- Build frame lists.
-- Manage single animation state (`play/pause/stop/update`).
-- Manage named animation sets (for example `idle/run`).
+- Build sprite frame lists for horizontal sheets.
+- Manage single animation playback state (`play/pause/stop/update`).
+- Manage named animation groups and switch active animation safely.
 
 ## API Summary
 
@@ -16,5 +16,6 @@ Source file: `js/animations.js`
 
 ## Notes
 
-- `fps` must be a positive number, otherwise an error is thrown.
-- `createAnimationSet.play(name)` requires a valid animation name.
+- `createAnimation` also supports `setFrames`, `setImage`, `setFPS`, and `getFrame`.
+- Invalid frame arrays and invalid FPS values throw explicit errors.
+- `createAnimationSet` resolves images from either direct `image` or `imageName` via assets registry.

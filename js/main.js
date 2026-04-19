@@ -13,6 +13,7 @@ import { registerDossierScene } from './scenes/dossierScene.js';
 import { registerPlayScene } from './scenes/playScene.js';
 import { registerResultScene } from './scenes/resultScene.js';
 import { registerVerdictScene } from './scenes/verdictScene.js';
+import { startBootAmbient } from './interrogationAudio.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from './ui/theme.js';
 
 async function loadCustomFonts() {
@@ -129,6 +130,7 @@ async function boot() {
   setSelectedCase(0);
   state.loading = false;
 
+  startBootAmbient();
   setScene('title');
   loop.start();
 }

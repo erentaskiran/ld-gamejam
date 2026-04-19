@@ -20,3 +20,4 @@ Source file: `js/gameAssets.js`
 ## Notes
 
 - This file is primarily static config/constants rather than runtime logic.
+- Current active scene flow does not import this module; values are legacy from earlier map/sprite setup.

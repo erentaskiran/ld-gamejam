@@ -21,3 +21,4 @@ Source file: `js/tilemap.js`
 
 - Positions outside the map are treated as blocked.
 - `options.colliderTileIds` and spawn settings affect parse behavior.
+- Current active scene flow does not import this module; kept as reusable utility.

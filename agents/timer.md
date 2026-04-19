@@ -16,3 +16,4 @@ Source file: `js/timer.js`
 ## Notes
 
 - Calling the cancel function returned by `every` deactivates that interval task.
+- Current scene flow does not import this module yet; it is available as a utility.
