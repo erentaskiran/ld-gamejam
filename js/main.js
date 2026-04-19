@@ -108,6 +108,7 @@ async function boot() {
     preloadAssets({
       images: {
         background: './assets/background.png',
+        'background-no-light': './assets/background-no-light.png',
         operator: './assets/operator.png',
         defendant: './assets/defendant.png',
       },
