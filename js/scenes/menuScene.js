@@ -164,7 +164,7 @@ function drawMenuScene(ctx) {
   if (infoP > 0.01) {
     const caseData = getSelectedCaseData();
     const infoX = listX + cardW + 12;
-    const infoW = DESIGN_W - infoX - 20;
+    const infoW = DESIGN_W - infoX - 28;
     const infoBaseY = listStartY;
     const infoH = DESIGN_H - listStartY - 56;
     const infoYOffset = (1 - infoP) * 14;
