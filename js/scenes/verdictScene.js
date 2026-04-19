@@ -1,6 +1,6 @@
 import { drawRect, drawText, wrapTextLines } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
-import { getMousePos, getWheelDelta, wasKeyPressed, wasMousePressed } from '../input.js';
+import { getMousePos, getPlatformScrollDelta, wasKeyPressed, wasMousePressed } from '../input.js';
 import { getSelectedCaseDef, getSuspectLabel, state } from '../game/state.js';
 import { recordAttempt } from '../game/caseStats.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
@@ -118,7 +118,7 @@ function drawEvidenceEntry(ctx, x, y, w, h, index, evidence, marker) {
   const waveStartY = y + h - waveRowH * 3 - 4;
   const samples = marker?.samples || { hr: [], eeg: [], gsr: [] };
 
-  drawText(ctx, 'HR', x + padX, waveStartY + waveRowH / 2, {
+  drawText(ctx, t('VERDICT_WAVE_HR'), x + padX, waveStartY + waveRowH / 2, {
     size: 9,
     color: COLORS.pulse,
     font: UI_FONT,
@@ -126,37 +126,21 @@ function drawEvidenceEntry(ctx, x, y, w, h, index, evidence, marker) {
   });
   drawMiniWave(ctx, waveX, waveStartY, waveW, waveRowH, samples.hr, COLORS.pulse);
 
-  drawText(ctx, 'EG', x + padX, waveStartY + waveRowH + waveRowH / 2, {
+  drawText(ctx, t('VERDICT_WAVE_EEG'), x + padX, waveStartY + waveRowH + waveRowH / 2, {
     size: 9,
     color: COLORS.eeg,
     font: UI_FONT,
     baseline: 'middle',
   });
-  drawMiniWave(
-    ctx,
-    waveX,
-    waveStartY + waveRowH,
-    waveW,
-    waveRowH,
-    samples.eeg,
-    COLORS.eeg
-  );
+  drawMiniWave(ctx, waveX, waveStartY + waveRowH, waveW, waveRowH, samples.eeg, COLORS.eeg);
 
-  drawText(ctx, 'GS', x + padX, waveStartY + waveRowH * 2 + waveRowH / 2, {
+  drawText(ctx, t('VERDICT_WAVE_GSR'), x + padX, waveStartY + waveRowH * 2 + waveRowH / 2, {
     size: 9,
     color: COLORS.gsr,
     font: UI_FONT,
     baseline: 'middle',
   });
-  drawMiniWave(
-    ctx,
-    waveX,
-    waveStartY + waveRowH * 2,
-    waveW,
-    waveRowH,
-    samples.gsr,
-    COLORS.gsr
-  );
+  drawMiniWave(ctx, waveX, waveStartY + waveRowH * 2, waveW, waveRowH, samples.gsr, COLORS.gsr);
 }
 
 function drawVerdictButton(ctx, rect, label, subtitle, hovered, accent) {
@@ -354,13 +338,10 @@ export function registerVerdictScene(_canvas, ctx) {
       anim += dt;
 
       const mouse = getMousePos();
-      const wheel = getWheelDelta();
+      const wheel = getPlatformScrollDelta();
       if (wheel !== 0 && listMaxScroll > 0) {
         if (!listViewportRect || inRect(mouse, listViewportRect)) {
-          listScrollOffset = Math.max(
-            0,
-            Math.min(listMaxScroll, listScrollOffset + wheel / 30)
-          );
+          listScrollOffset = Math.max(0, Math.min(listMaxScroll, listScrollOffset + wheel / 30));
         }
       }
       if (wasKeyPressed('arrowup')) {

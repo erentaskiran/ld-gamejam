@@ -1,6 +1,6 @@
 import { drawRect, drawText, drawWrappedText, drawScrollableText } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
-import { getMousePos, getWheelDelta, wasKeyPressed, wasMousePressed } from '../input.js';
+import { getMousePos, getPlatformScrollDelta, wasKeyPressed, wasMousePressed } from '../input.js';
 import { clamp } from '../math.js';
 import { CASES } from '../game/cases.js';
 import { getStats } from '../game/caseStats.js';
@@ -141,7 +141,7 @@ function drawMenuScene(ctx) {
     const titleY = -28 + (52 - -28) * titleP;
     ctx.save();
     ctx.globalAlpha = titleP;
-    drawText(ctx, 'THE OPERATOR', DESIGN_W / 2, titleY, {
+    drawText(ctx, t('APP_TITLE'), DESIGN_W / 2, titleY, {
       align: 'center',
       size: 28,
       color: COLORS.amberBright,
@@ -275,13 +275,19 @@ function drawMenuScene(ctx) {
 
     ctx.save();
     ctx.globalAlpha = promptP;
-    drawText(ctx, `1-${CASES.length} / ${t('MENU_KEY_INSTRUCTIONS')}`, DESIGN_W / 2, DESIGN_H - 44, {
-      align: 'center',
-      size: 12,
-      color: COLORS.creamDim,
-      font: UI_FONT,
-      baseline: 'middle',
-    });
+    drawText(
+      ctx,
+      `1-${CASES.length} / ${t('MENU_KEY_INSTRUCTIONS')}`,
+      DESIGN_W / 2,
+      DESIGN_H - 44,
+      {
+        align: 'center',
+        size: 12,
+        color: COLORS.creamDim,
+        font: UI_FONT,
+        baseline: 'middle',
+      }
+    );
     ctx.restore();
 
     const blink = 0.45 + 0.55 * Math.abs(Math.sin(menuAnim * 2.6));
@@ -314,7 +320,7 @@ export function registerMenuScene(_canvas, ctx) {
         infoScrollOffset = 0;
       }
 
-      const wheel = getWheelDelta();
+      const wheel = getPlatformScrollDelta();
       if (wheel !== 0) {
         infoScrollOffset = clamp(infoScrollOffset + wheel / 30, 0, infoMaxScroll);
       }

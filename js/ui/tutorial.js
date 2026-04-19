@@ -6,6 +6,11 @@ import { t } from '../i18n/index.js';
 export const TUTORIAL_KEY = 'the-operator:tutorial:v1';
 
 function buildSteps(layout) {
+  const isTr = t('TUTORIAL_NEXT').startsWith('DEVAM');
+  const tutorialTarget = isTr
+    ? `${t('PAUSE_SETTINGS')} > ${t('SETTINGS_LANGUAGE_LABEL')}`
+    : `${t('PAUSE_SETTINGS')} > ${t('SETTINGS_LANGUAGE_LABEL')}`;
+
   return [
     {
       highlight: layout.polygraph,
@@ -31,6 +36,20 @@ function buildSteps(layout) {
       highlight: layout.modal,
       titleKey: 'TUTORIAL_CHOICES_TITLE',
       bodyKey: 'TUTORIAL_CHOICES_BODY',
+      captionSide: 'top',
+    },
+    {
+      highlight: {
+        x: layout.modal.x + layout.modal.w + 8,
+        y: layout.modal.y + layout.modal.h - 30,
+        w: 120,
+        h: 20,
+      },
+      pulseWidth: 120,
+      titleKey: 'TUTORIAL_LANGUAGE_TITLE',
+      body: isTr
+        ? `Dil degistirmek icin ${tutorialTarget} yolunu kullan. Tum tutorial metinleri secilen dile gore aninda guncellenir.`
+        : `Use ${tutorialTarget} to switch language. All tutorial texts update instantly to the selected language.`,
       captionSide: 'top',
     },
   ];
@@ -151,19 +170,13 @@ function drawCaption(ctx, caption, title, body, stepIdx, stepCount) {
     baseline: 'alphabetic',
   });
 
-  drawText(
-    ctx,
-    t('TUTORIAL_SKIP'),
-    caption.x + caption.w - caption.padding,
-    caption.y + H - 8,
-    {
-      size: 10,
-      color: COLORS.creamDim,
-      align: 'right',
-      font: UI_FONT,
-      baseline: 'alphabetic',
-    }
-  );
+  drawText(ctx, t('TUTORIAL_SKIP'), caption.x + caption.w - caption.padding, caption.y + H - 8, {
+    size: 10,
+    color: COLORS.creamDim,
+    align: 'right',
+    font: UI_FONT,
+    baseline: 'alphabetic',
+  });
 }
 
 export function drawTutorial(ctx, layout, stepIdx, pulse) {
@@ -174,7 +187,9 @@ export function drawTutorial(ctx, layout, stepIdx, pulse) {
   drawDimMask(ctx, hl);
   drawHighlightBorder(ctx, hl, pulse);
   const caption = layoutCaption(hl, step.captionSide);
-  drawCaption(ctx, caption, t(step.titleKey), t(step.bodyKey), stepIdx, steps.length);
+  const title = step.titleKey ? t(step.titleKey) : '';
+  const body = step.body ?? t(step.bodyKey);
+  drawCaption(ctx, caption, title, body, stepIdx, steps.length);
 }
 
 export function getTutorialStepCount(layout) {

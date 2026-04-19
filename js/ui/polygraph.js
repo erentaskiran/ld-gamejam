@@ -7,15 +7,16 @@ const SWEEP_RATE = 28;
 
 const SEVERITY = {
   heart: { MAX_SPIKE: 3, SPIKE: 2, MAX: 3, ERRATIC: 2, INCREASE: 1, RISE: 1 },
-  eeg: { FLATLINE: 3, CHAOTIC: 3, ERRATIC: 2, INCREASE: 1 },
+  eeg: { FLATLINE: 3, CHAOTIC: 3, ERRATIC: 2, INCREASE: 2, DROP: 2, DECREASE: 2, BASELINE: 2 },
   gsr: { MAX: 3, SURGE: 3, SPIKE: 2, INCREASE: 1 },
 };
 
-function severityColor(score) {
-  if (score >= 3) return '#ff5d73';
-  if (score === 2) return '#ffb55a';
-  if (score === 1) return '#d98c3a';
-  return null;
+function severityAlpha(score, active, fade) {
+  const f = clamp(fade, 0, 1);
+  if (score >= 3) return (active ? 0.36 : 0.3) * (0.35 + 0.65 * f);
+  if (score === 2) return (active ? 0.31 : 0.25) * (0.35 + 0.65 * f);
+  if (score === 1) return (active ? 0.24 : 0.19) * (0.35 + 0.65 * f);
+  return 0;
 }
 
 function categoryForLane(marker, type) {
@@ -24,12 +25,18 @@ function categoryForLane(marker, type) {
   return marker.gsrCategory;
 }
 
-function drawBandSegment(ctx, waveX, y, h, sharedCursor, waveW, ageStart, ageEnd, color, alpha) {
+function normalizeCategory(value) {
+  if (value == null) return '';
+  return String(value).trim().toUpperCase();
+}
+
+function drawBandSegment(ctx, waveX, y, h, sharedCursor, waveW, ageStart, ageEnd, alpha) {
   if (ageStart <= ageEnd) return;
   const lenSamples = ageStart - ageEnd;
   const colStart = (((sharedCursor - ageStart) % waveW) + waveW) % waveW;
   ctx.save();
   ctx.globalAlpha = alpha;
+  const color = '#ffd26a';
   const room = waveW - colStart;
   if (lenSamples <= room) {
     drawRect(ctx, waveX + colStart, y + 2, lenSamples, h - 4, color);
@@ -51,31 +58,28 @@ function drawLaneMarkers(ctx, waveX, y, waveW, h, type, time, sharedCursor, mark
     const visibleStart = Math.min(ageStart, waveW);
     const visibleEnd = Math.max(ageEnd, 0);
     if (visibleStart <= visibleEnd) continue;
-    const cat = categoryForLane(m, type);
-    const sev = SEVERITY[type][cat] || 0;
-    const color = severityColor(sev);
-    if (!color) continue;
-    const fade = clamp(1 - ageStart / waveW, 0, 1);
-    const fillAlpha = 0.12 + 0.22 * fade;
-    drawBandSegment(
-      ctx,
-      waveX,
-      y,
-      h,
-      sharedCursor,
-      waveW,
-      visibleStart,
-      visibleEnd,
-      color,
-      fillAlpha
-    );
-    if (ageStart < waveW) {
-      const startCol = (((sharedCursor - visibleStart) % waveW) + waveW) % waveW;
-      ctx.save();
-      ctx.globalAlpha = 0.6 + 0.3 * fade;
-      drawRect(ctx, waveX + startCol, y + 2, 1, h - 4, color);
-      ctx.restore();
+
+    const cat = normalizeCategory(categoryForLane(m, type));
+    let sev = SEVERITY[type][cat] || 0;
+    if (type === 'eeg' && sev === 0 && cat) {
+      // EEG band should always render for captured reactions,
+      // even if case data contains unexpected labels.
+      sev = 1;
     }
+    if (sev <= 0) continue;
+
+    const isActive = m.endTime == null;
+    const fade = isActive ? 1 : clamp(1 - ageStart / (waveW * 2.2), 0, 1);
+    const alpha = severityAlpha(sev, isActive, fade);
+    if (alpha <= 0) continue;
+
+    drawBandSegment(ctx, waveX, y, h, sharedCursor, waveW, visibleStart, visibleEnd, alpha);
+
+    const headCol = (((sharedCursor - visibleStart) % waveW) + waveW) % waveW;
+    ctx.save();
+    ctx.globalAlpha = Math.min(0.85, alpha + 0.22);
+    drawRect(ctx, waveX + headCol, y + 2, 1, h - 4, '#ffd26a');
+    ctx.restore();
   }
 }
 
@@ -235,7 +239,6 @@ function drawLane(
   const waveW = w - labelW - valueW;
 
   drawLaneGrid(ctx, waveX, y + 2, waveW, h - 4);
-
   drawLaneMarkers(ctx, waveX, y, waveW, h, type, time, sharedCursor, markers);
 
   if (drawSweep) {

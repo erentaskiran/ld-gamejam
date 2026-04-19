@@ -1,5 +1,6 @@
 export const TR = {
   // title / common
+  APP_TITLE: 'THE OPERATOR',
   GAME_SUBTITLE: '[ POLIGRAF SORGU SIMULATORU ]',
   GAME_TAGLINE: 'GERCEGI SIZ ORTAYA CIKARIN',
   PRESS_ANY_KEY: '>> BASLAMAK ICIN BIR TUSA BASIN <<',
@@ -32,6 +33,7 @@ export const TR = {
   DOSSIER_START_BTN: '>> SORGUYA BASLA (ENTER) <<',
   DOSSIER_FOOTER: 'ESC: Menu  |  Scroll: Kaydir',
   DOSSIER_DEFAULT_NAME: 'SANIK',
+  PLAY_OPERATOR_LABEL: 'OPERATOR',
 
   // verdict
   VERDICT_TITLE: '[ HUKUM ASAMASI ]',
@@ -49,6 +51,9 @@ export const TR = {
   VERDICT_NOT_GUILTY_SUB: 'Yeterli delil yok',
   VERDICT_INSTRUCTIONS: '1 / 2 / MOUSE: HUKUM VER',
   VERDICT_NO_RECORD: 'Sorgu kaydi yok.',
+  VERDICT_WAVE_HR: 'HR',
+  VERDICT_WAVE_EEG: 'EG',
+  VERDICT_WAVE_GSR: 'GS',
 
   // result
   RESULT_CORRECT: '[ DOGRU HUKUM ]',
@@ -65,6 +70,9 @@ export const TR = {
   // settings
   SETTINGS_TITLE: '[ AYARLAR ]',
   SETTINGS_LANGUAGE_LABEL: 'DIL',
+  SETTINGS_SCROLL_LABEL: 'SCROLL TERSLE',
+  SETTINGS_SCROLL_ON: 'ACIK',
+  SETTINGS_SCROLL_OFF: 'KAPALI',
   SETTINGS_LANGUAGE_EN: 'ENGLISH',
   SETTINGS_LANGUAGE_TR: 'TURKCE',
   SETTINGS_BACK: 'ESC: Menuye Don',
@@ -94,11 +102,15 @@ export const TR = {
   TUTORIAL_STEP: 'ADIM',
   TUTORIAL_OF: '/',
   TUTORIAL_POLYGRAPH_TITLE: 'POLIGRAF PANELI',
-  TUTORIAL_POLYGRAPH_BODY: 'Sanigin kalp, beyin ve deri tepkilerini gosterir. Sorgu sirasinda olusan renkli bantlar, tepkinin siddetini belli eder.',
+  TUTORIAL_POLYGRAPH_BODY:
+    'Sanigin kalp, beyin ve deri tepkilerini gosterir. Sorgu sirasinda olusan renkli bantlar, tepkinin siddetini belli eder.',
   TUTORIAL_DOSSIER_TITLE: 'SANIK DOSYASI',
-  TUTORIAL_DOSSIER_BODY: 'Saglik, aliskanlik ve baski noktalarini inceleyin. Bazi durumlar poligraf okumalarini carpitabilir.',
+  TUTORIAL_DOSSIER_BODY:
+    'Saglik, aliskanlik ve baski noktalarini inceleyin. Bazi durumlar poligraf okumalarini carpitabilir.',
   TUTORIAL_LOG_TITLE: 'GECMIS KAYIT',
   TUTORIAL_LOG_BODY: 'Sorgu boyunca yapilan konusmalari buradan tekrar okuyabilirsiniz.',
   TUTORIAL_CHOICES_TITLE: 'SORULAR',
-  TUTORIAL_CHOICES_BODY: 'Tiklayarak veya 1-9 tuslarini kullanarak soru secin. Her soru farkli bir tepki doguracaktir.',
+  TUTORIAL_CHOICES_BODY:
+    'Tiklayarak veya 1-9 tuslarini kullanarak soru secin. Her soru farkli bir tepki doguracaktir.',
+  TUTORIAL_LANGUAGE_TITLE: 'DIL',
 };

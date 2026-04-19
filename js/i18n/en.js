@@ -1,5 +1,6 @@
 export const EN = {
   // title / common
+  APP_TITLE: 'THE OPERATOR',
   GAME_SUBTITLE: '[ POLYGRAPH INTERROGATION SIMULATOR ]',
   GAME_TAGLINE: 'YOU REVEAL THE TRUTH',
   PRESS_ANY_KEY: '>> PRESS ANY KEY TO START <<',
@@ -32,6 +33,7 @@ export const EN = {
   DOSSIER_START_BTN: '>> START INTERROGATION (ENTER) <<',
   DOSSIER_FOOTER: 'ESC: Menu  |  Scroll: Scroll',
   DOSSIER_DEFAULT_NAME: 'DEFENDANT',
+  PLAY_OPERATOR_LABEL: 'OPERATOR',
 
   // verdict
   VERDICT_TITLE: '[ VERDICT PHASE ]',
@@ -49,6 +51,9 @@ export const EN = {
   VERDICT_NOT_GUILTY_SUB: 'Insufficient evidence',
   VERDICT_INSTRUCTIONS: '1 / 2 / MOUSE: GIVE VERDICT',
   VERDICT_NO_RECORD: 'No interrogation record.',
+  VERDICT_WAVE_HR: 'HR',
+  VERDICT_WAVE_EEG: 'EG',
+  VERDICT_WAVE_GSR: 'GS',
 
   // result
   RESULT_CORRECT: '[ CORRECT VERDICT ]',
@@ -65,6 +70,9 @@ export const EN = {
   // settings
   SETTINGS_TITLE: '[ SETTINGS ]',
   SETTINGS_LANGUAGE_LABEL: 'LANGUAGE',
+  SETTINGS_SCROLL_LABEL: 'INVERT SCROLL',
+  SETTINGS_SCROLL_ON: 'ON',
+  SETTINGS_SCROLL_OFF: 'OFF',
   SETTINGS_LANGUAGE_EN: 'ENGLISH',
   SETTINGS_LANGUAGE_TR: 'TURKCE',
   SETTINGS_BACK: 'ESC: Back to Menu',
@@ -94,11 +102,15 @@ export const EN = {
   TUTORIAL_STEP: 'STEP',
   TUTORIAL_OF: '/',
   TUTORIAL_POLYGRAPH_TITLE: 'POLYGRAPH PANEL',
-  TUTORIAL_POLYGRAPH_BODY: 'Shows the suspect\u2019s pulse, brain and skin reactions. Colored bands during questions mark the intensity of their response.',
+  TUTORIAL_POLYGRAPH_BODY:
+    'Shows the suspect\u2019s pulse, brain and skin reactions. Colored bands during questions mark the intensity of their response.',
   TUTORIAL_DOSSIER_TITLE: 'DEFENDANT DOSSIER',
-  TUTORIAL_DOSSIER_BODY: 'Review medical notes, habits and pressure points. Some conditions can distort the polygraph readings.',
+  TUTORIAL_DOSSIER_BODY:
+    'Review medical notes, habits and pressure points. Some conditions can distort the polygraph readings.',
   TUTORIAL_LOG_TITLE: 'CONVERSATION LOG',
   TUTORIAL_LOG_BODY: 'Re-read everything that has been said during the interrogation here.',
   TUTORIAL_CHOICES_TITLE: 'QUESTIONS',
-  TUTORIAL_CHOICES_BODY: 'Click or press 1-9 to pick a question. Each one will provoke a different reaction.',
+  TUTORIAL_CHOICES_BODY:
+    'Click or press 1-9 to pick a question. Each one will provoke a different reaction.',
+  TUTORIAL_LANGUAGE_TITLE: 'LANGUAGE',
 };

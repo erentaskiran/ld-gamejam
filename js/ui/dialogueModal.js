@@ -3,7 +3,10 @@ import { COLORS, UI_FONT } from './theme.js';
 import { drawPanel } from './panel.js';
 import { t } from '../i18n/index.js';
 
-export function drawDialogueModal(ctx, { x, y, w, h, question, answer, answerScrollOffset = 0, suspectLabel = 'DEFENDANT' }) {
+export function drawDialogueModal(
+  ctx,
+  { x, y, w, h, question, answer, answerScrollOffset = 0, suspectLabel = t('DOSSIER_DEFAULT_NAME') }
+) {
   drawPanel(ctx, x, y, w, h, { border: COLORS.amber });
 
   drawText(ctx, t('DIALOGUE_ANSWER_HEADER'), x + 8, y + 10, {
@@ -13,13 +16,20 @@ export function drawDialogueModal(ctx, { x, y, w, h, question, answer, answerScr
     baseline: 'middle',
   });
 
-  const qLines = drawWrappedText(ctx, `${t('DIALOGUE_YOU_PREFIX')}${question}`, x + 8, y + 24, w - 16, {
-    size: 12,
-    color: COLORS.creamDim,
-    font: UI_FONT,
-    lineHeight: 12,
-    maxLines: 2,
-  });
+  const qLines = drawWrappedText(
+    ctx,
+    `${t('DIALOGUE_YOU_PREFIX')}${question}`,
+    x + 8,
+    y + 24,
+    w - 16,
+    {
+      size: 12,
+      color: COLORS.creamDim,
+      font: UI_FONT,
+      lineHeight: 12,
+      maxLines: 2,
+    }
+  );
 
   const footerH = 14;
   let scrollResult = { clampedScroll: 0, maxScroll: 0 };

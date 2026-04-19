@@ -1,6 +1,6 @@
 import { drawRect, drawText, drawWrappedText, wrapTextLines } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
-import { getMousePos, getWheelDelta, wasKeyPressed, wasMousePressed } from '../input.js';
+import { getMousePos, getPlatformScrollDelta, wasKeyPressed, wasMousePressed } from '../input.js';
 import { clamp } from '../math.js';
 import { state } from '../game/state.js';
 import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
@@ -45,14 +45,24 @@ function buildEntries(d) {
   if (d?.medical?.length) {
     entries.push({ type: 'heading', text: t('DOSSIER_HEALTH') });
     for (const m of d.medical) {
-      entries.push({ type: 'item', label: m.condition, detail: m.polygraph_effect || '', tag: t('DOSSIER_POLY_TAG') });
+      entries.push({
+        type: 'item',
+        label: m.condition,
+        detail: m.polygraph_effect || '',
+        tag: t('DOSSIER_POLY_TAG'),
+      });
     }
   }
 
   if (d?.habits?.length) {
     entries.push({ type: 'heading', text: t('DOSSIER_HABITS') });
     for (const h of d.habits) {
-      entries.push({ type: 'item', label: h.habit, detail: h.polygraph_effect || '', tag: t('DOSSIER_POLY_TAG') });
+      entries.push({
+        type: 'item',
+        label: h.habit,
+        detail: h.polygraph_effect || '',
+        tag: t('DOSSIER_POLY_TAG'),
+      });
     }
   }
 
@@ -295,7 +305,7 @@ export function registerDossierScene(_canvas, ctx) {
     },
     update(dt) {
       anim += dt;
-      const wheel = getWheelDelta();
+      const wheel = getPlatformScrollDelta();
       if (wheel !== 0) {
         scroll = clamp(scroll - wheel, 0, maxScroll);
       }

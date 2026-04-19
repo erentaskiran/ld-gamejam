@@ -27,7 +27,7 @@ function drawTitleScene(ctx) {
   ctx.save();
   ctx.globalAlpha = titleP;
   const titleY = DESIGN_H / 2 - 38 + (1 - titleP) * 10;
-  drawText(ctx, 'THE OPERATOR', DESIGN_W / 2, titleY, {
+  drawText(ctx, t('APP_TITLE'), DESIGN_W / 2, titleY, {
     align: 'center',
     size: 36,
     color: COLORS.amberBright,

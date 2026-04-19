@@ -112,7 +112,7 @@ export function drawLogPanel(ctx, x, y, w, h, log, scrollOffset) {
   const allLines = buildLines(ctx, log, textW, size);
   const maxScroll = Math.max(0, allLines.length - maxLines);
   const clampedScroll = Math.min(Math.max(0, scrollOffset), maxScroll);
-  const startIdx = Math.max(0, allLines.length - maxLines - clampedScroll);
+  const startIdx = Math.max(0, Math.floor(clampedScroll));
   const visible = allLines.slice(startIdx, startIdx + maxLines);
 
   for (let i = 0; i < visible.length; i += 1) {
@@ -130,7 +130,7 @@ export function drawLogPanel(ctx, x, y, w, h, log, scrollOffset) {
     const trackH = bodyHeight;
     drawRect(ctx, trackX, trackY, scrollbarW, trackH, COLORS.amberDim);
     const thumbH = Math.max(10, trackH * (maxLines / allLines.length));
-    const thumbYRatio = maxScroll === 0 ? 0 : 1 - clampedScroll / maxScroll;
+    const thumbYRatio = maxScroll === 0 ? 0 : clampedScroll / maxScroll;
     const thumbY = trackY + (trackH - thumbH) * thumbYRatio;
     drawRect(ctx, trackX, thumbY, scrollbarW, thumbH, COLORS.amberBright);
   }

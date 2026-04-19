@@ -1,5 +1,5 @@
 import { registerScene, setScene } from '../sceneManager.js';
-import { getMousePos, getWheelDelta, wasKeyPressed, wasMousePressed } from '../input.js';
+import { getMousePos, getPlatformScrollDelta, wasKeyPressed, wasMousePressed } from '../input.js';
 import { clamp, lerp } from '../math.js';
 import {
   getSuspectLabel,
@@ -26,6 +26,7 @@ import {
   markTutorialDone,
 } from '../ui/tutorial.js';
 import { DESIGN_H, DESIGN_W } from '../ui/theme.js';
+import { t } from '../i18n/index.js';
 
 const LAYOUT = {
   narration: { x: 8, y: 8, w: 518, h: 48 },
@@ -110,7 +111,7 @@ function drawConversationPortraits(ctx) {
     LAYOUT.operatorBadge.w,
     LAYOUT.operatorBadge.h,
     'operator',
-    'OPERATOR'
+    t('PLAY_OPERATOR_LABEL')
   );
 
   drawPortraitBadge(
@@ -360,9 +361,9 @@ function updateLogHover(dt) {
   }
 
   if (logExpanded && inRect(mouse, panelRect)) {
-    const wheel = getWheelDelta();
+    const wheel = getPlatformScrollDelta();
     if (wheel !== 0) {
-      logScrollOffset = clamp(logScrollOffset - wheel / 30, 0, logMaxScroll);
+      logScrollOffset = clamp(logScrollOffset + wheel / 30, 0, logMaxScroll);
     }
   }
 }
@@ -370,11 +371,7 @@ function updateLogHover(dt) {
 function updateDossierHover(dt) {
   const mouse = getMousePos();
   const ease = smoothstep(clamp(dossierAnim, 0, 1));
-  const tabX = lerp(
-    LAYOUT.dossierTab.x,
-    LAYOUT.dossierPanel.x + LAYOUT.dossierPanel.w + 2,
-    ease
-  );
+  const tabX = lerp(LAYOUT.dossierTab.x, LAYOUT.dossierPanel.x + LAYOUT.dossierPanel.w + 2, ease);
   const liveTabRect = {
     x: tabX,
     y: LAYOUT.dossierTab.y,
@@ -408,9 +405,9 @@ function updateDossierHover(dt) {
   }
 
   if (dossierExpanded && inRect(mouse, panelRect)) {
-    const wheel = getWheelDelta();
+    const wheel = getPlatformScrollDelta();
     if (wheel !== 0) {
-      dossierScrollOffset = clamp(dossierScrollOffset - wheel / 30, 0, dossierMaxScroll);
+      dossierScrollOffset = clamp(dossierScrollOffset + wheel / 30, 0, dossierMaxScroll);
     }
   }
 }
@@ -648,7 +645,7 @@ export function registerPlayScene(_canvas, ctx) {
       }
 
       if (state.responseMode) {
-        const wheel = getWheelDelta();
+        const wheel = getPlatformScrollDelta();
         if (wheel !== 0) {
           answerScrollOffset = clamp(answerScrollOffset + wheel / 30, 0, answerMaxScroll);
         }
@@ -657,7 +654,7 @@ export function registerPlayScene(_canvas, ctx) {
       }
 
       if (!state.responseMode && state.currentNode?.choices && !logExpanded && !dossierExpanded) {
-        const wheel = getWheelDelta();
+        const wheel = getPlatformScrollDelta();
         if (wheel !== 0) {
           choiceScrollOffset = clamp(choiceScrollOffset + wheel / 30, 0, choiceMaxScroll);
         }

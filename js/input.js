@@ -15,6 +15,16 @@ let isInitialized = false;
 let designScale = 1;
 let wheelDelta = 0;
 
+const platformText = `${navigator.platform || ''} ${navigator.userAgent || ''}`;
+const isMacPlatform = /mac|iphone|ipad|ipod/i.test(platformText);
+const isWindowsPlatform = /win/i.test(platformText);
+const SCROLL_INVERT_KEY = 'the-operator:scroll-invert:v1';
+
+let scrollInverted = false;
+try {
+  scrollInverted = localStorage.getItem(SCROLL_INVERT_KEY) === '1';
+} catch {}
+
 export function setDesignScale(scale) {
   designScale = scale || 1;
 }
@@ -89,6 +99,29 @@ export function endFrameInput() {
 
 export function getWheelDelta() {
   return wheelDelta;
+}
+
+export function getPlatformScrollDelta() {
+  const delta = wheelDelta;
+  if (isMacPlatform || isWindowsPlatform) {
+    return scrollInverted ? -delta : delta;
+  }
+  return scrollInverted ? -delta : delta;
+}
+
+export function isScrollInverted() {
+  return scrollInverted;
+}
+
+export function setScrollInverted(next) {
+  scrollInverted = !!next;
+  try {
+    localStorage.setItem(SCROLL_INVERT_KEY, scrollInverted ? '1' : '0');
+  } catch {}
+}
+
+export function toggleScrollInverted() {
+  setScrollInverted(!scrollInverted);
 }
 
 export function isKeyDown(key) {

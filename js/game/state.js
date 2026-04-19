@@ -55,7 +55,7 @@ export const state = {
 
 export function getSuspectLabel() {
   const name = state.gameData?.suspect?.name;
-  return name ? String(name).toUpperCase() : 'DEFENDANT';
+  return name ? String(name).toUpperCase() : t('DOSSIER_DEFAULT_NAME');
 }
 
 export function getSelectedCaseDef() {
@@ -195,13 +195,24 @@ export function resetRun() {
 
 const STRESS_TIER = {
   heartRate: {
-    MAX_SPIKE: 3, SPIKE: 2, MAX: 3, ERRATIC: 2, INCREASE: 1, RISE: 1,
+    MAX_SPIKE: 3,
+    SPIKE: 2,
+    MAX: 3,
+    ERRATIC: 2,
+    INCREASE: 1,
+    RISE: 1,
   },
   gsr: {
-    MAX: 3, SURGE: 3, SPIKE: 2, INCREASE: 1,
+    MAX: 3,
+    SURGE: 3,
+    SPIKE: 2,
+    INCREASE: 1,
   },
   eeg: {
-    FLATLINE: 3, CHAOTIC: 3, ERRATIC: 2, INCREASE: 1,
+    FLATLINE: 3,
+    CHAOTIC: 3,
+    ERRATIC: 2,
+    INCREASE: 1,
   },
 };
 
@@ -224,6 +235,7 @@ export function pickChoice(index) {
   }
 
   const mechanics = choice.mechanics || {};
+
   state.prompt = `${t('DIALOGUE_YOU_PREFIX')}${choice.question}`;
   state.lastQuestion = choice.question;
   state.lastAnswer = choice.answer;

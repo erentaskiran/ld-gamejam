@@ -1,6 +1,7 @@
 import { drawRect, drawText, wrapTextLines } from '../draw.js';
 import { COLORS, UI_FONT } from './theme.js';
 import { drawPanel } from './panel.js';
+import { t } from '../i18n/index.js';
 
 function buildEntries(d, suspect) {
   const entries = [];
@@ -13,21 +14,35 @@ function buildEntries(d, suspect) {
   if (d?.family?.length) {
     entries.push({ type: 'heading', text: 'AILE' });
     for (const f of d.family) {
-      entries.push({ type: 'item', label: `${f.relation}: ${f.name || ''}`.trim(), detail: f.note || '' });
+      entries.push({
+        type: 'item',
+        label: `${f.relation}: ${f.name || ''}`.trim(),
+        detail: f.note || '',
+      });
     }
   }
 
   if (d?.medical?.length) {
     entries.push({ type: 'heading', text: 'SAGLIK' });
     for (const m of d.medical) {
-      entries.push({ type: 'item', label: m.condition, detail: m.polygraph_effect || '', tag: 'POLIGRAF' });
+      entries.push({
+        type: 'item',
+        label: m.condition,
+        detail: m.polygraph_effect || '',
+        tag: 'POLIGRAF',
+      });
     }
   }
 
   if (d?.habits?.length) {
     entries.push({ type: 'heading', text: 'ALISKANLIK' });
     for (const h of d.habits) {
-      entries.push({ type: 'item', label: h.habit, detail: h.polygraph_effect || '', tag: 'POLIGRAF' });
+      entries.push({
+        type: 'item',
+        label: h.habit,
+        detail: h.polygraph_effect || '',
+        tag: 'POLIGRAF',
+      });
     }
   }
 
@@ -141,7 +156,7 @@ export function drawDossierPanel(ctx, x, y, w, h, dossier, suspect, scrollOffset
     fill: 'rgba(14, 9, 6, 0.95)',
   });
 
-  drawText(ctx, '[ SANIK ]', x + 8, y + 10, {
+  drawText(ctx, t('DOSSIER_TITLE'), x + 8, y + 10, {
     size: 12,
     color: COLORS.amberBright,
     font: UI_FONT,
