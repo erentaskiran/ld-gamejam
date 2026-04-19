@@ -19,7 +19,9 @@ async function removeBackground(pngBuffer) {
   const TOLERANCE = 40;
 
   const dist = (i) => {
-    const r = data[i] - BG[0], g = data[i + 1] - BG[1], b = data[i + 2] - BG[2];
+    const r = data[i] - BG[0],
+      g = data[i + 1] - BG[1],
+      b = data[i + 2] - BG[2];
     return Math.sqrt(r * r + g * g + b * b);
   };
 
@@ -35,17 +37,48 @@ async function removeBackground(pngBuffer) {
   };
 
   // Seed from all four edges
-  for (let x = 0; x < width; x++) { seed(x, 0); seed(x, height - 1); }
-  for (let y = 0; y < height; y++) { seed(0, y); seed(width - 1, y); }
+  for (let x = 0; x < width; x++) {
+    seed(x, 0);
+    seed(x, height - 1);
+  }
+  for (let y = 0; y < height; y++) {
+    seed(0, y);
+    seed(width - 1, y);
+  }
 
   while (stack.length > 0) {
     const idx = stack.pop();
     data[idx * ch + 3] = 0; // make transparent
-    const x = idx % width, y = (idx / width) | 0;
-    if (x > 0)          { const n = idx - 1;     if (!visited[n] && dist(n * ch) < TOLERANCE) { visited[n] = 1; stack.push(n); } }
-    if (x < width - 1)  { const n = idx + 1;     if (!visited[n] && dist(n * ch) < TOLERANCE) { visited[n] = 1; stack.push(n); } }
-    if (y > 0)          { const n = idx - width;  if (!visited[n] && dist(n * ch) < TOLERANCE) { visited[n] = 1; stack.push(n); } }
-    if (y < height - 1) { const n = idx + width;  if (!visited[n] && dist(n * ch) < TOLERANCE) { visited[n] = 1; stack.push(n); } }
+    const x = idx % width,
+      y = (idx / width) | 0;
+    if (x > 0) {
+      const n = idx - 1;
+      if (!visited[n] && dist(n * ch) < TOLERANCE) {
+        visited[n] = 1;
+        stack.push(n);
+      }
+    }
+    if (x < width - 1) {
+      const n = idx + 1;
+      if (!visited[n] && dist(n * ch) < TOLERANCE) {
+        visited[n] = 1;
+        stack.push(n);
+      }
+    }
+    if (y > 0) {
+      const n = idx - width;
+      if (!visited[n] && dist(n * ch) < TOLERANCE) {
+        visited[n] = 1;
+        stack.push(n);
+      }
+    }
+    if (y < height - 1) {
+      const n = idx + width;
+      if (!visited[n] && dist(n * ch) < TOLERANCE) {
+        visited[n] = 1;
+        stack.push(n);
+      }
+    }
   }
 
   return sharp(Buffer.from(data), { raw: { width, height, channels: ch } })

@@ -392,7 +392,7 @@ const STEP_LABELS = {
   suspect: 'Şüpheli oluşturuluyor...',
   case: 'Dava bağlamı oluşturuluyor...',
   nodes: 'Sorgulama düğümleri oluşturuluyor...',
-  final: 'Final dava JSON\'u derleniyor...',
+  final: "Final dava JSON'u derleniyor...",
 };
 
 const { results } = await runPipeline(steps, {

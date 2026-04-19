@@ -265,15 +265,22 @@ function drawMenuScene(ctx) {
     drawPanel(ctx, infoX, infoY, infoW, infoH, { border: COLORS.amberDim });
 
     if (caseData) {
-      const titleLineCount = drawWrappedText(ctx, caseData.title, infoX + infoW / 2, infoY + 10, infoW - 24, {
-        align: 'center',
-        size: 12,
-        color: COLORS.amberBright,
-        font: UI_FONT,
-        baseline: 'top',
-        lineHeight: 15,
-        maxLines: 3,
-      });
+      const titleLineCount = drawWrappedText(
+        ctx,
+        caseData.title,
+        infoX + infoW / 2,
+        infoY + 10,
+        infoW - 24,
+        {
+          align: 'center',
+          size: 12,
+          color: COLORS.amberBright,
+          font: UI_FONT,
+          baseline: 'top',
+          lineHeight: 15,
+          maxLines: 3,
+        }
+      );
       const titleBlockH = titleLineCount * 15 + 10;
       const scrollResult = drawScrollableText(
         ctx,

@@ -23,12 +23,7 @@ export const CASES = [
     label: 'CASE TR TEST 2',
     language: 'tr',
   },
-  {
-    id: 'TR TEST 3',
-    file: './dialogs/test-3.json',
-    label: 'CASE TR TEST 3',
-    language: 'tr',
-  },
+
   {
     id: 'TR TEST 4',
     file: './dialogs/resimli-tr-test.json',
@@ -47,12 +42,7 @@ export const CASES = [
     label: 'CASE EN TEST 2',
     language: 'en',
   },
-  {
-    id: 'EN TEST 3',
-    file: './dialogs/test-3.json',
-    label: 'CASE EN TEST 3',
-    language: 'en',
-  },
+
   {
     id: 'test-4-en',
     file: './dialogs/test-4-en.json',
