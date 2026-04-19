@@ -32,6 +32,9 @@ let dossierViewportRect = null;
 let summaryScrollOffset = 0;
 let summaryMaxScroll = 0;
 let summaryViewportRect = null;
+let pendingVerdict = null;
+let confirmOkRect = null;
+let confirmCancelRect = null;
 
 function inRect(point, rect) {
   return (
@@ -196,8 +199,92 @@ function drawVerdictButton(ctx, rect, label, subtitle, hovered, accent) {
   });
 }
 
+function drawConfirmOverlay(ctx, verdict) {
+  drawRect(ctx, 0, 0, DESIGN_W, DESIGN_H, 'rgba(4, 2, 1, 0.72)');
+
+  const w = 260;
+  const h = 96;
+  const x = (DESIGN_W - w) / 2;
+  const y = (DESIGN_H - h) / 2;
+  drawPanel(ctx, x, y, w, h, { border: COLORS.amberBright, fill: 'rgba(14, 9, 6, 0.96)' });
+
+  const accent = verdict === VERDICT_GUILTY ? COLORS.fail : COLORS.success;
+  drawText(ctx, t('VERDICT_CONFIRM_TITLE'), x + w / 2, y + 18, {
+    align: 'center',
+    size: 14,
+    color: accent,
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+
+  drawText(ctx, t('VERDICT_CONFIRM_BODY'), x + w / 2, y + 40, {
+    align: 'center',
+    size: 11,
+    color: COLORS.cream,
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+
+  const btnY = y + h - 28;
+  const btnW = 108;
+  const btnH = 18;
+  const gap = 8;
+  const leftX = x + (w - (btnW * 2 + gap)) / 2;
+  confirmCancelRect = { x: leftX, y: btnY, w: btnW, h: btnH };
+  confirmOkRect = { x: leftX + btnW + gap, y: btnY, w: btnW, h: btnH };
+
+  const mouse = getMousePos();
+  const cancelHover = inRect(mouse, confirmCancelRect);
+  const okHover = inRect(mouse, confirmOkRect);
+
+  drawPanel(
+    ctx,
+    confirmCancelRect.x,
+    confirmCancelRect.y,
+    confirmCancelRect.w,
+    confirmCancelRect.h,
+    {
+      border: cancelHover ? COLORS.amberBright : COLORS.amberDim,
+      fill: cancelHover ? 'rgba(56, 34, 14, 0.84)' : COLORS.panelFillLight,
+    }
+  );
+  drawText(
+    ctx,
+    t('VERDICT_CONFIRM_NO'),
+    confirmCancelRect.x + confirmCancelRect.w / 2,
+    confirmCancelRect.y + confirmCancelRect.h / 2,
+    {
+      align: 'center',
+      size: 10,
+      color: cancelHover ? COLORS.amberBright : COLORS.creamDim,
+      font: UI_FONT,
+      baseline: 'middle',
+    }
+  );
+
+  drawPanel(ctx, confirmOkRect.x, confirmOkRect.y, confirmOkRect.w, confirmOkRect.h, {
+    border: okHover ? accent : COLORS.amberDim,
+    fill: okHover ? 'rgba(56, 34, 14, 0.84)' : COLORS.panelFillLight,
+  });
+  drawText(
+    ctx,
+    t('VERDICT_CONFIRM_YES'),
+    confirmOkRect.x + confirmOkRect.w / 2,
+    confirmOkRect.y + confirmOkRect.h / 2,
+    {
+      align: 'center',
+      size: 10,
+      color: okHover ? accent : COLORS.cream,
+      font: UI_FONT,
+      baseline: 'middle',
+    }
+  );
+}
+
 function drawVerdictScene(ctx) {
   drawSceneBackground(ctx);
+  confirmOkRect = null;
+  confirmCancelRect = null;
 
   const panelX = 16;
   const panelY = 12;
@@ -456,6 +543,10 @@ function drawVerdictScene(ctx) {
     baseline: 'middle',
   });
   ctx.restore();
+
+  if (pendingVerdict) {
+    drawConfirmOverlay(ctx, pendingVerdict);
+  }
 }
 
 function submitVerdict(verdict) {
@@ -483,10 +574,36 @@ export function registerVerdictScene(_canvas, ctx) {
       summaryScrollOffset = 0;
       summaryMaxScroll = 0;
       summaryViewportRect = null;
+      pendingVerdict = null;
+      confirmOkRect = null;
+      confirmCancelRect = null;
       applyAmbientProfile('verdict');
     },
     update(dt) {
       anim += dt;
+
+      if (pendingVerdict) {
+        const mouse = getMousePos();
+        if (wasKeyPressed('enter')) {
+          submitVerdict(pendingVerdict);
+          return;
+        }
+        if (wasKeyPressed('escape')) {
+          pendingVerdict = null;
+          return;
+        }
+        if (wasMousePressed(0)) {
+          if (confirmOkRect && inRect(mouse, confirmOkRect)) {
+            submitVerdict(pendingVerdict);
+            return;
+          }
+          if (confirmCancelRect && inRect(mouse, confirmCancelRect)) {
+            pendingVerdict = null;
+            return;
+          }
+        }
+        return;
+      }
 
       const mouse = getMousePos();
       const wheel = getPlatformScrollDelta();
@@ -519,11 +636,11 @@ export function registerVerdictScene(_canvas, ctx) {
         listScrollOffset = Math.min(listMaxScroll, listScrollOffset + 12);
       }
       if (wasKeyPressed('1')) {
-        submitVerdict(VERDICT_GUILTY);
+        pendingVerdict = VERDICT_GUILTY;
         return;
       }
       if (wasKeyPressed('2')) {
-        submitVerdict(VERDICT_NOT_GUILTY);
+        pendingVerdict = VERDICT_NOT_GUILTY;
         return;
       }
       if (wasKeyPressed('escape')) {
@@ -533,7 +650,7 @@ export function registerVerdictScene(_canvas, ctx) {
       if (wasMousePressed(0)) {
         for (const rect of buttonRects) {
           if (inRect(mouse, rect)) {
-            submitVerdict(rect.verdict);
+            pendingVerdict = rect.verdict;
             return;
           }
         }
