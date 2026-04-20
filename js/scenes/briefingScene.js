@@ -63,6 +63,16 @@ const SIGNAL_CYCLES = {
 
 const STEPS = ['intro', 'pulse', 'breathing', 'gsr', 'fear', 'cctv', 'modifiers', 'close'];
 
+const CCTV_CUE_FALLBACK = {
+  STONE_FACE: 'Stone face',
+  EYE_DART: 'Eye dart',
+  JAW_TIGHTEN: 'Jaw tighten',
+  DEFENSIVE_CROSS_ARMS: 'Defensive posture',
+  BREAKDOWN: 'Breakdown',
+  TEAR_POOLING: 'Tear pooling',
+  RELIEVED_EXHALE: 'Relief exhale',
+};
+
 let stepIndex = 0;
 let cycleIndex = 0;
 let demoFearBar = 20;
@@ -176,7 +186,9 @@ function currentStateLabel() {
   if (entry.mechanics) {
     return entry.mechanics.heart_rate || entry.mechanics.breathing || entry.mechanics.gsr || '';
   }
-  if (entry.cue) return entry.cue;
+  if (entry.cue) {
+    return resolveCctvCueLabel(entry.cue);
+  }
   if (entry.fearDelta != null) {
     return entry.fearDelta > 0 ? `+${entry.fearDelta}` : String(entry.fearDelta);
   }
@@ -186,6 +198,15 @@ function currentStateLabel() {
 function stepKey(key) {
   const name = STEPS[stepIndex].toUpperCase();
   return t(`BRIEFING_${name}_${key}`);
+}
+
+function resolveCctvCueLabel(cue) {
+  const i18nKey = `BRIEFING_CCTV_CUE_${cue}`;
+  const localized = t(i18nKey);
+  if (localized && localized !== i18nKey) {
+    return localized;
+  }
+  return CCTV_CUE_FALLBACK[cue] || String(cue || '').replaceAll('_', ' ');
 }
 
 function drawHeader(ctx) {
@@ -295,7 +316,8 @@ function drawCctvDemo(ctx) {
   const entry = currentCycleEntry();
   const cue = entry?.cue || 'STONE_FACE';
   const style = classifyCctv(cue);
-  drawPortraitBadge(ctx, x, y, badgeW, badgeH, 'defendant', cue, {
+  const cueLabel = resolveCctvCueLabel(cue);
+  drawPortraitBadge(ctx, x, y, badgeW, badgeH, 'defendant', cueLabel, {
     style,
     intensity: 1,
     time: sandbox.time,
@@ -355,7 +377,7 @@ function drawFooter(ctx) {
     );
     drawText(
       ctx,
-      `SIMULASYON  ${cycleIndex + 1}/${cycle.length}  ·  SPACE / CLICK`,
+      `${t('BRIEFING_SIM_LABEL')}  ${cycleIndex + 1}/${cycle.length}  ·  ${t('BRIEFING_SIM_HINT')}`,
       simCenterRect.x + simCenterRect.w / 2,
       simCenterRect.y + simCenterRect.h / 2 + 1,
       {

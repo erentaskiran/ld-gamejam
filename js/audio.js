@@ -17,8 +17,7 @@ function clamp01(v) {
 function getMasterVolumeScale() {
   const normalized = clamp01(getAmbientVolume() / 100);
   const curved =
-    Math.log1p(normalized * GLOBAL_VOLUME_LOG_STRENGTH) /
-    Math.log1p(GLOBAL_VOLUME_LOG_STRENGTH);
+    Math.log1p(normalized * GLOBAL_VOLUME_LOG_STRENGTH) / Math.log1p(GLOBAL_VOLUME_LOG_STRENGTH);
   return clamp01(curved * GLOBAL_VOLUME_MAX);
 }
 

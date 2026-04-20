@@ -1,5 +1,11 @@
 import { registerScene, setScene } from '../sceneManager.js';
-import { getMousePos, isMouseDown, toggleScrollInverted, wasKeyPressed, wasMousePressed } from '../input.js';
+import {
+  getMousePos,
+  isMouseDown,
+  toggleScrollInverted,
+  wasKeyPressed,
+  wasMousePressed,
+} from '../input.js';
 import { drawSettingsModal } from '../ui/pauseModal.js';
 
 let settingsRects = {};

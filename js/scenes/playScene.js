@@ -897,17 +897,9 @@ export function registerPlayScene(_canvas, ctx) {
               questionMaxScroll
             );
           } else if (overAnswer && answerMaxScroll > 0) {
-            setScrollTarget(
-              'play.answer',
-              getScrollTarget('play.answer') + delta,
-              answerMaxScroll
-            );
+            setScrollTarget('play.answer', getScrollTarget('play.answer') + delta, answerMaxScroll);
           } else {
-            setScrollTarget(
-              'play.answer',
-              getScrollTarget('play.answer') + delta,
-              answerMaxScroll
-            );
+            setScrollTarget('play.answer', getScrollTarget('play.answer') + delta, answerMaxScroll);
           }
         }
         handleResponseMode(dt);

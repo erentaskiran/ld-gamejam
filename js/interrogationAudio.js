@@ -15,8 +15,7 @@ function clamp100(v) {
 function getEngineVolumePercent(uiVolume) {
   const normalized = clamp01(uiVolume / 100);
   const curved =
-    Math.log1p(normalized * AMBIENT_VOLUME_LOG_STRENGTH) /
-    Math.log1p(AMBIENT_VOLUME_LOG_STRENGTH);
+    Math.log1p(normalized * AMBIENT_VOLUME_LOG_STRENGTH) / Math.log1p(AMBIENT_VOLUME_LOG_STRENGTH);
   return clamp100(curved * AMBIENT_VOLUME_MAX);
 }
 

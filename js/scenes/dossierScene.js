@@ -179,7 +179,14 @@ function drawDossierScene(ctx) {
   const summaryY = contextY + 14;
   const summaryH = Math.max(46, btnY - summaryY - 8);
   summaryRect = { x: contextX, y: summaryY, w: contextW, h: summaryH };
-  drawRect(ctx, summaryRect.x - 2, summaryRect.y - 2, summaryRect.w + 4, summaryRect.h + 4, 'rgba(14, 9, 6, 0.4)');
+  drawRect(
+    ctx,
+    summaryRect.x - 2,
+    summaryRect.y - 2,
+    summaryRect.w + 4,
+    summaryRect.h + 4,
+    'rgba(14, 9, 6, 0.4)'
+  );
   const summaryDraw = drawScrollableText(
     ctx,
     state.gameData?.context || '',
@@ -200,9 +207,23 @@ function drawDossierScene(ctx) {
   summaryMaxScroll = summaryDraw.maxScroll;
 
   drawRect(ctx, summaryRect.x - 2, summaryRect.y - 2, summaryRect.w + 4, 1, COLORS.amberDim);
-  drawRect(ctx, summaryRect.x - 2, summaryRect.y + summaryRect.h + 1, summaryRect.w + 4, 1, COLORS.amberDim);
+  drawRect(
+    ctx,
+    summaryRect.x - 2,
+    summaryRect.y + summaryRect.h + 1,
+    summaryRect.w + 4,
+    1,
+    COLORS.amberDim
+  );
   drawRect(ctx, summaryRect.x - 2, summaryRect.y - 2, 1, summaryRect.h + 4, COLORS.amberDim);
-  drawRect(ctx, summaryRect.x + summaryRect.w + 1, summaryRect.y - 2, 1, summaryRect.h + 4, COLORS.amberDim);
+  drawRect(
+    ctx,
+    summaryRect.x + summaryRect.w + 1,
+    summaryRect.y - 2,
+    1,
+    summaryRect.h + 4,
+    COLORS.amberDim
+  );
 
   const contentX = portraitX + portraitW + 16;
   const contentY = panelY + 44;

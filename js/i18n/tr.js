@@ -99,6 +99,8 @@ export const TR = {
   BRIEFING_HINT_BACK: '← : Geri',
   BRIEFING_HINT_STATE: 'SPACE : Simulasyonu ilerlet',
   BRIEFING_HINT_EXIT: 'ESC : Menu',
+  BRIEFING_SIM_LABEL: 'SIMULASYON',
+  BRIEFING_SIM_HINT: 'SPACE / TIKLA',
   BRIEFING_INTRO_TITLE: 'ODAYI OKUMAK',
   BRIEFING_INTRO_BODY:
     '- Bu oyunda 5 kaynağı birlikte okursun: NABIZ, NEFES, GSR, STRES ve portre.\n- Tek bir kanal, tek başına kesin kanıt değildir.\n- Her sorudan sonra önce değişimi gör, sonra dosyayla karşılaştır.',
@@ -117,6 +119,13 @@ export const TR = {
   BRIEFING_CCTV_TITLE: 'SUPHELI PORTRESI',
   BRIEFING_CCTV_BODY:
     '- Portrede metin etiketi yok; sadece görsel ipuçları var.\n- Kırmızı/titrek görünüm gerginliği, çökme efekti kırılmayı, soğuk/sabit görünüm kontrolü işaret eder.\n- Portreyi mutlaka poligraf sinyalleriyle birlikte yorumla.',
+  BRIEFING_CCTV_CUE_STONE_FACE: 'Kontrollu ifade',
+  BRIEFING_CCTV_CUE_EYE_DART: 'Goz kacirma',
+  BRIEFING_CCTV_CUE_JAW_TIGHTEN: 'Cene sikma',
+  BRIEFING_CCTV_CUE_DEFENSIVE_CROSS_ARMS: 'Savunmaci durus',
+  BRIEFING_CCTV_CUE_BREAKDOWN: 'Kirilma anı',
+  BRIEFING_CCTV_CUE_TEAR_POOLING: 'Gozler doluyor',
+  BRIEFING_CCTV_CUE_RELIEVED_EXHALE: 'Rahatlama nefesi',
   BRIEFING_MODIFIERS_TITLE: 'SAGLIK VE ALISKANLIK',
   BRIEFING_MODIFIERS_BODY:
     '- Dossier\'daki sağlık ve alışkanlık notları oyunu doğrudan etkiler.\n- "polygraph_effect" satırlarını okumadan yorum yapma.\n- Basit kural: önce dosyayı oku, sonra grafiğe bak.',

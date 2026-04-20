@@ -5,9 +5,9 @@ import Anthropic from '@anthropic-ai/sdk';
 // Sonnet 4.6: $3/$15 per MTok — best balance, good for creative/complex tasks
 // Opus 4.7:   $5/$25 per MTok — highest quality, use when Sonnet falls short
 export const MODEL = {
-  HEAVY: 'claude-sonnet-4-6',  // complex creative steps (suspect)
-  NODES: 'claude-opus-4-7',    // branching graph — highest quality
-  LIGHT: 'claude-haiku-4-5',   // simple structured steps (case, extras)
+  HEAVY: 'claude-sonnet-4-6', // complex creative steps (suspect)
+  NODES: 'claude-opus-4-7', // branching graph — highest quality
+  LIGHT: 'claude-haiku-4-5', // simple structured steps (case, extras)
 };
 
 const DEFAULT_MODEL = MODEL.HEAVY;

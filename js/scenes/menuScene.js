@@ -1,10 +1,4 @@
-import {
-  drawRect,
-  drawText,
-  drawWrappedText,
-  drawScrollableText,
-  wrapTextLines,
-} from '../draw.js';
+import { drawRect, drawText, drawWrappedText, drawScrollableText, wrapTextLines } from '../draw.js';
 import { getImage } from '../assets.js';
 import { registerScene, setScene } from '../sceneManager.js';
 import {

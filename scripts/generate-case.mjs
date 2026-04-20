@@ -128,7 +128,7 @@ const ANTI_DEFAULT_PRINCIPLES = [
   'Stay out of the polished American legal-procedural register: no FDA inquiries, no class-action suits, no Phase III trial scandals, no Fortune-500 boardrooms. Prefer small-scale, regional, neighborhood-level stakes.',
   'No glossy victim/villain framing. Both sides of the dispute should have a defensible read; the morally-simple "evil corporation vs. innocent family" template is forbidden.',
   'The displaced-guilt source must not be a romantic or sexual affair. Use the secondary_secret_category from the anchor as the actual shape of the secondary secret.',
-  'The suspect must not be primarily occupied with shielding a senior boss / mentor / business partner. The displaced guilt must come from the suspect\'s own life, not loyalty to a powerful protector figure.',
+  "The suspect must not be primarily occupied with shielding a senior boss / mentor / business partner. The displaced guilt must come from the suspect's own life, not loyalty to a powerful protector figure.",
   'The medical baseline must not collapse into the stock polygraph subject (chronic anxiety + heavy caffeine + beta-blocker). Follow medical_profile from the anchor literally, including "clean baseline" when rolled.',
   'Names must fit the suspect\'s region, class, and generation specifically — no recycling of names that have appeared in this project before, and no generic "Marcus / Vanessa / Renata / Kerem"-tier defaults pulled from the model\'s prior outputs.',
 ];

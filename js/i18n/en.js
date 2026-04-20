@@ -99,6 +99,8 @@ export const EN = {
   BRIEFING_HINT_BACK: '← : Back',
   BRIEFING_HINT_STATE: 'SPACE : Next state',
   BRIEFING_HINT_EXIT: 'ESC : Menu',
+  BRIEFING_SIM_LABEL: 'SIMULATION',
+  BRIEFING_SIM_HINT: 'SPACE / CLICK',
   BRIEFING_INTRO_TITLE: 'READING THE ROOM',
   BRIEFING_INTRO_BODY:
     '- Read 5 sources together: PULSE, BREATHING, GSR, STRESS, and portrait cues.\n- No single channel is proof by itself.\n- After each question: observe change first, then verify with dossier notes.',
@@ -117,6 +119,13 @@ export const EN = {
   BRIEFING_CCTV_TITLE: 'DEFENDANT PORTRAIT',
   BRIEFING_CCTV_BODY:
     '- The portrait has no text labels, only visual cues.\n- Red/jitter: tension; collapse-like motion: breakdown; cold/still: control.\n- Always evaluate portrait cues with polygraph channels.',
+  BRIEFING_CCTV_CUE_STONE_FACE: 'Controlled face',
+  BRIEFING_CCTV_CUE_EYE_DART: 'Eyes darting',
+  BRIEFING_CCTV_CUE_JAW_TIGHTEN: 'Jaw tightening',
+  BRIEFING_CCTV_CUE_DEFENSIVE_CROSS_ARMS: 'Defensive posture',
+  BRIEFING_CCTV_CUE_BREAKDOWN: 'Breaking down',
+  BRIEFING_CCTV_CUE_TEAR_POOLING: 'Holding tears',
+  BRIEFING_CCTV_CUE_RELIEVED_EXHALE: 'Relief exhale',
   BRIEFING_MODIFIERS_TITLE: 'MEDICAL & HABITS',
   BRIEFING_MODIFIERS_BODY:
     '- Medical and habit notes directly affect gameplay.\n- Do not skip "polygraph_effect" lines.\n- Rule of thumb: dossier first, chart second.',
