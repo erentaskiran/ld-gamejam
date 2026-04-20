@@ -20,6 +20,7 @@ import {
   setScrollTarget,
   tickScrollOffset,
 } from '../smoothScroll.js';
+import { trackEvent } from '../analytics.js';
 
 let anim = 0;
 let textScrollOffset = 0;
@@ -109,6 +110,7 @@ export function registerBadEndScene(_canvas, ctx) {
         if (caseDef?.id) {
           recordBadEnd(caseDef.id);
         }
+        trackEvent('bad-end', { case: caseDef?.id || 'unknown' });
         recorded = true;
       }
     },

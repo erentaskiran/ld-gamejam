@@ -28,6 +28,7 @@ import {
   setScrollTarget,
   tickScrollOffset,
 } from '../smoothScroll.js';
+import { trackEvent } from '../analytics.js';
 
 const VERDICT_GUILTY = 'GUILTY';
 const VERDICT_NOT_GUILTY = 'NOT_GUILTY';
@@ -608,6 +609,11 @@ function submitVerdict(verdict) {
   if (caseDef?.id) {
     recordAttempt(caseDef.id, correct);
   }
+  trackEvent('verdict', {
+    call: verdict === VERDICT_GUILTY ? 'guilty' : 'not-guilty',
+    outcome: correct ? 'correct' : 'wrong',
+    case: caseDef?.id || 'unknown',
+  });
   setScene('result');
 }
 

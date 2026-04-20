@@ -208,4 +208,8 @@ Extra utilities in `scripts/`:
 - ESLint flat config in `eslint.config.js`.
 - `.env` is gitignored. Copy `.env.example` and set `ANTHROPIC_API_KEY` for case generation.
 
+## Privacy
+
+The deployed build uses [GoatCounter](https://www.goatcounter.com/) — a cookieless, privacy‑friendly analytics service — to count pageviews and anonymous gameplay events (case started, verdict called, bad end). No cookies are set, no personal data is collected, and no data is shared with third parties.
+
 **Who is lying, and who is just afraid?**
