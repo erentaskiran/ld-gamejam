@@ -1,8 +1,8 @@
 import './interrogationSound.js';
 
 const AMBIENT_VOLUME_KEY = 'the-operator:ambient-volume:v1';
-const AMBIENT_VOLUME_MAX = 12;
-const AMBIENT_VOLUME_LOG_STRENGTH = 24;
+const AMBIENT_VOLUME_MAX = 9;
+const AMBIENT_VOLUME_LOG_STRENGTH = 3;
 
 function clamp01(v) {
   return Math.max(0, Math.min(1, v));

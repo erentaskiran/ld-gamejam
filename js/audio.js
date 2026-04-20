@@ -1,8 +1,8 @@
 import { getAudio } from './assets.js';
 
 const MASTER_VOLUME_KEY = 'the-operator:ambient-volume:v1';
-const GLOBAL_VOLUME_MAX = 0.12;
-const GLOBAL_VOLUME_LOG_STRENGTH = 24;
+const GLOBAL_VOLUME_MAX = 0.09;
+const GLOBAL_VOLUME_LOG_STRENGTH = 3;
 
 let currentMusic = null;
 let currentMusicBaseVolume = 0.6;
