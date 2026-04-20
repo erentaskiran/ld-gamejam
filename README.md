@@ -1,3 +1,7 @@
+
+
+<img width="1024" height="711" alt="cover-image" src="https://github.com/user-attachments/assets/a56dcb49-3385-4fcd-a0dd-7f14cb3a3c62" />
+
 # The Operator
 
 **You don't catch liars. You read them.**
