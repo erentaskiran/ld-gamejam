@@ -15,7 +15,170 @@ const SYSTEM =
   "game 'The Operator'. Output only valid JSON matching the requested schema. " +
   'No markdown fences, no prose, no explanations.';
 
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const VERDICTS = ['GUILTY', 'NOT_GUILTY'];
+
+const ROLE_CATEGORIES = [
+  'blue-collar trade (welder, electrician, plumber, machinist, mechanic, truck driver, longshoreman)',
+  'public sector mid-level (city inspector, social worker, parole officer, public-school teacher, librarian, court clerk)',
+  'creative/arts (graphic designer, novelist, gallery owner, session musician, film editor, tattoo artist)',
+  'hospitality/service (head chef, hotel night manager, sommelier, event planner, bartender, wedding caterer)',
+  'healthcare front-line (ER nurse, paramedic, dental hygienist, physiotherapist, hospice midwife, lab phlebotomist)',
+  'agriculture/rural (family farmer, vineyard owner, livestock vet, park ranger, beekeeper, fishery manager)',
+  'small independent business owner (used bookshop, dog-grooming studio, food truck, repair shop, neighborhood pharmacy)',
+  'education (high-school principal, tutoring-center owner, university adjunct, special-needs aide)',
+  'transport/logistics (cargo dispatcher, dock supervisor, regional bus operator, freight conductor)',
+  'religious or community-organization figure (clergy, charity director, community-center coordinator, halfway-house manager)',
+  'tech/scientific specialist (forensic lab tech, cartographer, instrument calibrator, museum archivist)',
+  'media/journalism (regional reporter, podcaster, documentary fixer, photo editor)',
+  'athletics or coaching (youth sports coach, gym owner, professional team trainer, e-sports manager)',
+  'retired or semi-retired with active side life (foster carer, neighborhood-association president, hobbyist breeder)',
+];
+
+const CHARGE_CATEGORIES = [
+  'civil negligence causing injury or death (consumer product, premises liability, professional duty)',
+  'inheritance dispute / will challenge / alleged elder abuse',
+  'intellectual property / plagiarism / counterfeit goods claim',
+  'animal welfare violation or zoning/agricultural infraction',
+  'defamation / libel / civil harassment suit',
+  'real-estate or rental fraud (deposit theft, fake listing, illegal eviction)',
+  'food safety incident (poisoning, mislabeling, supply tampering)',
+  'environmental contamination (waste dumping, well water, air quality)',
+  'art or document forgery / authenticity dispute',
+  'custody dispute or domestic civil action',
+  'workplace safety incident in a small operation (not a corporate boardroom)',
+  'religious or charitable-fund misappropriation',
+  'fraudulent insurance claim or staged loss',
+  'wrongful-arrest counter-suit / police misconduct civil action',
+  'sports doping or athletic-eligibility fraud',
+  'historical-artifact theft / cultural heritage violation',
+  'professional license revocation (medical, legal, teaching) over alleged misconduct',
+];
+
+const SECONDARY_SECRET_CATEGORIES = [
+  'hidden long-term addiction (alcohol, gambling, prescription meds, online betting)',
+  'undisclosed child or estranged biological relative',
+  'identity or credentialing fraud (forged degree, exaggerated past, borrowed CV)',
+  'past criminal record long sealed or expunged',
+  'undocumented immigration status of self or close family',
+  'religious or political conversion kept hidden from family/community',
+  'past plagiarism or academic misconduct never publicly surfaced',
+  'inherited family shame (relative committed a crime, hidden suicide, family bankruptcy)',
+  'covert caretaking of a stigmatized relative (severe mental illness, terminal disease)',
+  'sexual orientation or gender identity hidden from a hostile community',
+  'unrelated petty financial misdeed (tax dodge, undisclosed cash income, chronic shoplifting)',
+  'protecting a third party who is hiding a separate secret',
+  'medical secret (terminal diagnosis, infertility, past abortion) hidden from family',
+  'unprocessed trauma (past abuse, accidental harm caused, witnessed violence)',
+  'cult or fringe-group involvement years ago',
+  'witness-protection-style relocation under a constructed identity',
+];
+
+const MEDICAL_PROFILES = [
+  'clean baseline — no chronic conditions, no daily medications',
+  'cardiac history on a beta-blocker (HR responses suppressed)',
+  'SSRI or SNRI long-term (sympathetic blunting)',
+  'pacemaker or chronic arrhythmia (HR ceiling/floor distortion)',
+  'COPD or asthma (breathing instability dominant)',
+  'recent pregnancy or postpartum (elevated baseline HR, hormonal lability)',
+  'thyroid disorder on medication (hyper -> noisy baseline; hypo -> blunted)',
+  'recovery from opioid dependency on maintenance therapy',
+  'epilepsy on anticonvulsant medication',
+  'autoimmune flare on corticosteroids (jittery baseline, irritability)',
+  'panic disorder, unmedicated by choice',
+  'recent surgery on pain management (opioid or gabapentinoid)',
+  'chronic pain managed with cannabis (mild parasympathetic shift)',
+  'menopause / perimenopause with vasomotor symptoms (sudden GSR surges unrelated to topic)',
+  'sleep apnea, untreated, with chronic fatigue',
+];
+
+const AGE_BRACKETS = [
+  '23-30 (early career, less guarded experience)',
+  '31-39 (mid-career, family obligations forming)',
+  '40-49 (peak responsibility, deep history)',
+  '50-59 (late career, reputational stakes)',
+  '60-72 (post-peak, legacy/health concerns dominate)',
+];
+
+const FAMILY_SHAPES = [
+  'single, no children, close to one elderly parent',
+  'long-term partner, no children, shared business or property',
+  'married with one teenage child in a custody-stable home',
+  'divorced co-parent of multiple children of mixed ages',
+  'widowed, raising grandchildren or supporting adult children',
+  'estranged from immediate family, closest to chosen family / longtime friends',
+  'caretaker of a disabled sibling or chronically ill parent',
+  'remarried with stepchildren and complex prior-marriage entanglements',
+  'unmarried, in a long-distance relationship across borders',
+];
+
+const SUSPECT_TONE = [
+  'overtly cooperative, almost too helpful',
+  'curt and minimal-word, treats every question as a trap',
+  'rambling and over-explanatory, buries the truth in detail',
+  'stoic and emotionally flat, hard to read',
+  'visibly anxious, leaks affect even on neutral questions',
+  'professionally polished, lawyer-coached, careful diction',
+  'angry and indignant, pushes back on the premise itself',
+  'self-deprecating and apologetic, deflects via likability',
+];
+
+const ANTI_DEFAULT_PRINCIPLES = [
+  'Stay out of the polished American legal-procedural register: no FDA inquiries, no class-action suits, no Phase III trial scandals, no Fortune-500 boardrooms. Prefer small-scale, regional, neighborhood-level stakes.',
+  'No glossy victim/villain framing. Both sides of the dispute should have a defensible read; the morally-simple "evil corporation vs. innocent family" template is forbidden.',
+  'The displaced-guilt source must not be a romantic or sexual affair. Use the secondary_secret_category from the anchor as the actual shape of the secondary secret.',
+  'The suspect must not be primarily occupied with shielding a senior boss / mentor / business partner. The displaced guilt must come from the suspect\'s own life, not loyalty to a powerful protector figure.',
+  'The medical baseline must not collapse into the stock polygraph subject (chronic anxiety + heavy caffeine + beta-blocker). Follow medical_profile from the anchor literally, including "clean baseline" when rolled.',
+  'Names must fit the suspect\'s region, class, and generation specifically — no recycling of names that have appeared in this project before, and no generic "Marcus / Vanessa / Renata / Kerem"-tier defaults pulled from the model\'s prior outputs.',
+];
+
+function rollDiversityAnchor() {
+  const verdict = pick(VERDICTS);
+  return {
+    true_verdict: verdict,
+    role_category: pick(ROLE_CATEGORIES),
+    charge_category: pick(CHARGE_CATEGORIES),
+    secondary_secret_category: pick(SECONDARY_SECRET_CATEGORIES),
+    medical_profile: pick(MEDICAL_PROFILES),
+    age_bracket: pick(AGE_BRACKETS),
+    family_shape: pick(FAMILY_SHAPES),
+    suspect_tone: pick(SUSPECT_TONE),
+    anti_default_principles: ANTI_DEFAULT_PRINCIPLES,
+  };
+}
+
+const DIVERSITY = rollDiversityAnchor();
+console.log('Diversity anchor for this run:');
+console.log(JSON.stringify(DIVERSITY, null, 2));
+
 const STEP_1_SUSPECT = `You are generating a suspect for a legal interrogation game.
+
+DIVERSITY ANCHOR (HARD CONSTRAINTS — must all be satisfied):
+{{diversity_anchor}}
+
+How to use the anchor:
+- true_verdict MUST equal the value above. Do not pick the other one.
+- role_category dictates the SUSPECT'S PROFESSION CLASS. Pick a specific
+  job inside this category. Do NOT default to a corporate executive,
+  pharmaceutical role, or generic CFO/VP unless the category names it.
+- charge_category dictates the LEGAL DISPUTE TYPE for STEP 2. The suspect's
+  motive and secret must be plausible WITHIN this charge category.
+- secondary_secret_category dictates the SECONDARY SECRET SHAPE. Do not
+  substitute "workplace affair" if the category names something else.
+- medical_profile dictates the SUSPECT'S MEDICAL BASELINE. Translate it
+  into the medical[] and habits[] entries and into the modifiers. If the
+  category says "clean baseline", use few/no medical entries and keep
+  modifiers near defaults (heart_rate_suppression near 0, gsr_sensitivity
+  near 1.0).
+- age_bracket constrains the suspect's age.
+- family_shape constrains the household / family[] composition.
+- suspect_tone shapes how the suspect comes across in the profile and in
+  later answer text — pick verb choice and demeanor accordingly.
+- anti_default_principles is a list of structural defaults the model
+  collapses into. Treat each entry as a hard constraint on your draft.
+  If any single principle is violated, the output is invalid — revise
+  before returning.
 
 OUTPUT RULES:
 - Return ONLY valid JSON
@@ -51,7 +214,9 @@ OUTPUT:
 }
 
 RULES:
-- Realistic modern role (e.g. restaurant owner, contractor, CFO, landlord, doctor)
+- Realistic modern role drawn from the role_category in the diversity anchor
+  (NOT a default corporate executive, pharmaceutical sales rep, or
+  large-firm CFO unless the anchor explicitly names that category).
 - The suspect must be morally ambiguous
 - profile must include:
   - background
@@ -59,26 +224,31 @@ RULES:
   - personality traits
   - one suspicious detail
   - one humanizing detail
+  Note: profile is INTERNAL CONTEXT for the pipeline only — it is never
+  shown to the player. Be detailed here. The "humanizing detail" may
+  reference the secondary secret since the player will not see this field;
+  the secondary secret must NOT, however, leak into player-facing fields
+  (dossier.family, dossier.priors, dossier.pressure_points, context).
 - motive must connect to a potential lawsuit or wrongdoing
 - secret must NOT be obvious but meaningful
 - credibility must be 1-10 with subtle reasoning implied
-- true_verdict is the ground truth the player must deduce from polygraph evidence:
+- true_verdict is FIXED by the diversity anchor for this run. Do NOT
+  override it.
   - "GUILTY" means the suspect actually is responsible (secret contains the real act)
   - "NOT_GUILTY" means the suspect is innocent of the charge even if the secret is shady
-  - Pick the verdict that makes the case most interesting; mix both over time
-  - IMPORTANT: NOT_GUILTY cases are harder and more interesting. Prioritize them.
-    A NOT_GUILTY suspect must still have a REAL secondary secret causing displaced
-    physiological guilt (e.g. protecting someone else, covering a separate minor crime,
-    hiding an affair or financial shame). Their signals spike hard on the secondary
-    secret but NOT on the core mechanism of the charged crime.
+  - A NOT_GUILTY suspect must still have a REAL secondary secret causing displaced
+    physiological guilt — drawn from the secondary_secret_category in the anchor.
+    Their signals spike hard on the secondary secret but NOT on the core mechanism
+    of the charged crime.
 
 LAYERED SECRETS (REQUIRED):
 - Every suspect must conceal AT LEAST TWO distinct things:
   PRIMARY SECRET: the fact directly relevant to the charge (may or may not be guilt)
-  SECONDARY SECRET: something unrelated to the charge that causes genuine stress
-    responses (e.g. an affair, financial shame, protecting a third party, a past
-    mistake). This is the source of "displaced guilt" — signals that look like
-    primary guilt but aren't. Document both in the "secret" field as:
+  SECONDARY SECRET: an unrelated stressor that causes genuine stress responses.
+    SHAPE IT FROM the secondary_secret_category in the diversity anchor — do
+    not default to "workplace affair" unless the anchor specifies one. The
+    secondary secret is the source of "displaced guilt" — signals that look
+    like primary guilt but aren't. Document both in the "secret" field as:
     "PRIMARY: [charge-relevant secret]. SECONDARY: [unrelated stressor secret]."
 - The secondary secret must be a genuine pressure point that produces high
   biometric responses. It must be distinguishable from the primary secret only
@@ -87,37 +257,77 @@ LAYERED SECRETS (REQUIRED):
 DOSSIER (background the player reads BEFORE interrogation):
 - age: realistic age
 - identity_summary: 1-2 sentence factual capsule (role, key credentials)
-- family: 1-4 entries. Relatives or close partners with a SHORT note saying
-  WHY they matter to the interrogation (leverage, dependency, conflict).
+- family: 1-4 entries. Treat this as a researcher's neutral background sheet
+  built from public records and HR forms. Each note must contain ONLY
+  publicly-knowable, factual context (relationship duration, employment,
+  health/custody status, dependency situation, notable circumstance).
+  STRICT RULES for note (this text is SHOWN DIRECTLY TO THE PLAYER):
+  - NEVER mention biometrics ("spike", "GSR", "HR", "breathing", "expect",
+    "trigger", "reaction", "response").
+  - NEVER use words like "leverage", "pressure point", "high-leverage",
+    "key trigger", "strongest reaction", "exploit", "weak spot".
+  - NEVER describe how mentioning this person AFFECTS the suspect.
+  - NEVER single out one entry as "the most important" or imply which
+    family member is connected to the primary charge versus a private
+    matter. Treat ALL listed people with the same neutral, factual tone.
+  - NEVER reference the suspect's secret, motive, or known stress topics.
+  - 1-2 short sentences max, written as a personnel file would phrase it.
+  Good: "Daughter, age 14. Lives full-time with the suspect since the 2021
+  custody ruling. Sole financial dependent."
+  Bad: "Mentioning her daughter creates the strongest biometric response in
+  her profile — high-leverage point for empathic framing."
 - medical: 0-3 entries. Each must include polygraph_effect explaining how the
-  condition distorts readings (e.g. anxiety disorder -> elevated baseline
-  GSR; pacemaker -> suppressed heart rate swings). Never invent diseases
-  that conveniently reveal guilt. The goal is to let the player know which
-  spikes to DISCOUNT.
+  condition mechanically distorts the readings (e.g. anxiety disorder ->
+  elevated baseline GSR; pacemaker -> suppressed heart rate swings). Phrase
+  these as clinical/forensic notes a polygraph examiner would write —
+  about the INSTRUMENT, not about the suspect's psychology or this case.
+  Never invent diseases that conveniently reveal guilt. Never imply that a
+  specific topic will trigger the condition.
 - habits: 0-3 entries (medications, caffeine, sleep, substances). Each must
   include polygraph_effect. Examples: "Beta-blocker -> suppresses
   heart-rate response"; "High caffeine -> GSR baseline elevated"; "SSRI
-  -> blunts sympathetic response".
+  -> blunts sympathetic response". Same rule as medical: phrase as a
+  generic clinical note, not as case-specific guidance.
 - priors: 0-3 short factual bullets about prior incidents or proceedings.
-  Not verdict-revealing.
-- pressure_points: 1-3 short bullets describing emotional or situational
-  leverage. This text is SHOWN DIRECTLY TO THE PLAYER on the case file
-  ("Pressure Points" section). STRICT RULES:
-  - NEVER write meta-game labels like "PRIMARY secret", "SECONDARY secret",
-    "displaced guilt", "primary charge", or any equivalent. The player must
-    deduce on their own which trigger relates to the actual charge.
-  - DO NOT reveal which secret is the real crime versus misdirection.
-  - DO NOT directly name what the secret is about (e.g. "protecting his
-    partner", "an affair"); instead name the TRIGGER TOPIC (e.g. "mention
-    of business partner's name", "questions about home life", "expense
-    line items") and the EXPECTED BIOMETRIC PATTERN (e.g. "GSR surges
-    while HR stays muted by medication").
-  - You may hint at which tactics (EMPATHIC, TRAP, EVIDENCE, etc.) tend
-    to land or backfire.
-  Format: "[Trigger topic] — [expected biometric pattern] — [optional
-  tactic hint]". Example: "Mention of her business partner's name — GSR
-  surges sharply with breathing irregularity; HR spike masked by
-  medication — EMPATHIC framing tends to open more than direct pressure."
+  Not verdict-revealing. Do not telegraph which prior connects to the
+  current charge — list them in a flat, equal tone.
+- pressure_points: 2-4 short bullets describing topical sensitivities a
+  prior interviewer noted. This text is SHOWN DIRECTLY TO THE PLAYER on
+  the case file ("Pressure Points" section). The goal is to set TONE and
+  hint at handling difficulty — NOT to provide an answer key.
+  STRICT RULES:
+  - NEVER write meta-game labels ("PRIMARY", "SECONDARY", "displaced
+    guilt", "the real trigger", "the misdirection topic", "primary
+    charge", "secondary stressor", or any equivalent).
+  - NEVER predict a biometric pattern. No "GSR surges", "HR spikes",
+    "breathing irregular", "fear bar rises", etc. Pressure points are
+    OBSERVATIONAL notes about the SUSPECT'S DEMEANOR, not biometric
+    predictions. The player must read biometrics from the live polygraph,
+    not from the dossier.
+  - NEVER rank triggers ("the strongest", "the sharpest", "the clearest
+    dual-channel signal", "the most reliable tell"). All listed
+    sensitivities must be presented with EQUAL weight.
+  - NEVER name a specific person whose mention is "the key trigger" or
+    similar. You may reference broad topical areas ("questions about
+    workplace relationships", "details of personal finances", "the night
+    in question") but must not flag any one of them as the decisive
+    reveal.
+  - NEVER reveal or hint at the secret. Topical areas listed should be
+    the kind of things a real prior interviewer would note from
+    DEMEANOR alone (defensiveness, deflection, over-explanation,
+    silence, irritation), without knowing what the secret is.
+  - At least one listed pressure point should be a plausible RED HERRING:
+    a topical area where the suspect becomes guarded but which is not
+    actually decisive for the charge. Do not label it as such; present it
+    with the same weight as the others.
+  - You may briefly note which interview tactic (EMPATHIC, ANALYTICAL,
+    AGGRESSIVE) tends to make the suspect open up vs. shut down — kept
+    generic, not tied to a specific topic.
+  Format: "[Topical area or behavioral observation] — [demeanor /
+  conversational pattern, NOT biometric] — [optional generic tactic
+  note]". Example: "Discussion of long-term colleagues — subject becomes
+  noticeably more guarded and rephrases questions before answering;
+  ANALYTICAL framing tends to escalate withdrawal."
 - modifiers: numeric knobs that translate medical+habits into live polygraph
   distortion. MUST be consistent with the polygraph_effect notes. Defaults
   are 0/1; only deviate where the dossier justifies it.
@@ -157,6 +367,11 @@ OUTPUT:
 
 RULES:
 - Must describe a legal dispute or lawsuit
+- The dispute MUST fall within this charge category for this run:
+  {{charge_category}}
+  Do NOT default to corporate fraud, pharmaceutical malpractice,
+  embezzlement, kickbacks, or large-firm wrongful death unless the
+  category above explicitly names them.
 - Clearly define:
   - who is accusing whom
   - what happened
@@ -435,8 +650,18 @@ OUTPUT:
 }
 
 RULES:
-- fear_bar_description: 1-2 sentences describing what the fear bar tracks
-  (emotional/psychological pressure on the suspect during the interrogation).
+- fear_bar_description: A SHORT, GENERIC, CASE-INDEPENDENT definition of
+  what the meter represents. It must read as a tooltip that would fit ANY
+  case — describe ONLY that the bar tracks the suspect's accumulated
+  psychological strain across the session. STRICT RULES:
+  - NEVER name the suspect, any other person, family member, or topic.
+  - NEVER describe which questions, themes, or relationships make the bar
+    rise or fall.
+  - NEVER hint at the suspect's vulnerabilities, secrets, or the verdict.
+  - 1 sentence is preferred; 2 max. Should be reusable across cases.
+  Example: "A composite gauge of the suspect's accumulated psychological
+  strain — combining heart rate, breath irregularity, sweat response, and
+  visible affect into a single tension reading."
 - heart_rate_baseline: BPM number. Start from ~70 and apply
   suspect.dossier.modifiers.heart_rate_baseline_shift if meaningful.
   Typical range 60-90.
@@ -464,7 +689,7 @@ const steps = [
     // Complex creative profile — needs Sonnet reasoning quality
     name: 'suspect',
     model: MODEL.HEAVY,
-    prompt: STEP_1_SUSPECT,
+    prompt: () => fill(STEP_1_SUSPECT, { diversity_anchor: DIVERSITY }),
     parse: parseJsonBlock,
     thinking: think(4000),
     maxTokens: 12000,
@@ -473,7 +698,11 @@ const steps = [
     // Simple structured summary — Haiku is sufficient and much cheaper
     name: 'case',
     model: MODEL.LIGHT,
-    prompt: (r) => fill(STEP_2_CASE, { suspect_json: r.suspect }),
+    prompt: (r) =>
+      fill(STEP_2_CASE, {
+        suspect_json: r.suspect,
+        charge_category: DIVERSITY.charge_category,
+      }),
     parse: parseJsonBlock,
     thinking: think(1024),
     maxTokens: 3000,

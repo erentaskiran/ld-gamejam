@@ -17,7 +17,170 @@ const SYSTEM =
   'TURKCE olmali. Sema anahtarlari ve enum degerleri (STABLE, RISE, ' +
   'ANALYTICAL vb.) ingilizce kalmali.';
 
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const VERDICTS = ['GUILTY', 'NOT_GUILTY'];
+
+const ROLE_CATEGORIES = [
+  'mavi yakali zanaatkar (kaynakci, elektrikci, tesisatci, torna ustasi, kamyon soforu, liman iscisi)',
+  'kamu sektoru orta kademe (belediye denetcisi, sosyal hizmet uzmani, denetimli serbestlik memuru, devlet okulu ogretmeni, kutuphaneci, mahkeme katibi)',
+  'yaratici/sanat (grafik tasarimci, romanci, galeri sahibi, stuydo muzisyeni, film kurgucusu, dovme sanatcisi)',
+  'agirlama/servis (sef, otel gece muduru, sommelier, organizasyon planlamacisi, barmen, dugun catering sahibi)',
+  'on cephe saglik (acil hemsiresi, paramedik, dis hijyenisti, fizyoterapist, ebe, klinik laboratuvar teknisyeni)',
+  'tarim/kirsal (aile ciftcisi, baghan, hayvan veterineri, milli park bekcisi, aricilik isletmecisi, su urunleri ciftligi muduru)',
+  'kucuk bagimsiz isletme sahibi (sahaf, kopek bakim merkezi, food truck, tamir dukkani, mahalle eczanesi)',
+  'egitim (lise muduru, etut merkezi sahibi, universite ogretim gorevlisi, ozel egitim asistani)',
+  'tasimacilik/lojistik (kargo dispetcheri, liman amiri, bolgesel otobus operatoru, yuk treni gorevlisi)',
+  'dini veya toplum kuruluslari (din gorevlisi, hayir kurumu yoneticisi, mahalle kulturhanesi sorumlusu, sigima evi yoneticisi)',
+  'tek alanda uzman teknik kisi (adli laboratuvar teknisyeni, harita muhendisi, olcum kalibratoru, muze arsivcisi)',
+  'medya/gazetecilik (yerel muhabir, podcaster, belgesel saha sorumlusu, foto editor)',
+  'spor veya antrenorluk (genc spor kocu, spor salonu sahibi, profesyonel takim antrenoru, e-spor menajeri)',
+  'emekli veya yari emekli aktif sosyal yasam (koruyucu aile, mahalle dernek baskani, hobi cinsi yetistiricisi)',
+];
+
+const CHARGE_CATEGORIES = [
+  'yaralanma veya olume yol acan medeni hukuk ihmal davasi (tuketici urunu, isyeri sorumlulugu, mesleki yukumluluk)',
+  'miras anlasmazligi / vasiyet itirazi / yasli istismari iddiasi',
+  'fikri mulkiyet / intihal / sahte mal davasi',
+  'hayvan refahi ihlali veya imar/tarim mevzuati ihlali',
+  'iftira / hakaret / sivil taciz davasi',
+  'gayrimenkul veya kira dolandiriciligi (depozito calintisi, sahte ilan, hukuksuz tahliye)',
+  'gida guvenligi olayi (zehirlenme, yanlis etiketleme, tedarik zinciri tahrifati)',
+  'cevre kirliligi (atik dampingi, kuyu suyu, hava kalitesi)',
+  'sanat veya belge sahteciligi / orijinallik anlasmazligi',
+  'velayet anlasmazligi veya aile ici sivil dava',
+  'kucuk bir isletmede meydana gelen isyeri guvenligi olayi (kurumsal yonetim kurulu degil)',
+  'dini veya hayir kurumu fonu zimmete gecirme',
+  'sahte sigorta talebi veya senaryolu kayip',
+  'haksiz tutuklama karsi davasi / polis kotu davranisi sivil davasi',
+  'spor doping veya atletik uygunluk dolandiriciligi',
+  'tarihi eser hirsizligi / kulturel miras ihlali',
+  'mesleki lisans iptali (tip, hukuk, ogretmenlik) iddia edilen kotu davranis nedeniyle',
+];
+
+const SECONDARY_SECRET_CATEGORIES = [
+  'gizli uzun sureli bagimlilik (alkol, kumar, recetesiz ilac, online bahis)',
+  'aciklanmamis cocuk veya yabancilasmis biyolojik akraba',
+  'kimlik veya diploma sahteciligi (sahte diploma, abartilmis gecmis, odunc CV)',
+  'cok onceden silinmis veya ortbas edilmis adli sicil',
+  'kendisi veya yakinlarinin belgesiz goc statusu',
+  'aileden/cevreden gizli tutulan dini veya siyasi donusum',
+  'kamuoyuna sizmamis gecmis intihal veya akademik sahtekarlik',
+  'aile utanci (akraba suc isledi, gizli intihar, aile iflasi)',
+  'damgalanmis bir akrabanin gizli bakimini ustlenme (agir ruhsal hastalik, olumcul hastalik)',
+  'dusman bir cevreden gizli tutulan cinsel yonelim veya cinsiyet kimligi',
+  'ilgisiz kucuk mali suistimal (vergi kacirma, kayit disi gelir, kronik magaza hirsizligi)',
+  'baskasinin sirrini koruyan ucuncu kisi pozisyonu',
+  'aileden gizlenen tibbi sir (olumcul tani, kisirlik, gecmis kurtaj)',
+  'islenmemis travma (gecmis istismar, kazara verilmis zarar, sahit olunmus siddet)',
+  'yillar onceki tarikat veya marjinal grup baglantisi',
+  'tanik koruma tarzi yer degistirme ile insa edilmis kimlik',
+];
+
+const MEDICAL_PROFILES = [
+  'temiz baseline — kronik durum yok, gunluk ilac yok',
+  'kalp gecmisi nedeniyle beta-bloker kullanimi (HR tepkileri baskili)',
+  'uzun sureli SSRI veya SNRI (sempatik baskilanma)',
+  'kalp pili veya kronik aritmi (HR tavan/taban bozulmasi)',
+  'KOAH veya astim (nefes instabilitesi baskin)',
+  'yakin zamanda hamilelik veya postpartum (yuksek baseline HR, hormonal degiskenlik)',
+  'tiroid bozuklugu ilac kullaniminda (hiper -> gurultulu baseline; hipo -> baskili)',
+  'opioid bagimliligi sonrasi idame tedavisi',
+  'epilepsi antikonvulzan ilac kullaniminda',
+  'kortikosteroid kullanan otoimmun atak (titrek baseline, sinirlilik)',
+  'panik bozuklugu, ilac kullanmiyor',
+  'yakin tarihli ameliyat sonrasi agri yonetimi (opioid veya gabapentinoid)',
+  'kronik agri kannabis ile yonetiliyor (hafif parasempatik kayma)',
+  'menopoz / perimenopoz vasomotor semptomlarla (konuyla ilgisiz ani GSR sicramalari)',
+  'tedavi edilmemis uyku apnesi, kronik yorgunluk',
+];
+
+const AGE_BRACKETS = [
+  '23-30 (kariyerin baslangici, daha az savunma deneyimi)',
+  '31-39 (orta kariyer, aile yukumlulukleri olusuyor)',
+  '40-49 (zirve sorumluluk, derin gecmis)',
+  '50-59 (geç kariyer, itibar baski altinda)',
+  '60-72 (zirve sonrasi, miras/saglik kaygisi baskin)',
+];
+
+const FAMILY_SHAPES = [
+  'bekar, cocuksuz, yasli bir ebeveyne yakin',
+  'uzun sureli partner, cocuksuz, ortak isletme veya mulk',
+  'evli, velayet istikrarli evde bir genc cocuk',
+  'bosanmis, farkli yaslarda birden fazla cocugun ortak velayetini paylasiyor',
+  'dul, torun buyutuyor veya yetiskin cocuklarini destekliyor',
+  'cekirdek aileden uzak, en yakini secilmis aile / eski arkadaslar',
+  'engelli kardesin veya kronik hasta ebeveynin bakimini ustlenmis',
+  'yeniden evli, uvey cocuklar ve karmasik onceki evlilik baglari',
+  'evlenmemis, sinirlar arasinda uzun mesafeli iliskide',
+];
+
+const SUSPECT_TONE = [
+  'asiri isbirlikci, fazlasiyla yardimci',
+  'kisa ve az kelimeli, her soruyu tuzak gibi gorur',
+  'dagilan ve fazla aciklayici, gercegi detayda gomer',
+  'stoik ve duygusal olarak duz, okumasi zor',
+  'gorunur derecede tedirgin, notr sorularda bile duygu sizdiriyor',
+  'profesyonelce cilali, avukat tarafindan hazirlanmis, dikkatli ifade',
+  'ofkeli ve mustehcen, davanın temelini reddeder',
+  'kendisini kucumseyen ve ozur dileyen, sevimlilikle saptiran',
+];
+
+const ANTI_DEFAULT_PRINCIPLES = [
+  'Cilali Amerikan hukuk-prosedur registerinden uzak dur: FDA sorusturmasi, sinif davasi, Faz III ilac skandali, Fortune-500 yonetim kurulu yok. Kucuk olcekli, bolgesel, mahalle dukei riskler tercih edilmeli.',
+  'Parlak magdur/cellat cercevelemesi yok. Anlasmazligin iki tarafi da savunulabilir bir okumaya sahip olmali; ahlaki olarak basit "kotu sirket vs masum aile" sablonu yasak.',
+  'Yer-degistirmis suclilik kaynagi romantik veya cinsel bir iliski OLMAMALI. Ikincil sirrin gercek sekli olarak filodaki secondary_secret_category degerini kullan.',
+  'Supheli oncelikli olarak kidemli bir patron / akil hocasi / is ortagini KORUMAKLA mesgul olmamali. Yer-degistirmis suclilik gucli bir koruyucu figure baglilictan degil, suphelinin kendi hayatindan kaynaklanmali.',
+  'Tibbi baseline stok poligraf deneki klisesine cokmemeli (kronik anksiyete + yogun kafein + beta-bloker). Filodaki medical_profile degerini harfiyen takip et — "temiz baseline" cikarsa onu da harfiyen uygula.',
+  'Isimler suphelinin bolgesini, sosyal sinifini ve kusagini somut olarak yansitmali.',
+];
+
+function rollDiversityAnchor() {
+  const verdict = pick(VERDICTS);
+  return {
+    true_verdict: verdict,
+    role_category: pick(ROLE_CATEGORIES),
+    charge_category: pick(CHARGE_CATEGORIES),
+    secondary_secret_category: pick(SECONDARY_SECRET_CATEGORIES),
+    medical_profile: pick(MEDICAL_PROFILES),
+    age_bracket: pick(AGE_BRACKETS),
+    family_shape: pick(FAMILY_SHAPES),
+    suspect_tone: pick(SUSPECT_TONE),
+    anti_default_principles: ANTI_DEFAULT_PRINCIPLES,
+  };
+}
+
+const DIVERSITY = rollDiversityAnchor();
+console.log('Bu calisma icin cesitlilik filosu:');
+console.log(JSON.stringify(DIVERSITY, null, 2));
+
 const STEP_1_SUSPECT = `Hukuki bir sorgulama oyunu icin suphelisi uretiyorsun.
+
+CESITLILIK FILOSU (KESIN KISITLAR — hepsi karsilanmali):
+{{diversity_anchor}}
+
+Filoyu nasil kullan:
+- true_verdict yukaridaki degere ESIT olmak ZORUNDA. Diger degeri secme.
+- role_category SUPHELININ MESLEK SINIFINI belirler. Bu kategorinin
+  icinden somut bir is sec. Kategori aciklayicidir; varsayilan olarak
+  kurumsal yonetici, ilac firmasi calisani veya buyuk firma CFO/GM ASLA
+  secme — yalnizca kategori bunu adlandiriyorsa.
+- charge_category 2. ADIM ICIN HUKUKI ANLASMAZLIK TIPINI belirler.
+  Suphelinin motiv ve sirri bu suclama kategorisi icinde mantikli olmali.
+- secondary_secret_category IKINCIL SIR SEKLINI belirler. Kategori farkli
+  bir sey soyluyorsa "is yerinde iliski" ile DEGISTIRME.
+- medical_profile SUPHELININ TIBBI BASELINE'INI belirler. Bunu medical[]
+  ve habits[] kayitlarina ve modifiers'a cevir. Kategori "temiz baseline"
+  diyorsa az/hicbir tibbi giris kullanma ve modifiers'i varsayilana yakin
+  tut (heart_rate_suppression ~0, gsr_sensitivity ~1.0).
+- age_bracket suphelinin yasini kisitlar.
+- family_shape ev/aile[] kompozisyonunu kisitlar.
+- suspect_tone suphelinin profilde ve sonraki cevap metinlerinde nasil
+  goruldugunu sekillendirir — fiil seçimi ve tavri buna gore sec.
+- anti_default_principles modelin coktugu yapisal varsayilanlarin
+  listesidir. Her maddeyi taslagin uzerinde sert bir kisit gibi uygula.
+  Tek bir madde bile ihlal edilmisse cikti gecersizdir — dondurmeden
+  once duzelt.
 
 CIKTI KURALLARI:
 - Yalnizca gecerli JSON dondur
@@ -54,7 +217,10 @@ CIKTI:
 }
 
 KURALLAR:
-- Gercekci, modern bir meslek (orn. restoran sahibi, muteahhit, CFO, ev sahibi, doktor)
+- Cesitlilik filosundaki role_category'den alinan gercekci, modern bir
+  meslek. Filo aciklayicidir; varsayilan olarak kurumsal yonetici, ilac
+  firmasi calisani veya buyuk firma CFO'su olamaz — yalnizca filo o
+  kategoriyi acikca adlandiriyorsa.
 - Supheli ahlaki olarak belirsiz olmali
 - profile sunlari icermeli:
   - gecmis
@@ -62,26 +228,31 @@ KURALLAR:
   - kisilik ozellikleri
   - bir supheli detay
   - bir insani detay
+  Not: profile yalnizca pipeline icin DAHILI baglamdir — oyuncuya asla
+  gosterilmez. Burada detayli olabilirsin. "Insani detay" ikincil sirri
+  referans alabilir cunku bu alan oyuncu tarafindan goruntulenmez; ancak
+  ikincil sir oyuncuya gosterilen alanlara (dossier.family,
+  dossier.priors, dossier.pressure_points, context) SIZMAMALI.
 - motive potansiyel bir dava veya haksiz fiille baglantili olmali
 - secret asikar OLMAMALI ama anlamli olmali
 - credibility 1-10 arasinda, gerekcesi ustu kapali ima edilmeli
-- true_verdict oyuncunun poligraf kanitlarindan cikarmasi gereken GERCEK:
+- true_verdict bu calisma icin cesitlilik filosu tarafindan SABITLENMISTIR.
+  Onu KESINLIKLE DEGISTIRME.
   - "GUILTY" = supheli gercekten sorumlu (secret asil fiili iceriyor)
   - "NOT_GUILTY" = secret karanlik bile olsa supheli bu suctan masum
-  - Davayi en ilginc kilan verdict'i sec; zamanla her ikisini de kullan
   - Enum degerleri ingilizce kalmali
-  - ONEMLI: NOT_GUILTY davalar daha zordur ve daha ilginctir. Onceliklendirin.
-    NOT_GUILTY bir supheli yine de GERCEK bir ikincil sirri gizliyor olmali
-    (baskasini koruma, ayri bir kucuk suc, bir ask iliskisi veya mali utanc).
-    Bu ikincil sirr guclu fizyolojik tepkilere yol acar ama suclama konusu olan
-    sucun mekanizmasiyla ilgili degil.
+  - NOT_GUILTY bir supheli yine de GERCEK bir ikincil sirri gizliyor olmali
+    — bu sir cesitlilik filosundaki secondary_secret_category'den
+    sekillendirilir. Bu ikincil sir guclu fizyolojik tepkilere yol acar
+    ama suclama konusu olan sucun mekanizmasiyla ilgili degildir.
 
 KATMANLI SIRLAR (ZORUNLU):
 - Her supheli EN AZ IKI farkli seyi gizlemeli:
   BIRINCIL SIR: dogrudan suclamayla ilgili olgu (suclu veya masum olabilir)
-  IKINCIL SIR: suclamayla ILGISIZ, gercek stres tepkisi yaratan baska bir gizli
-    (orn. bir ask iliskisi, mali utanc, birini koruma, gecmisteki bir hata).
-    Bu "yer degistirmis suclilik" kaynagi — birincil suclilik gibi gorunen ama
+  IKINCIL SIR: suclamayla ILGISIZ, gercek stres tepkisi yaratan baska bir gizli.
+    Cesitlilik filosundaki secondary_secret_category'den SEKILLENDIR — filo
+    aksini soyluyorsa "is yerinde iliski" varsayilanina kayma. Bu "yer
+    degistirmis suclilik" kaynagi — birincil suclilik gibi gorunen ama
     aslinda oyle olmayan sinyaller. Her ikisini "secret" alaninda su bicimde
     belgele: "BIRINCIL: [suclama ile ilgili sir]. IKINCIL: [ilgisiz stres kaynagi]."
 - Ikincil sir gercek bir baskilama noktasi olmali ve yuksek biyometrik tepkilere
@@ -91,36 +262,79 @@ KATMANLI SIRLAR (ZORUNLU):
 DOSSIER (oyuncunun sorgudan ONCE okuyacagi arka plan):
 - age: gercekci bir yas
 - identity_summary: 1-2 cumle, gorev ve kilit nitelikler
-- family: 1-4 giris. Akrabalar veya yakin iliskilerden olusur; her birinin
-  note alani sorguda NEDEN onemli oldugunu kisaca acikmali (bagimlilik,
-  leverage, catisma).
-- medical: 0-3 giris. Her birinin polygraph_effect alani, durumun
-  biyometriyi nasil bozdugunu aciklamali (orn. anksiyete bozuklugu ->
+- family: 1-4 giris. Bunu bir arastirmacinin TARAFSIZ ozgecmis fisi gibi
+  dusun: kamu kayitlarindan ve IK formlarindan derlenmis OLGUSAL bilgi.
+  Her note alani SADECE herkesce bilinebilecek olgusal baglam icermeli
+  (iliski suresi, meslek, saglik/velayet durumu, bagimlilik durumu, dikkat
+  ceken kosul). KESIN KURALLAR (bu metin DOGRUDAN OYUNCUYA gosterilir):
+  - Biyometrik terimleri ASLA kullanma ("sicrama", "GSR", "HR", "nabiz",
+    "nefes", "tepki", "yukselir", "tetikler" vb.).
+  - "Leverage", "baski noktasi", "anahtar tetik", "en kuvvetli tepki",
+    "somurulebilir", "zayif nokta" gibi kelimeleri ASLA YAZMA.
+  - Bu kisinin anilmasinin suphelide nasil bir TEPKI yarattigini ASLA
+    aciklama.
+  - Bir aile uyesini "en onemli" olarak ONE CIKARMA veya hangi uyenin
+    birincil suclamayla, hangisinin ozel bir konuyla ilgili oldugunu
+    asla ima etme. Tum kayitli kisileri ESIT, tarafsiz ve olgusal bir
+    tonda yaz.
+  - Suphelinin sirrini, motivini veya bilinen stres konularini ASLA
+    referans alma.
+  - 1-2 kisa cumle, bir personel dosyasinin yazacagi kuru tonda.
+  Iyi: "Kizi, 14 yasinda. 2021 velayet kararindan bu yana tam zamanli
+  Renata ile yasiyor. Tek mali bagli."
+  Kotu: "Kizinin adi anildiginda profilinin en guclu biyometrik tepkisini
+  uretir; empatik cerceveleme icin yuksek leverage."
+- medical: 0-3 giris. Her birinin polygraph_effect alani, durumun cihazi
+  MEKANIK olarak nasil bozdugunu aciklamali (orn. anksiyete bozuklugu ->
   yuksek GSR baseline; kalp pili -> kalp atisi dalgalanmasi bastirilir).
-  AMAC: oyuncu hangi sicramalarina GUVENMEMESI gerektigini bilsin. Suc
+  Bu notlari, bir poligraf uzmaninin yazacagi GENEL klinik/forensik notlar
+  gibi yaz — CIHAZ hakkinda, suphelinin psikolojisi veya bu dava hakkinda
+  DEGIL. Belirli bir konunun bu durumu tetikleyecegini ASLA ima etme. Suc
   kaniti olacak sekilde hastalik UYDURMA.
 - habits: 0-3 giris (ilac, kafein, uyku, madde). Her birinin
   polygraph_effect alani olmali. Ornek: "Beta-bloker -> kalp atisi
   tepkisi baskilanir"; "Yuksek kafein -> GSR baseline yuksek"; "SSRI ->
-  sempatik tepki hafifler".
+  sempatik tepki hafifler". Medical ile ayni kural: genel klinik not gibi
+  yaz, bu davaya ozel rehberlik degil.
 - priors: 0-3 kisa olgusal bullet (onceki olaylar). Verdict'i ele vermez.
-- pressure_points: 1-3 kisa bullet, duygusal veya durumsal leverage.
-  Bu metin DOGRUDAN OYUNCUYA gosterilir (dosya ekranindaki "Baski Noktalari"
-  bolumu). KESIN KURALLAR:
-  - "BIRINCIL sir", "IKINCIL sir", "PRIMARY", "SECONDARY", "yer degistirmis
-    suclilik", "displaced guilt" gibi meta-oyun etiketlerini ASLA YAZMA.
-    Oyuncu hangi sirrin asil suclamayla ilgili oldugunu kendisi cikarmali.
-  - Hangi sirrin gercek suclu yoksa misdirection oldugunu IFSA ETME.
-  - Hangi sirrin neye bagli oldugunu (orn. "ortagi koruyor", "gizli iliski")
-    DOGRUDAN soyleme; bunun yerine TETIKLEYICI KONUYU (orn. "is ortaginin
-    adi", "ev hayati", "harcama kalemleri") ve BEKLENEN BIYOMETRIK DESENI
-    (orn. "GSR yukselir, HR ilac nedeniyle baskili kalir") yaz.
-  - Hangi taktigin (EMPATHIC, TRAP, EVIDENCE vb.) etkili olabilecegini
-    ima edebilirsin.
-  Format: "[Tetikleyici konu] — [beklenen biyometrik desen] — [taktik
-  ipucu, opsiyonel]". Ornek: "Is ortaginin adi anildiginda — GSR ve nefes
-  instabilitesi belirgin yukselir; HR ilac nedeniyle sönük kalir — EMPATIK
-  yaklasim daha cok bilgi acabilir."
+  Hangi onceki olayin guncel suclamayla baglantili oldugunu telegraflama
+  — hepsini esit, duz bir tonda sirala.
+- pressure_points: 2-4 kisa bullet — onceki bir gorusmecinin not aldigi
+  KONUSAL hassasiyetler. Bu metin DOGRUDAN OYUNCUYA gosterilir (dosya
+  ekranindaki "Baski Noktalari" bolumu). Amac TON belirlemek ve ele alma
+  zorlugunu ima etmek — cevap anahtari saglamak DEGIL.
+  KESIN KURALLAR:
+  - "BIRINCIL", "IKINCIL", "PRIMARY", "SECONDARY", "yer degistirmis
+    suclilik", "displaced guilt", "asil tetik", "yaniltici konu",
+    "birincil suclama" veya benzer meta-oyun etiketlerini ASLA yazma.
+  - Biyometrik desen TAHMINI YAPMA. "GSR yukselir", "HR sicrar", "nefes
+    duzensizlesir", "korku bari yukselir" GIBI hicbir sey YAZMA. Pressure
+    points yalnizca SUPHELININ TAVRINA dair GOZLEMSEL notlardir,
+    biyometrik tahmin DEGIL. Oyuncu biyometriyi canli poligraftan
+    okuyacak, dosyadan DEGIL.
+  - Tetikleri SIRALAMA ("en kuvvetli", "en keskin", "en net cift kanal
+    sinyali", "en guvenilir kanit"). Listelenen tum hassasiyetler ESIT
+    agirlikta sunulmali.
+  - Anilmasi "asil tetik" veya benzeri olan belirli bir KISI ADI ASLA
+    yazma. Genis konusal alanlara atif yapabilirsin ("is hayatindaki
+    iliskiler", "kisisel mali detaylar", "olay gecesi") ama hicbirini
+    belirleyici ifsa olarak isaretleme.
+  - Sirri ASLA ifsa etme veya ima etme. Listelenen konusal alanlar,
+    gercek bir gorusmecinin sirri BILMEKSIZIN sadece TAVIRDAN (savunma,
+    savusturma, fazla aciklama, sessizlik, sinirlenme) cikarabilecegi
+    seyler olmali.
+  - Listelenen pressure_points'lerden EN AZ BIRI makul bir YANILTICI
+    OLMALI: suphelinin ihtiyatli oldugu ama suclama icin aslinda
+    belirleyici olmayan bir konusal alan. Bunu boyle etiketleme; digerleri
+    ile esit agirlikta sun.
+  - Hangi gorusme taktiginin (EMPATHIC, ANALYTICAL, AGGRESSIVE) suphelinin
+    acilmasini ya da kapanmasini sagladigini kisaca not edebilirsin —
+    genel kalsin, belirli bir konuya bagli olmasin.
+  Format: "[Konusal alan veya davranissal gozlem] — [tavir / konusma
+  oruntusu, BIYOMETRIK DEGIL] — [opsiyonel genel taktik notu]". Ornek:
+  "Uzun sureli is arkadaslarinin ele alindigi konular — supheli belirgin
+  sekilde ihtiyatlilasiyor ve cevap vermeden once soruyu kendisi tekrar
+  cerceveliyor; ANALYTICAL yaklasim cekilmeyi tirmandiriyor."
 - modifiers: medical+habits'i canli poligraf bozulmasina ceviren sayisal
   ayarlar. polygraph_effect notlariyla TUTARLI olmali. Default 0/1; sadece
   dossier'in destekledigi yerde sapma yap.
@@ -161,6 +375,12 @@ CIKTI:
 
 KURALLAR:
 - Bir hukuki anlasmazligi veya davayi tanimlamali
+- Anlasmazlik MUTLAKA bu calisma icin secilen suclama kategorisi icinde
+  olmali:
+  {{charge_category}}
+  Yukarida acikca adlandirilmadikca kurumsal dolandiricilik, ilac
+  malpraktisi, zimmet, rusvet veya buyuk firma haksiz olum varsayilanlari
+  KULLANILMAMALI.
 - Net sekilde belirtilmeli:
   - kim kimi suclaiyor
   - ne oldu
@@ -447,8 +667,20 @@ CIKTI:
 }
 
 KURALLAR:
-- fear_bar_description: 1-2 cumle, sorgulama sirasinda supheli uzerindeki
-  duygusal/psikolojik baskinin nasil takip edildigini aciklar (Turkce).
+- fear_bar_description: GENEL, DAVA-BAGIMSIZ, KISA bir tanim. Bu metin
+  HERHANGI BIR DAVAYA uyabilecek bir tooltip gibi okunmali — yalnizca
+  oturum boyunca suphelinin biriken psikolojik gerilimini ozetledigini
+  belirtir. KESIN KURALLAR:
+  - Suphelinin adini, baska hicbir kisiyi, aile uyesini veya konuyu ASLA
+    isimlendirme.
+  - Hangi sorularin/konularin/iliskilerin bari yukselttigini veya
+    dusurdugunu ASLA aciklama.
+  - Suphelinin zaaflarini, sirlarini veya hukmu ASLA ima etme.
+  - Tercihen 1 cumle, en fazla 2. Davalar arasinda yeniden kullanilabilir
+    olmali.
+  Ornek: "Suphelinin oturum boyunca biriken psikolojik geriliminin bir
+  ozet gostergesi — nabiz, nefes duzensizligi, ter tepkisi ve gorunur
+  duyguyu tek bir gerilim okumasinda bir araya getirir."
 - heart_rate_baseline: BPM sayisi. ~70'ten basla, dossier.modifiers.
   heart_rate_baseline_shift anlamliysa uygula. Tipik aralik 60-90.
 - gsr_baseline: microsiemens sayisi. ~5'ten basla, dossier.modifiers.
@@ -474,7 +706,7 @@ const steps = [
     // Karmaşık yaratıcı profil — Sonnet kalitesi gerekli
     name: 'suspect',
     model: MODEL.HEAVY,
-    prompt: STEP_1_SUSPECT,
+    prompt: () => fill(STEP_1_SUSPECT, { diversity_anchor: DIVERSITY }),
     parse: parseJsonBlock,
     thinking: think(4000),
     maxTokens: 12000,
@@ -483,7 +715,11 @@ const steps = [
     // Basit yapılandırılmış özet — Haiku yeterli ve çok daha ucuz
     name: 'case',
     model: MODEL.LIGHT,
-    prompt: (r) => fill(STEP_2_CASE, { suspect_json: r.suspect }),
+    prompt: (r) =>
+      fill(STEP_2_CASE, {
+        suspect_json: r.suspect,
+        charge_category: DIVERSITY.charge_category,
+      }),
     parse: parseJsonBlock,
     thinking: think(1024),
     maxTokens: 3000,
@@ -521,7 +757,9 @@ const { results } = await runPipeline(steps, {
   onStep: ({ name, text, stopReason }) => {
     const step = steps.find((s) => s.name === name);
     const model = step?.model ?? 'default';
-    console.log(`[${name}] tamamlandı — ${text.length} karakter, model=${model}, stop_reason=${stopReason}`);
+    console.log(
+      `[${name}] tamamlandı — ${text.length} karakter, model=${model}, stop_reason=${stopReason}`
+    );
   },
 });
 
