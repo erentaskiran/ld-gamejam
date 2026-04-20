@@ -90,11 +90,16 @@ let dossierScrollOffset = 0;
 let dossierMaxScroll = 0;
 let answerScrollOffset = 0;
 let answerMaxScroll = 0;
+let questionScrollOffset = 0;
+let questionMaxScroll = 0;
 let choiceScrollOffset = 0;
 let choiceMaxScroll = 0;
 let portraitSlide = 0;
 let narrationSlide = 0;
 let narrationTextProgress = 0;
+let narrationScrollOffset = 0;
+let narrationMaxScroll = 0;
+let narrationBodyRect = null;
 let choicesAnim = 0;
 let polygraphSlide = 0;
 let displayedNodeId = '';
@@ -109,6 +114,8 @@ const CCTV_RISE_SPEED = 4;
 const CCTV_DECAY_SPEED = 1.4;
 let cctvStyle = 'NEUTRAL';
 let cctvIntensity = 0;
+let dialogueQuestionRect = null;
+let dialogueAnswerRect = null;
 
 function smoothstep(t) {
   return t * t * (3 - 2 * t);
@@ -119,6 +126,7 @@ function easeOutCubic(t) {
 }
 
 function inRect(point, rect) {
+  if (!point || !rect) return false;
   return (
     point.x >= rect.x &&
     point.x <= rect.x + rect.w &&
@@ -184,15 +192,28 @@ function drawPlayScene(ctx) {
     const titleSlice = titleStr.slice(0, Math.min(titleLen, shown));
     const descSlice = descStr.slice(0, Math.max(0, shown - titleLen));
 
-    drawNarrationBox(
+    const narrScroll = drawNarrationBox(
       ctx,
       LAYOUT.narration.x,
       narrY,
       LAYOUT.narration.w,
       LAYOUT.narration.h,
       titleSlice,
-      descSlice
+      descSlice,
+      narrationScrollOffset
     );
+    narrationScrollOffset = narrScroll.clampedScroll;
+    narrationMaxScroll = narrScroll.maxScroll;
+    narrationBodyRect = narrScroll.bodyRect
+      ? {
+          x: narrScroll.bodyRect.x,
+          y: narrY + (narrScroll.bodyRect.y - LAYOUT.narration.y),
+          w: narrScroll.bodyRect.w,
+          h: narrScroll.bodyRect.h,
+        }
+      : null;
+  } else {
+    narrationBodyRect = null;
   }
 
   const mouse = getMousePos();
@@ -208,11 +229,16 @@ function drawPlayScene(ctx) {
       h: LAYOUT.modal.h,
       question: qVisible,
       answer: aVisible,
+      questionScrollOffset,
       answerScrollOffset,
       suspectLabel: getSuspectLabel(),
     });
-    answerMaxScroll = modalResult.maxScroll;
-    answerScrollOffset = modalResult.clampedScroll;
+    questionMaxScroll = modalResult.questionMaxScroll;
+    questionScrollOffset = modalResult.questionClampedScroll;
+    answerMaxScroll = modalResult.answerMaxScroll;
+    answerScrollOffset = modalResult.answerClampedScroll;
+    dialogueQuestionRect = modalResult.questionRect || null;
+    dialogueAnswerRect = modalResult.answerRect || null;
     state.choiceRects = [];
   } else if (textFullyRevealed && node && node.choices && !node.is_end_state) {
     const choiceResult = drawChoiceModal(ctx, {
@@ -228,8 +254,12 @@ function drawPlayScene(ctx) {
     state.choiceRects = choiceResult.rects;
     choiceMaxScroll = choiceResult.maxScroll;
     choiceScrollOffset = choiceResult.clampedScroll;
+    dialogueQuestionRect = null;
+    dialogueAnswerRect = null;
   } else {
     state.choiceRects = [];
+    dialogueQuestionRect = null;
+    dialogueAnswerRect = null;
   }
 
   const polyE = easeOutCubic(clamp(polygraphSlide, 0, 1));
@@ -560,11 +590,16 @@ export function registerPlayScene(_canvas, ctx) {
       tutorialPulseTime = 0;
       answerScrollOffset = 0;
       answerMaxScroll = 0;
+      questionScrollOffset = 0;
+      questionMaxScroll = 0;
       choiceScrollOffset = 0;
       choiceMaxScroll = 0;
       portraitSlide = 0;
       narrationSlide = 0;
       narrationTextProgress = 0;
+      narrationScrollOffset = 0;
+      narrationMaxScroll = 0;
+      narrationBodyRect = null;
       choicesAnim = 0;
       polygraphSlide = 0;
       laneFlash.heartRate = 0;
@@ -572,6 +607,8 @@ export function registerPlayScene(_canvas, ctx) {
       laneFlash.gsr = 0;
       cctvStyle = 'NEUTRAL';
       cctvIntensity = 0;
+      dialogueQuestionRect = null;
+      dialogueAnswerRect = null;
       prevMetrics.heartRate = state.metrics.heartRate;
       prevMetrics.breathing = state.metrics.breathing;
       prevMetrics.gsr = state.metrics.gsr;
@@ -636,9 +673,14 @@ export function registerPlayScene(_canvas, ctx) {
         resetSignalsToBaseline();
         applyNodeAtmosphere(state.currentNode, state.currentNodeId);
         narrationTextProgress = 0;
+        narrationScrollOffset = 0;
+        narrationMaxScroll = 0;
+        narrationBodyRect = null;
         choicesAnim = 0;
         answerScrollOffset = 0;
         answerMaxScroll = 0;
+        questionScrollOffset = 0;
+        questionMaxScroll = 0;
         choiceScrollOffset = 0;
         choiceMaxScroll = 0;
       }
@@ -780,14 +822,36 @@ export function registerPlayScene(_canvas, ctx) {
         return;
       }
 
+      if (!state.responseMode && narrationTextProgress >= totalTextLen) {
+        const wheel = getPlatformScrollDelta();
+        if (wheel !== 0) {
+          const mouse = getMousePos();
+          const overNarration = inRect(mouse, narrationBodyRect);
+          if (overNarration && narrationMaxScroll > 0) {
+            narrationScrollOffset = clamp(
+              narrationScrollOffset + toUnifiedScrollLines(wheel),
+              0,
+              narrationMaxScroll
+            );
+            return;
+          }
+        }
+      }
+
       if (state.responseMode) {
         const wheel = getPlatformScrollDelta();
         if (wheel !== 0) {
-          answerScrollOffset = clamp(
-            answerScrollOffset + toUnifiedScrollLines(wheel),
-            0,
-            answerMaxScroll
-          );
+          const mouse = getMousePos();
+          const overQuestion = inRect(mouse, dialogueQuestionRect);
+          const overAnswer = inRect(mouse, dialogueAnswerRect);
+          const delta = toUnifiedScrollLines(wheel);
+          if (overQuestion && questionMaxScroll > 0) {
+            questionScrollOffset = clamp(questionScrollOffset + delta, 0, questionMaxScroll);
+          } else if (overAnswer && answerMaxScroll > 0) {
+            answerScrollOffset = clamp(answerScrollOffset + delta, 0, answerMaxScroll);
+          } else {
+            answerScrollOffset = clamp(answerScrollOffset + delta, 0, answerMaxScroll);
+          }
         }
         handleResponseMode(dt);
         return;

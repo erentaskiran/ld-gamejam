@@ -1,4 +1,4 @@
-import { drawRect, drawText, drawWrappedText, wrapTextLines } from '../draw.js';
+import { drawRect, drawText, drawScrollableText, wrapTextLines } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
 import {
   getMousePos,
@@ -18,7 +18,10 @@ import { CASES } from '../game/cases.js';
 
 let scroll = 0;
 let maxScroll = 0;
+let summaryScroll = 0;
+let summaryMaxScroll = 0;
 let startRect = null;
+let summaryRect = null;
 let anim = 0;
 
 function inRect(point, rect) {
@@ -122,6 +125,10 @@ function drawDossierScene(ctx) {
   const panelY = 14;
   const panelW = DESIGN_W - 32;
   const panelH = DESIGN_H - 28;
+  const btnW = 240;
+  const btnH = 32;
+  const btnX = DESIGN_W / 2 - btnW / 2;
+  const btnY = panelY + panelH - btnH - 10;
   drawPanel(ctx, panelX, panelY, panelW, panelH, { border: COLORS.amber });
 
   drawText(ctx, t('DOSSIER_TITLE'), DESIGN_W / 2, panelY + 14, {
@@ -164,14 +171,34 @@ function drawDossierScene(ctx) {
     font: UI_FONT,
     baseline: 'top',
   });
-  drawWrappedText(ctx, state.gameData?.context || '', contextX, contextY + 14, contextW, {
-    size: 11,
-    color: COLORS.creamDim,
-    font: UI_FONT,
-    lineHeight: 11,
-    maxLines: 10,
-    baseline: 'top',
-  });
+  const summaryY = contextY + 14;
+  const summaryH = Math.max(46, btnY - summaryY - 8);
+  summaryRect = { x: contextX, y: summaryY, w: contextW, h: summaryH };
+  drawRect(ctx, summaryRect.x - 2, summaryRect.y - 2, summaryRect.w + 4, summaryRect.h + 4, 'rgba(14, 9, 6, 0.4)');
+  const summaryDraw = drawScrollableText(
+    ctx,
+    state.gameData?.context || '',
+    summaryRect.x,
+    summaryRect.y,
+    summaryRect.w,
+    summaryRect.h,
+    summaryScroll,
+    {
+      size: 11,
+      color: COLORS.creamDim,
+      font: UI_FONT,
+      lineHeight: 11,
+      scrollbarTrackColor: COLORS.fearTrack,
+      scrollbarThumbColor: COLORS.amberBright,
+    }
+  );
+  summaryScroll = summaryDraw.clampedScroll;
+  summaryMaxScroll = summaryDraw.maxScroll;
+
+  drawRect(ctx, summaryRect.x - 2, summaryRect.y - 2, summaryRect.w + 4, 1, COLORS.amberDim);
+  drawRect(ctx, summaryRect.x - 2, summaryRect.y + summaryRect.h + 1, summaryRect.w + 4, 1, COLORS.amberDim);
+  drawRect(ctx, summaryRect.x - 2, summaryRect.y - 2, 1, summaryRect.h + 4, COLORS.amberDim);
+  drawRect(ctx, summaryRect.x + summaryRect.w + 1, summaryRect.y - 2, 1, summaryRect.h + 4, COLORS.amberDim);
 
   const contentX = portraitX + portraitW + 16;
   const contentY = panelY + 44;
@@ -285,10 +312,6 @@ function drawDossierScene(ctx) {
     });
   }
 
-  const btnW = 240;
-  const btnH = 32;
-  const btnX = DESIGN_W / 2 - btnW / 2;
-  const btnY = panelY + panelH - btnH - 10;
   startRect = { x: btnX, y: btnY, w: btnW, h: btnH };
   const mouse = getMousePos();
   const hovered = inRect(mouse, startRect);
@@ -321,6 +344,9 @@ export function registerDossierScene(_canvas, ctx) {
     enter() {
       scroll = 0;
       maxScroll = 0;
+      summaryScroll = 0;
+      summaryMaxScroll = 0;
+      summaryRect = null;
       anim = 0;
       startRect = null;
     },
@@ -328,7 +354,14 @@ export function registerDossierScene(_canvas, ctx) {
       anim += dt;
       const wheel = getPlatformScrollDelta();
       if (wheel !== 0) {
-        scroll = clamp(scroll + toUnifiedScrollPixels(wheel), 0, maxScroll);
+        const delta = toUnifiedScrollPixels(wheel);
+        const mouse = getMousePos();
+        const overSummary = inRect(mouse, summaryRect);
+        if (overSummary && summaryMaxScroll > 0) {
+          summaryScroll = clamp(summaryScroll + delta, 0, summaryMaxScroll);
+        } else {
+          scroll = clamp(scroll + delta, 0, maxScroll);
+        }
       }
       if (wasKeyPressed('arrowdown') || wasKeyPressed('s')) {
         scroll = clamp(scroll + 24, 0, maxScroll);
