@@ -1,4 +1,10 @@
-import { drawRect, drawText, drawWrappedText, drawScrollableText } from '../draw.js';
+import {
+  drawRect,
+  drawText,
+  drawWrappedText,
+  drawScrollableText,
+  wrapTextLines,
+} from '../draw.js';
 import { getImage } from '../assets.js';
 import { registerScene, setScene } from '../sceneManager.js';
 import {
@@ -142,21 +148,29 @@ function drawCaseCard(ctx, x, y, w, h, opts) {
   const textW = characterImage ? w - h - 12 : w - 52;
 
   const hasStatus = stats && stats.attempts > 0;
-
-  drawText(ctx, prefix, textX, y + 13, {
-    size: 11,
-    color: selected ? COLORS.amberBright : COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
   const suffixW = hasStatus ? textW - 18 : textW;
-  drawWrappedText(ctx, suffix, textX, y + 28, suffixW, {
+
+  const titleLineH = 12;
+  const titleLines = wrapTextLines(ctx, prefix, textW, 11, UI_FONT).slice(0, 2);
+  const titleTop = y + 7;
+  for (let i = 0; i < titleLines.length; i += 1) {
+    drawText(ctx, titleLines[i], textX, titleTop + i * titleLineH, {
+      size: 11,
+      color: selected ? COLORS.amberBright : COLORS.cream,
+      font: UI_FONT,
+      baseline: 'top',
+    });
+  }
+
+  const suffixY = titleTop + titleLines.length * titleLineH + 1;
+  const suffixMaxLines = titleLines.length >= 2 ? 1 : 2;
+  drawWrappedText(ctx, suffix, textX, suffixY, suffixW, {
     size: 11,
     color: COLORS.creamDim,
     font: UI_FONT,
     lineHeight: 11,
-    maxLines: 2,
+    maxLines: suffixMaxLines,
+    baseline: 'top',
   });
 
   drawStatusIcon(ctx, x + w - 6, y + h - 6, stats);
