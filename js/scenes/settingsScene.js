@@ -1,30 +1,10 @@
-import { drawRect, drawText } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
-import {
-  getMousePos,
-  isScrollInverted,
-  isMouseDown,
-  toggleScrollInverted,
-  wasKeyPressed,
-  wasMousePressed,
-} from '../input.js';
-import { COLORS, DESIGN_H, DESIGN_W, UI_FONT } from '../ui/theme.js';
-import { drawSceneBackground } from '../ui/background.js';
-import { drawPanel } from '../ui/panel.js';
-import { t, getLanguage, setLanguage } from '../i18n/index.js';
-import { getAmbientVolume, setAmbientVolume } from '../interrogationAudio.js';
-import { getCrtStrength, setCrtStrength } from '../videoSettings.js';
+import { getMousePos, isMouseDown, toggleScrollInverted, wasKeyPressed, wasMousePressed } from '../input.js';
+import { drawSettingsModal } from '../ui/pauseModal.js';
 
-let langLeftRect = null;
-let langRightRect = null;
-let scrollToggleRect = null;
-let volumeTrackRect = null;
-let volumeHitRect = null;
+let settingsRects = {};
 let volumeDragActive = false;
-let crtTrackRect = null;
-let crtHitRect = null;
 let crtDragActive = false;
-const LANGS = ['en', 'tr'];
 
 function inRect(point, rect) {
   return (
@@ -36,246 +16,27 @@ function inRect(point, rect) {
   );
 }
 
-function cycleLanguage(dir) {
-  const idx = LANGS.indexOf(getLanguage());
-  const next = LANGS[(idx + dir + LANGS.length) % LANGS.length];
-  setLanguage(next);
-}
-
-function drawSettingsScene(ctx) {
-  drawSceneBackground(ctx);
-
-  const panelX = 80;
-  const panelY = 60;
-  const panelW = DESIGN_W - 160;
-  const panelH = DESIGN_H - 120;
-  drawPanel(ctx, panelX, panelY, panelW, panelH, { border: COLORS.amber });
-
-  drawText(ctx, t('SETTINGS_TITLE'), DESIGN_W / 2, panelY + 18, {
-    align: 'center',
-    size: 14,
-    color: COLORS.amberBright,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  drawRect(ctx, panelX + 16, panelY + 32, panelW - 32, 1, COLORS.amberDim);
-
-  // Language row
-  const rowY = panelY + 60;
-  drawText(ctx, t('SETTINGS_LANGUAGE_LABEL'), panelX + 24, rowY, {
-    size: 12,
-    color: COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  const arrowW = 20;
-  const arrowH = 20;
-  const labelW = 90;
-  const rowRight = panelX + panelW - 24;
-  const labelX = rowRight - labelW / 2 - arrowW;
-  const leftArrowX = labelX - labelW / 2 - arrowW - 4;
-  const rightArrowX = labelX + labelW / 2 + 4;
-
-  const mouse = getMousePos();
-  langLeftRect = { x: leftArrowX, y: rowY - arrowH / 2, w: arrowW, h: arrowH };
-  langRightRect = { x: rightArrowX, y: rowY - arrowH / 2, w: arrowW, h: arrowH };
-
-  const leftHover = inRect(mouse, langLeftRect);
-  const rightHover = inRect(mouse, langRightRect);
-
-  drawPanel(ctx, langLeftRect.x, langLeftRect.y, arrowW, arrowH, {
-    border: leftHover ? COLORS.amberBright : COLORS.amberDim,
-    fill: leftHover ? 'rgba(60,36,14,0.8)' : COLORS.panelFillLight,
-  });
-  drawText(ctx, '<', langLeftRect.x + arrowW / 2, rowY, {
-    align: 'center',
-    size: 12,
-    color: leftHover ? COLORS.amberBright : COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  drawPanel(ctx, langRightRect.x, langRightRect.y, arrowW, arrowH, {
-    border: rightHover ? COLORS.amberBright : COLORS.amberDim,
-    fill: rightHover ? 'rgba(60,36,14,0.8)' : COLORS.panelFillLight,
-  });
-  drawText(ctx, '>', langRightRect.x + arrowW / 2, rowY, {
-    align: 'center',
-    size: 12,
-    color: rightHover ? COLORS.amberBright : COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  const langLabel = getLanguage() === 'en' ? t('SETTINGS_LANGUAGE_EN') : t('SETTINGS_LANGUAGE_TR');
-  drawText(ctx, langLabel, labelX, rowY, {
-    align: 'center',
-    size: 12,
-    color: COLORS.amberBright,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  // Invert scroll row
-  const scrollRowY = rowY + 34;
-  drawText(ctx, t('SETTINGS_SCROLL_LABEL'), panelX + 24, scrollRowY, {
-    size: 12,
-    color: COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  scrollToggleRect = {
-    x: rowRight - 92,
-    y: scrollRowY - 10,
-    w: 92,
-    h: 20,
-  };
-  const scrollHover = inRect(mouse, scrollToggleRect);
-  drawPanel(ctx, scrollToggleRect.x, scrollToggleRect.y, scrollToggleRect.w, scrollToggleRect.h, {
-    border: scrollHover ? COLORS.amberBright : COLORS.amberDim,
-    fill: scrollHover ? 'rgba(60,36,14,0.8)' : COLORS.panelFillLight,
-  });
-
-  const scrollLabel = isScrollInverted() ? t('SETTINGS_SCROLL_ON') : t('SETTINGS_SCROLL_OFF');
-  drawText(ctx, scrollLabel, scrollToggleRect.x + scrollToggleRect.w / 2, scrollRowY, {
-    align: 'center',
-    size: 12,
-    color: scrollHover ? COLORS.amberBright : COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  // Volume row
-  const volumeRowY = scrollRowY + 34;
-  drawText(ctx, t('SETTINGS_SOUND_LABEL'), panelX + 24, volumeRowY, {
-    size: 12,
-    color: COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  const trackW = 96;
-  const trackH = 6;
-  const trackX = rowRight - trackW - 14;
-  const trackY = volumeRowY - trackH / 2;
-  volumeTrackRect = { x: trackX, y: trackY, w: trackW, h: trackH };
-  volumeHitRect = { x: trackX, y: trackY - 8, w: trackW, h: trackH + 16 };
-
-  const vol = getAmbientVolume();
-  const ratio = vol / 100;
-  drawRect(ctx, trackX, trackY, trackW, trackH, COLORS.amberDim);
-  drawRect(
-    ctx,
-    trackX,
-    trackY,
-    Math.max(1, Math.round(trackW * ratio)),
-    trackH,
-    COLORS.amberBright
-  );
-
-  const knobSize = 9;
-  const knobX = trackX + ratio * trackW - knobSize / 2;
-  const knobY = volumeRowY - knobSize / 2;
-  const knobRect = { x: knobX, y: knobY, w: knobSize, h: knobSize };
-  const knobHover = inRect(mouse, knobRect);
-  drawPanel(ctx, knobX, knobY, knobSize, knobSize, {
-    border: knobHover ? COLORS.amberBright : COLORS.amber,
-    fill: knobHover ? 'rgba(70,42,16,0.85)' : COLORS.panelFillLight,
-  });
-
-  drawText(ctx, `${vol}%`, rowRight, volumeRowY, {
-    align: 'center',
-    size: 11,
-    color: COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  // CRT row
-  const crtRowY = volumeRowY + 34;
-  drawText(ctx, t('SETTINGS_CRT_LABEL'), panelX + 24, crtRowY, {
-    size: 12,
-    color: COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  const crtTrackW = 96;
-  const crtTrackH = 6;
-  const crtTrackX = rowRight - crtTrackW - 14;
-  const crtTrackY = crtRowY - crtTrackH / 2;
-  crtTrackRect = { x: crtTrackX, y: crtTrackY, w: crtTrackW, h: crtTrackH };
-  crtHitRect = { x: crtTrackX, y: crtTrackY - 8, w: crtTrackW, h: crtTrackH + 16 };
-
-  const crt = getCrtStrength();
-  const crtRatio = crt / 100;
-  drawRect(ctx, crtTrackX, crtTrackY, crtTrackW, crtTrackH, COLORS.amberDim);
-  drawRect(
-    ctx,
-    crtTrackX,
-    crtTrackY,
-    Math.max(1, Math.round(crtTrackW * crtRatio)),
-    crtTrackH,
-    COLORS.amberBright
-  );
-
-  const crtKnobSize = 9;
-  const crtKnobX = crtTrackX + crtRatio * crtTrackW - crtKnobSize / 2;
-  const crtKnobY = crtRowY - crtKnobSize / 2;
-  const crtKnobRect = { x: crtKnobX, y: crtKnobY, w: crtKnobSize, h: crtKnobSize };
-  const crtKnobHover = inRect(mouse, crtKnobRect);
-  drawPanel(ctx, crtKnobX, crtKnobY, crtKnobSize, crtKnobSize, {
-    border: crtKnobHover ? COLORS.amberBright : COLORS.amber,
-    fill: crtKnobHover ? 'rgba(70,42,16,0.85)' : COLORS.panelFillLight,
-  });
-
-  drawText(ctx, `${crt}%`, rowRight, crtRowY, {
-    align: 'center',
-    size: 11,
-    color: COLORS.cream,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-
-  drawText(ctx, t('SETTINGS_BACK'), DESIGN_W / 2, panelY + panelH - 16, {
-    align: 'center',
-    size: 11,
-    color: COLORS.creamDim,
-    font: UI_FONT,
-    baseline: 'middle',
-  });
-}
-
 export function registerSettingsScene(_canvas, ctx) {
   registerScene('settings', {
     enter() {
-      langLeftRect = null;
-      langRightRect = null;
-      scrollToggleRect = null;
-      volumeTrackRect = null;
-      volumeHitRect = null;
+      settingsRects = {};
       volumeDragActive = false;
-      crtTrackRect = null;
-      crtHitRect = null;
       crtDragActive = false;
     },
     update() {
       const mouse = getMousePos();
+
       if (volumeDragActive) {
-        if (isMouseDown(0) && volumeTrackRect) {
-          const ratio = (mouse.x - volumeTrackRect.x) / volumeTrackRect.w;
-          setAmbientVolume(Math.round(Math.max(0, Math.min(1, ratio)) * 100));
+        if (isMouseDown(0) && settingsRects.hitTest) {
+          settingsRects.hitTest(mouse);
         } else {
           volumeDragActive = false;
         }
       }
+
       if (crtDragActive) {
-        if (isMouseDown(0) && crtTrackRect) {
-          const ratio = (mouse.x - crtTrackRect.x) / crtTrackRect.w;
-          setCrtStrength(Math.round(Math.max(0, Math.min(1, ratio)) * 100));
+        if (isMouseDown(0) && settingsRects.hitTest) {
+          settingsRects.hitTest(mouse);
         } else {
           crtDragActive = false;
         }
@@ -285,12 +46,13 @@ export function registerSettingsScene(_canvas, ctx) {
         setScene('menu');
         return;
       }
+
       if (wasKeyPressed('arrowleft') || wasKeyPressed('a')) {
-        cycleLanguage(-1);
+        settingsRects.cycleLanguage?.(-1);
         return;
       }
       if (wasKeyPressed('arrowright') || wasKeyPressed('d')) {
-        cycleLanguage(1);
+        settingsRects.cycleLanguage?.(1);
         return;
       }
       if (wasKeyPressed('i')) {
@@ -298,50 +60,34 @@ export function registerSettingsScene(_canvas, ctx) {
         return;
       }
       if (wasKeyPressed('arrowup') || wasKeyPressed('w')) {
-        setAmbientVolume(getAmbientVolume() + 4);
+        settingsRects.adjustVolume?.(1);
         return;
       }
       if (wasKeyPressed('arrowdown') || wasKeyPressed('s')) {
-        setAmbientVolume(getAmbientVolume() - 4);
+        settingsRects.adjustVolume?.(-1);
         return;
       }
       if (wasKeyPressed('q')) {
-        setCrtStrength(getCrtStrength() - 4);
+        settingsRects.adjustCrt?.(-1);
         return;
       }
       if (wasKeyPressed('e')) {
-        setCrtStrength(getCrtStrength() + 4);
+        settingsRects.adjustCrt?.(1);
         return;
       }
+
       if (wasMousePressed(0)) {
-        if (inRect(mouse, langLeftRect)) {
-          cycleLanguage(-1);
-          return;
-        }
-        if (inRect(mouse, langRightRect)) {
-          cycleLanguage(1);
-          return;
-        }
-        if (inRect(mouse, scrollToggleRect)) {
-          toggleScrollInverted();
-          return;
-        }
-        if (volumeTrackRect && volumeHitRect && inRect(mouse, volumeHitRect)) {
-          const ratio = (mouse.x - volumeTrackRect.x) / volumeTrackRect.w;
-          setAmbientVolume(Math.round(Math.max(0, Math.min(1, ratio)) * 100));
+        if (settingsRects.volumeHitRect && inRect(mouse, settingsRects.volumeHitRect)) {
           volumeDragActive = true;
-          return;
         }
-        if (crtTrackRect && crtHitRect && inRect(mouse, crtHitRect)) {
-          const ratio = (mouse.x - crtTrackRect.x) / crtTrackRect.w;
-          setCrtStrength(Math.round(Math.max(0, Math.min(1, ratio)) * 100));
+        if (settingsRects.crtHitRect && inRect(mouse, settingsRects.crtHitRect)) {
           crtDragActive = true;
-          return;
         }
+        settingsRects.hitTest?.(mouse);
       }
     },
     render() {
-      drawSettingsScene(ctx);
+      settingsRects = drawSettingsModal(ctx, { mouse: getMousePos(), standalone: true });
     },
   });
 }

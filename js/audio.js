@@ -1,6 +1,6 @@
 import { getAudio } from './assets.js';
+import { getAmbientVolume } from './interrogationAudio.js';
 
-const MASTER_VOLUME_KEY = 'the-operator:ambient-volume:v1';
 const GLOBAL_VOLUME_MAX = 0.09;
 const GLOBAL_VOLUME_LOG_STRENGTH = 3;
 
@@ -15,19 +15,11 @@ function clamp01(v) {
 }
 
 function getMasterVolumeScale() {
-  try {
-    const stored = localStorage.getItem(MASTER_VOLUME_KEY);
-    const raw = stored == null || String(stored).trim() === '' ? NaN : Number(stored);
-    if (Number.isFinite(raw)) {
-      const percent = raw <= 1 ? raw * 100 : raw;
-      const normalized = clamp01(percent / 100);
-      const curved =
-        Math.log1p(normalized * GLOBAL_VOLUME_LOG_STRENGTH) /
-        Math.log1p(GLOBAL_VOLUME_LOG_STRENGTH);
-      return clamp01(curved * GLOBAL_VOLUME_MAX);
-    }
-  } catch {}
-  return 0.5;
+  const normalized = clamp01(getAmbientVolume() / 100);
+  const curved =
+    Math.log1p(normalized * GLOBAL_VOLUME_LOG_STRENGTH) /
+    Math.log1p(GLOBAL_VOLUME_LOG_STRENGTH);
+  return clamp01(curved * GLOBAL_VOLUME_MAX);
 }
 
 function applyCurrentMusicVolume() {

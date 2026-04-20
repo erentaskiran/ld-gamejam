@@ -86,6 +86,7 @@ let pauseSelectedIndex = 0;
 let settingsOpen = false;
 let settingsRects = {};
 let pauseSettingsVolumeDragActive = false;
+let pauseSettingsCrtDragActive = false;
 let logExpanded = false;
 let logAnim = 0;
 let logScrollOffset = 0;
@@ -585,6 +586,7 @@ export function registerPlayScene(_canvas, ctx) {
       settingsOpen = false;
       settingsRects = {};
       pauseSettingsVolumeDragActive = false;
+      pauseSettingsCrtDragActive = false;
       logExpanded = false;
       logAnim = 0;
       logScrollOffset = 0;
@@ -761,6 +763,13 @@ export function registerPlayScene(_canvas, ctx) {
               pauseSettingsVolumeDragActive = false;
             }
           }
+          if (pauseSettingsCrtDragActive) {
+            if (isMouseDown(0) && settingsRects.hitTest) {
+              settingsRects.hitTest(getMousePos());
+            } else {
+              pauseSettingsCrtDragActive = false;
+            }
+          }
 
           if (wasKeyPressed('arrowleft') || wasKeyPressed('a')) {
             settingsRects.cycleLanguage?.(-1);
@@ -778,10 +787,21 @@ export function registerPlayScene(_canvas, ctx) {
             settingsRects.adjustVolume?.(-1);
             return;
           }
+          if (wasKeyPressed('q')) {
+            settingsRects.adjustCrt?.(-1);
+            return;
+          }
+          if (wasKeyPressed('e')) {
+            settingsRects.adjustCrt?.(1);
+            return;
+          }
           if (wasMousePressed(0)) {
             const mouse = getMousePos();
             if (settingsRects.volumeHitRect && inRect(mouse, settingsRects.volumeHitRect)) {
               pauseSettingsVolumeDragActive = true;
+            }
+            if (settingsRects.crtHitRect && inRect(mouse, settingsRects.crtHitRect)) {
+              pauseSettingsCrtDragActive = true;
             }
             if (settingsRects.hitTest) {
               settingsRects.hitTest(mouse);

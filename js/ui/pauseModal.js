@@ -1,9 +1,11 @@
 import { drawText, drawRect } from '../draw.js';
+import { drawSceneBackground } from './background.js';
 import { COLORS, UI_FONT, DESIGN_W, DESIGN_H } from './theme.js';
 import { drawPanel } from './panel.js';
 import { t, getLanguage, setLanguage } from '../i18n/index.js';
 import { isScrollInverted, toggleScrollInverted } from '../input.js';
 import { getAmbientVolume, setAmbientVolume } from '../interrogationAudio.js';
+import { getCrtStrength, setCrtStrength } from '../videoSettings.js';
 
 const LANGS = ['en', 'tr'];
 
@@ -83,7 +85,7 @@ export function drawPauseModal(ctx, { mouse, selectedIndex = 0 }) {
 }
 
 const S_MODAL_W = 220;
-const S_MODAL_H = 182;
+const S_MODAL_H = 214;
 const S_MODAL_X = (DESIGN_W - S_MODAL_W) / 2;
 const S_MODAL_Y = (DESIGN_H - S_MODAL_H) / 2;
 
@@ -92,9 +94,12 @@ function cycleLanguage(dir) {
   setLanguage(LANGS[(idx + dir + LANGS.length) % LANGS.length]);
 }
 
-export function drawSettingsModal(ctx, { mouse }) {
+export function drawSettingsModal(ctx, { mouse, standalone = false }) {
+  if (standalone) {
+    drawSceneBackground(ctx);
+  }
   ctx.save();
-  ctx.fillStyle = 'rgba(14, 9, 6, 0.78)';
+  ctx.fillStyle = standalone ? 'rgba(14, 9, 6, 0.68)' : 'rgba(14, 9, 6, 0.78)';
   ctx.fillRect(0, 0, DESIGN_W, DESIGN_H);
   ctx.restore();
 
@@ -240,6 +245,51 @@ export function drawSettingsModal(ctx, { mouse }) {
     align: 'center',
   });
 
+  const crtRowY = volumeRowY + 30;
+  drawText(ctx, t('SETTINGS_CRT_LABEL'), S_MODAL_X + 18, crtRowY, {
+    size: 11,
+    color: COLORS.cream,
+    font: UI_FONT,
+    baseline: 'middle',
+  });
+
+  const crtTrackW = 96;
+  const crtTrackH = 6;
+  const crtTrackX = rowRight - crtTrackW - 14;
+  const crtTrackY = crtRowY - crtTrackH / 2;
+  const crtTrackRect = { x: crtTrackX, y: crtTrackY, w: crtTrackW, h: crtTrackH };
+  const crtHitRect = { x: crtTrackX, y: crtTrackY - 8, w: crtTrackW, h: crtTrackH + 16 };
+
+  const crt = getCrtStrength();
+  const crtRatio = crt / 100;
+  drawRect(ctx, crtTrackX, crtTrackY, crtTrackW, crtTrackH, COLORS.amberDim);
+  drawRect(
+    ctx,
+    crtTrackX,
+    crtTrackY,
+    Math.max(1, Math.round(crtTrackW * crtRatio)),
+    crtTrackH,
+    COLORS.amberBright
+  );
+
+  const crtKnobSize = 9;
+  const crtKnobX = crtTrackX + crtRatio * crtTrackW - crtKnobSize / 2;
+  const crtKnobY = crtRowY - crtKnobSize / 2;
+  const crtKnobRect = { x: crtKnobX, y: crtKnobY, w: crtKnobSize, h: crtKnobSize };
+  const crtHover = pointInRect(mouse, crtKnobRect);
+  drawPanel(ctx, crtKnobX, crtKnobY, crtKnobSize, crtKnobSize, {
+    border: crtHover ? COLORS.amberBright : COLORS.amber,
+    fill: crtHover ? 'rgba(60,36,14,0.8)' : COLORS.panelFillLight,
+  });
+
+  drawText(ctx, `${crt}%`, rowRight, crtRowY, {
+    size: 10,
+    color: COLORS.cream,
+    font: UI_FONT,
+    baseline: 'middle',
+    align: 'center',
+  });
+
   drawText(ctx, t('SETTINGS_BACK'), S_MODAL_X + S_MODAL_W / 2, S_MODAL_Y + S_MODAL_H - 14, {
     size: 10,
     color: COLORS.creamDim,
@@ -251,9 +301,13 @@ export function drawSettingsModal(ctx, { mouse }) {
   return {
     volumeTrackRect,
     volumeHitRect,
+    crtHitRect,
     cycleLanguage,
     adjustVolume(dir) {
       setAmbientVolume(getAmbientVolume() + dir * 4);
+    },
+    adjustCrt(dir) {
+      setCrtStrength(getCrtStrength() + dir * 4);
     },
     hitTest(mouse) {
       if (pointInRect(mouse, leftRect)) cycleLanguage(-1);
@@ -269,6 +323,16 @@ export function drawSettingsModal(ctx, { mouse }) {
       ) {
         const ratio = (mouse.x - volumeTrackRect.x) / volumeTrackRect.w;
         setAmbientVolume(Math.round(Math.max(0, Math.min(1, ratio)) * 100));
+      } else if (
+        pointInRect(mouse, {
+          x: crtTrackRect.x,
+          y: crtTrackRect.y - 6,
+          w: crtTrackRect.w,
+          h: crtTrackRect.h + 12,
+        })
+      ) {
+        const ratio = (mouse.x - crtTrackRect.x) / crtTrackRect.w;
+        setCrtStrength(Math.round(Math.max(0, Math.min(1, ratio)) * 100));
       }
     },
   };
