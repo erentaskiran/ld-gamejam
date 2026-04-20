@@ -18,6 +18,7 @@ export const EN = {
   STAT_COMPLETED: 'COMPLETED',
   STAT_ATTEMPTED: 'ATTEMPTED',
   STAT_FAILED: 'FAILED',
+  MENU_FULLSCREEN_HINT: 'F: Fullscreen',
   LANG_TOGGLE_HINT: 'L: TR',
 
   // dossier

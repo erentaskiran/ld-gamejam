@@ -18,6 +18,7 @@ export const TR = {
   STAT_COMPLETED: 'TAMAMLANDI',
   STAT_ATTEMPTED: 'DENENDI',
   STAT_FAILED: 'BASARISIZ',
+  MENU_FULLSCREEN_HINT: 'F: Tam ekran',
   LANG_TOGGLE_HINT: 'L: EN',
 
   // dossier
