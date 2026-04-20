@@ -73,6 +73,32 @@ export function trackEvent(name, props) {
   }
 }
 
+/**
+ * Fire a manual pageview. Use this for scene-level "screens" we want to
+ * appear in GoatCounter's Pages stats (e.g. title, menu). The auto-onload
+ * pageview is disabled in `index.html` so this is the only path that counts.
+ *
+ * @param {string} path   A URL-like identifier, e.g. '/title', '/menu'.
+ * @param {string} [title] Optional friendly title for the dashboard.
+ */
+export function trackPageview(path, title) {
+  if (DISABLED) {
+    console.log('[analytics] skipped pageview (local):', path);
+    return;
+  }
+  const gc = getGoatcounter();
+  if (!gc) {
+    console.log('[analytics] skipped pageview (no goatcounter):', path);
+    return;
+  }
+  try {
+    gc.count({ path, title: title || path });
+    console.log('[analytics] pageview:', path);
+  } catch (err) {
+    console.warn('[analytics] pageview failed:', path, err);
+  }
+}
+
 export function isAnalyticsEnabled() {
   return !DISABLED;
 }

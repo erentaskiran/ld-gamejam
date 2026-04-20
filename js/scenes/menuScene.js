@@ -23,6 +23,7 @@ import {
   setScrollTarget,
   tickScrollOffset,
 } from '../smoothScroll.js';
+import { trackPageview } from '../analytics.js';
 
 let menuAnim = 0;
 let infoScrollOffset = 0;
@@ -429,6 +430,7 @@ export function registerMenuScene(_canvas, ctx) {
       listScrollOffset = 0;
       listMaxScroll = 0;
       lastCaseIndex = -1;
+      trackPageview('/menu', 'Case Selection');
       resetScroll('menu.list');
       resetScroll('menu.info');
       applyAmbientProfile('menu');

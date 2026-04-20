@@ -8,6 +8,7 @@ import { drawPanel } from '../ui/panel.js';
 import { t } from '../i18n/index.js';
 import { applyAmbientProfile } from '../interrogationAudio.js';
 import { hasSeenBriefing } from '../game/onboarding.js';
+import { trackPageview } from '../analytics.js';
 
 let anim = 0;
 let armed = false;
@@ -81,6 +82,7 @@ export function registerTitleScene(_canvas, ctx) {
       anim = 0;
       armed = false;
       applyAmbientProfile('title');
+      trackPageview('/title', 'Title');
     },
     update(dt) {
       anim += dt;
