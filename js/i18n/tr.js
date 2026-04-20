@@ -100,28 +100,28 @@ export const TR = {
   BRIEFING_HINT_EXIT: 'ESC : Menu',
   BRIEFING_INTRO_TITLE: 'ODAYI OKUMAK',
   BRIEFING_INTRO_BODY:
-    'Bu oyunda 5 kaynagi birlikte okursun: NABIZ, NEFES, GSR, STRES metresi ve supheli portresi. Tek bir kanal tek basina kanit degildir. Her sorudan sonra once degisimi gor, sonra dosya notlariyla karsilastir.',
+    '- Bu oyunda 5 kaynagi birlikte okursun: NABIZ, NEFES, GSR, STRES ve portre.\n- Tek bir kanal tek basina kanit degildir.\n- Her sorudan sonra degisimi gor, sonra dosya ile karsilastir.',
   BRIEFING_PULSE_TITLE: 'NABIZ',
   BRIEFING_PULSE_BODY:
-    'Nabizda hem atim sikligina hem de ani sicrama anlarina bak. Sert bir sorudan sonra hizli yukselis normaldir; hic tepki gelmemesi bazen "kontrol" degil ilac etkisi olabilir. Ozellikle beta-bloker notu varsa sakin gorunen nabzi tek basina dogru kabul etme.',
+    '- Nabizda atim sikligi + ani sicrama anlarina birlikte bak.\n- Sert sorudan sonra yukselis normaldir.\n- Beta-bloker notu varsa sakin nabzi tek basina dogru kabul etme.',
   BRIEFING_BREATHING_TITLE: 'NEFES',
   BRIEFING_BREATHING_BODY:
-    'Nefes kanali "ritim" verir: duzenli ve derin akis daha kontrollu bir durumu, yuzeysel/hizli akis savunmayi gosterir. Uzun duz bolge + ani nefes alma, nefes tutma denemesi olabilir. Cevabin zorlu noktasinda ritim bozuluyorsa bunu not et.',
+    '- Nefes kanalinda ritme bak: duzenli/derin akim daha kontrolludur.\n- Yuzeysel ve hizli akis savunma baskisini gosterir.\n- Uzun duz bolge + ani nefes, nefes tutma denemesi olabilir.',
   BRIEFING_GSR_TITLE: 'GSR (DERI ILETKENLIGI)',
   BRIEFING_GSR_BODY:
-    'GSR duygusal tepkiyi biraz gecikmeli verir. Soru aninda degil, kisa bir sure sonra yukselis gorebilirsin. Kafein ve anksiyete gibi etkiler taban seviyeyi zaten yuksek tutabilir; bu durumda artisin zamanlamasi, yukseklikten daha degerlidir.',
+    '- GSR tepkiyi gecikmeli verir; artis genelde soru anindan hemen sonra gelir.\n- Kafein/anksiyete taban seviyeyi yuksek tutabilir.\n- Bu durumda zamanlama, yukseklikten daha degerlidir.',
   BRIEFING_FEAR_TITLE: 'STRES METRESI',
   BRIEFING_FEAR_BODY:
-    'Stres metresi tek kanalin degil, genel sorgu baskisinin ozetidir. Dogru baski kurdugunda yukselir; zayif veya zamansiz hamlede dusebilir. "Yuksek stres = otomatik suclu" demek degildir, sadece dogru noktaya temas ettigini gosterir.',
+    '- Stres metresi tek kanal degil, genel sorgu baskisinin ozetidir.\n- Dogru baskida yukselir; zamansiz/zayif hamlede dusebilir.\n- Yuksek stres otomatik suclu demek degildir.',
   BRIEFING_CCTV_TITLE: 'SUPHELI PORTRESI',
   BRIEFING_CCTV_BODY:
-    'Portrede metin etiketi yok; sadece gorsel ipucu var. Kirmizi/titrek gorunum genelde gerginlik, cokme etkisi kirilma, soguk-sabit gorunum kontrol, yumusama ise rahatlama sinyali verir. Portreyi mutlaka poligraf kanallariyla birlikte yorumla.',
+    '- Portrede metin etiketi yok; sadece gorsel ipucu var.\n- Kirmizi/titrek: gerginlik, cokme etkisi: kirilma, soguk/sabit: kontrol.\n- Portreyi mutlaka poligraf kanallariyla birlikte yorumla.',
   BRIEFING_MODIFIERS_TITLE: 'SAGLIK VE ALISKANLIK',
   BRIEFING_MODIFIERS_BODY:
-    'Dossier ekranindaki medical/habits notlari oyunu dogrudan etkiler. "polygraph_effect" satirlarini okumadan sinyal yorumlamak kolayca yanlis sonuca goturur. Kural basit: once dosya, sonra grafik.',
+    '- Dossier\'daki medical/habits notlari oyunu dogrudan etkiler.\n- "polygraph_effect" satirlarini okumadan yorum yapma.\n- Kural: once dosya, sonra grafik.',
   BRIEFING_CLOSE_TITLE: 'OPERATOR SENSIN',
   BRIEFING_CLOSE_BODY:
-    'Guvenli karar akisi: (1) soruyu sor, (2) 3 kanaldaki degisimi gor, (3) dosya ile capraz kontrol et, (4) sonucu logdan tekrar oku. Bu adimlari birlestirmeden hukum verme. ENTER ile dava secimine donebilirsin.',
+    '- Guvenli akis: soruyu sor -> degisimi gor -> dosya ile capraz kontrol et.\n- Sonucu logdan tekrar oku.\n- Bu adimlari birlestirmeden hukum verme.',
 
   // polygraph / UI
   POLY_HEADER: 'POLIGRAF SINYALLERI',

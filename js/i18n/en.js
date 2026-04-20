@@ -100,28 +100,28 @@ export const EN = {
   BRIEFING_HINT_EXIT: 'ESC : Menu',
   BRIEFING_INTRO_TITLE: 'READING THE ROOM',
   BRIEFING_INTRO_BODY:
-    'You read 5 sources together: PULSE, BREATHING, GSR, the STRESS meter, and the defendant portrait. No single channel is proof by itself. After each question, observe the change first, then verify it against dossier notes.',
+    '- Read 5 sources together: PULSE, BREATHING, GSR, STRESS, and portrait cues.\n- No single channel is proof by itself.\n- After each question: observe change first, then verify with dossier notes.',
   BRIEFING_PULSE_TITLE: 'PULSE',
   BRIEFING_PULSE_BODY:
-    'On pulse, watch both beat density and sudden spikes. A hard question usually creates a rise; no visible reaction can sometimes be medication, not calmness. If the dossier mentions beta-blockers, do not trust a flat pulse on its own.',
+    '- On pulse, read beat density together with sudden spikes.\n- Hard questions usually create a rise.\n- If beta-blockers are noted, do not trust a flat pulse alone.',
   BRIEFING_BREATHING_TITLE: 'BREATHING',
   BRIEFING_BREATHING_BODY:
-    'Breathing gives you rhythm. Regular/deep flow suggests control; shallow/fast flow suggests defensive pressure. A long flat segment followed by a sharp inhale can indicate breath-holding. If rhythm breaks at key moments, flag it.',
+    '- Breathing gives rhythm: regular/deep suggests control.\n- Shallow/fast flow suggests defensive pressure.\n- Long flat segment + sharp inhale can indicate breath-holding.',
   BRIEFING_GSR_TITLE: 'GSR (SKIN CONDUCTANCE)',
   BRIEFING_GSR_BODY:
-    'GSR is delayed compared to the spoken moment. You often see the rise shortly after the question, not instantly. Caffeine and anxiety can keep baseline high, so timing of the rise is often more valuable than raw height.',
+    '- GSR reaction is delayed relative to speech timing.\n- You often see the rise shortly after the question.\n- With caffeine/anxiety, timing is often more useful than raw peak height.',
   BRIEFING_FEAR_TITLE: 'STRESS METER',
   BRIEFING_FEAR_BODY:
-    'The stress meter is a summary of interrogation pressure, not a lie detector on its own. It rises when your approach lands, and can drop on weak or mistimed pressure. High stress does not automatically mean guilty; it means your line is hitting.',
+    '- Stress is a pressure summary, not a standalone lie detector.\n- It rises on effective pressure, drops on weak/mistimed pressure.\n- High stress does not automatically mean guilty.',
   BRIEFING_CCTV_TITLE: 'DEFENDANT PORTRAIT',
   BRIEFING_CCTV_BODY:
-    'The portrait has no text labels, only visual cues. Red/jitter usually means tension, collapse-like motion suggests breakdown, cold/still look suggests control, and warm softening suggests relief. Always read portrait cues together with polygraph channels.',
+    '- The portrait has no text labels, only visual cues.\n- Red/jitter: tension; collapse-like motion: breakdown; cold/still: control.\n- Always evaluate portrait cues with polygraph channels.',
   BRIEFING_MODIFIERS_TITLE: 'MEDICAL & HABITS',
   BRIEFING_MODIFIERS_BODY:
-    'Medical and habit notes in the dossier directly affect gameplay. If you ignore "polygraph_effect" lines, your interpretation can be wrong even when the chart looks clear. Rule of thumb: dossier first, chart second.',
+    '- Medical and habit notes directly affect gameplay.\n- Do not skip "polygraph_effect" lines.\n- Rule of thumb: dossier first, chart second.',
   BRIEFING_CLOSE_TITLE: 'YOU ARE THE OPERATOR',
   BRIEFING_CLOSE_BODY:
-    'Safe decision flow: (1) ask, (2) observe changes across channels, (3) cross-check with dossier, (4) re-read from log before verdict. Do not commit on a single signal. Press ENTER to return to case selection.',
+    '- Safe flow: ask -> observe changes -> cross-check with dossier.\n- Re-read in log before final verdict.\n- Do not commit on a single signal.',
 
   // polygraph / UI
   POLY_HEADER: 'POLYGRAPH SIGNALS',
