@@ -1,8 +1,14 @@
 export const CASES = [
   {
-    id: 'tr-case-6',
-    file: './dialogs/tr-case-6.json',
-    label: 'Kerem Doğan - Ankara Çevre Yolu İhalesi Rüşvet Soruşturması',
+    id: 'tr-case-1',
+    file: './dialogs/tr-case-1.json',
+    label: 'Çankaya Konut Projesi — İşçi Ölümü Davası',
+    language: 'tr',
+  },
+  {
+    id: 'tr-case-2',
+    file: './dialogs/tr-case-2.json',
+    label: 'Ankara Çevre Yolu İhalesi - Rüşvet Soruşturması',
     language: 'tr',
   },
   {
