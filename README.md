@@ -1,5 +1,3 @@
-
-
 <img width="1024" height="711" alt="cover-image" src="https://github.com/user-attachments/assets/a56dcb49-3385-4fcd-a0dd-7f14cb3a3c62" />
 
 # The Operator
@@ -22,7 +20,6 @@ A pixel-art interrogation game. A lamp-lit room, a polygraph, and a suspect with
 - [Scripts](#scripts)
 - [Tech notes](#tech-notes)
 - [Tooling](#tooling)
-- [Credits](#credits)
 
 ---
 
@@ -94,9 +91,6 @@ ld-gamejam/
 ├── dialogs/                # case JSON (en-case-*.json, tr-case-*.json) — loaded at runtime
 ├── scripts/                # LLM pipeline + case-generation runners
 ├── docs/                   # dialog-generator.md
-├── agents/                 # per-module reference docs for AI agents
-├── agents.md               # agents entry point
-└── DESCRIPTION.md          # pitch copy
 ```
 
 ## Scene flow
