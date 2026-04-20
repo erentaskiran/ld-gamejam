@@ -30,6 +30,12 @@ export const CASES = [
     language: 'tr',
   },
   {
+    id: 'tr-case-6',
+    file: './dialogs/tr-case-6.json',
+    label: 'Doğan Ailesi - Harmancı İşyeri Güvenliği İhmalı',
+    language: 'tr',
+  },
+  {
     id: 'en-case-1',
     file: './dialogs/en-case-1.json',
     label: 'Velastyn Adverse Events Investigation — Ardent BioPharma',
