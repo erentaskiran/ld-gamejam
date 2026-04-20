@@ -18,6 +18,12 @@ export const CASES = [
     language: 'tr',
   },
   {
+    id: 'tr-case-4',
+    file: './dialogs/tr-case-4.json',
+    label: 'Yıldız & Ortak İnşaat A.Ş. Zimmet Dosyası — Savcılık vs. Kerem Yıldız',
+    language: 'tr',
+  },
+  {
     id: 'en-case-1',
     file: './dialogs/en-case-1.json',
     label: 'Velastyn Adverse Events Investigation — Ardent BioPharma',

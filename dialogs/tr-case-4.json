@@ -1,0 +1,559 @@
+{
+  "game_data": {
+    "title": "Yıldız & Ortak İnşaat A.Ş. Zimmet Dosyası — Savcılık vs. Kerem Yıldız",
+    "suspect": {
+      "name": "Kerem Yıldız",
+      "role": "Orta ölçekli bir inşaat firması olan Yıldız & Ortak İnşaat A.Ş.'nin CFO'su",
+      "profile": "Kerem Yıldız, Ankara'nın varoşlarında büyümüş, burs kazanarak İTÜ İşletme bölümünü bitirmiştir. Kariyerine küçük bir muhasebe ofisinde başlamış; on yıl içinde sektörde tanınan, sayıların arkasındaki hikâyeleri okuyan biri olarak nam salmıştır. Şirkete on dört yıl önce kurucu ortağın daveti üzerine katılmış, şirketi iki kez iflasın eşiğinden kurtarmıştır. Dışarıdan soğuk ve mesafeli görünür; toplantılarda kelimelerini tartarak konuşur, e-postalarını geceleri yazar. Ancak yakın çevresindeki az sayıda kişi onun kendi parasıyla çalışanların eğitim masraflarını karşıladığını bilir. Muhasebe kayıtlarında bir kalem her zaman açıklamasız kalmaktadır."
+    },
+    "system_config": {
+      "initial_fear_bar": 20,
+      "max_fear_bar": 100,
+      "fear_bar_description": "Sorgulama boyunca Kerem'in duygusal yükü bir korku barında ölçülür: kişisel/ailevi konular (Haluk Çakır, Emre Çakır, kumar borcu) tetikleyici olduğunda bar yükselir; mekanizma ve teknik sorulara karşılık ise stabildir. Bar'ın dağılımı, gerçek suçun nerede saklandığını ortaya koymada oyuncunun rehberidir.",
+      "heart_rate_baseline": 75,
+      "gsr_baseline": 8
+    },
+    "context": "Ankara Cumhuriyet Savcılığı, Yıldız & Ortak İnşaat A.Ş.'nin muhasebe kayıtlarında tespit ettiği 1,2 milyon TL'lik açık nedeniyle CFO Kerem Yıldız'ı zimmet suçlaması altında sorgulamaya çağırmıştır. Kerem'in imzası taşıyan onay formları paraların transferini belgelemektedir; ayrıca son altı ayda şahsi hesaplarına açıklanamayan para hareketleri kaydedilmiştir. Kerem, tüm mali kontrol yetkisini elinde bulundurmakta ve şirketin kurucusu Haluk Çakır'ın güvenini kazanmış bir figür olarak bilinmektedir. Ancak şirket yönetimi bölünmüş durumdadır; kurucu ortağın oğlu Emre Çakır ile Kerem arasında gerilim sinyalleri vardır. Dosyada, Kerem'in geçmişinde 2019'da benzer bir usulsüzlük iddiası ve 2021'de ağır borç krizleri yer almaktadır. Soruşturma, Kerem'in suçu işleyip işlemediğini, yoksa açıklanamayan para hareketlerinin başka bir kaynaktan mı kaynaklandığını ortaya çıkarmalıdır.",
+    "true_verdict": "NOT_GUILTY",
+    "verdict_truth_text": "Kerem Yıldız bir milyon ikiüz bin lirayı çalmadı. İmzaları taklit eden, dört transferi onaylayan ve paraları yönlendiren kişi kurucu ortağın oğlu Emre Çakır'dır. Kerem sahte imzaları bizzat keşfetmiş ancak Haluk Çakır'ı ve şirketi kırmaktan korktukları için sessiz kalarak suç ortağı konumuna düşmüştür. Şahsi hesabındaki para hareketleri ise gizli bir kumar borcundan kaynaklanmakta olup bu borç savcılıkla doğrudan ilişkilidir — ancak ortaya konulan zimmeti delili değildir. Biyometrik kayıt iki sırrı net biçimde ayrıştırır: birincil suçlamaya dair mekanizma sorularında stabildir; ikincil duygusal/kişisel konularda zirveyle dolar.",
+    "dossier": {
+      "age": 47,
+      "identity_summary": "Yıldız & Ortak İnşaat A.Ş.'nin 14 yıllık CFO'su; şirketin tüm mali onay yetkisi elindedir. Titiz, kapalı kutu bir finansçı profili çizer; ancak geçmişte iki kriz döneminde şirketi ayakta tutan kişi olarak tanınır.",
+      "family": [
+        {
+          "relation": "Eş",
+          "name": "Selin Yıldız",
+          "note": "Evlilikleri son iki yılda gerginleşmiştir; Kerem'in geç saatleri ve paranoya biçiminde tezahür eden gerginliği nedeniyle ayrılık konuşmaları yaşanmıştır. Eş, kumar borcundan habersizdir; bu durum Kerem için yüksek duygusal bir yük oluşturmaktadır."
+        },
+        {
+          "relation": "Kurucu Ortak ve İşveren",
+          "name": "Haluk Çakır",
+          "note": "Kerem'i işe alan, on dört yıl boyunca koruyan figür. Kerem'in sessiz kalmasının asıl nedeni bu kişidir; Haluk'un adı geçtiğinde güçlü bir çatışma tepkisi beklenmektedir."
+        },
+        {
+          "relation": "Kurucu Ortağın Oğlu / Orta Kademe Yönetici",
+          "name": "Emre Çakır",
+          "note": "Zimmeti gerçekleştiren asıl kişidir. Kerem onun suçunu örtmektedir. Bu isim sorguda doğrudan baskı aracı olarak kullanılabilir."
+        },
+        {
+          "relation": "Küçük Kardeş",
+          "name": "Tolga Yıldız",
+          "note": "İşsiz, Kerem'e mali bağımlı. Kumar borcunun bir kısmı Tolga üzerinden takip edilmektedir; ilişki hem duygusal hem pratik bir kırılganlık noktasıdır."
+        }
+      ],
+      "medical": [
+        {
+          "condition": "Hipertansiyon (kontrollü) — günlük bisoprolol 5 mg kullanımı",
+          "polygraph_effect": "Beta-bloker kalp atışı tepkisini belirgin biçimde bastırır. Stres anlarında HR artışı gerçek değerinin yaklaşık yarısına iner; nabız temelli stres sinyalleri yanıltıcı şekilde düşük kalır. Oyuncu HR zirvelerine aşırı anlam yüklememeli."
+        },
+        {
+          "condition": "Kronik uyku bozukluğu — son sekiz aydır devam ediyor",
+          "polygraph_effect": "Otonom sinir sistemi düzensizliği GSR baseline'ını hafifçe yükseltir ve nefes ritmini kararsız kılar. Dinlenmiş bir denekle karşılaştırıldığında tüm biyometrik değerler daha 'gürültülü' okunur; bu, sahte pozitif yoruma zemin hazırlar."
+        }
+      ],
+      "habits": [
+        {
+          "habit": "Günde 5-6 fincan Türk kahvesi tüketimi — yıllardır süregelen alışkanlık",
+          "polygraph_effect": "Yüksek kafein GSR duyarlılığını ve baseline'ını belirgin biçimde artırır. Nötr sorularda bile ter tepkisi normun üzerinde çıkabilir; bu durum suçlu izlenimi doğurabilir."
+        },
+        {
+          "habit": "Ara sıra zolpidem kullanımı (uyku ilacı) — reçeteli ama düzensiz",
+          "polygraph_effect": "Sabah sorgusu öncesi alınmışsa merkezi sinir sistemi genel uyarılma düzeyini bastırabilir. Nefes instabilitesini hafifçe azaltır; ancak kafeinle kombinasyonda net etki öngörülemez."
+        }
+      ],
+      "priors": [
+        "2019'da şirket içi denetimde usulsüzlük iddiasıyla incelenmiş; soruşturma delil yetersizliğiyle kapatılmıştır.",
+        "2021'de şahsi kredi kartı borcu nedeniyle icra takibine maruz kalmış; borç altı ay içinde kapatılmıştır.",
+        "Bir kumar kulübüyle ilişkili olduğu iddia edilen bir kişiyle telefon trafiği tespit edilmiş; bu husus savcılık dosyasında ek şüphe gerekçesi olarak yer almaktadır."
+      ],
+      "pressure_points": [
+        "Emre Çakır'ın adı ve şirketteki rolü sorgu gündeminde öne çıktığında — GSR ve nefes instabilitesi keskin biçimde yükselir; HR bisoprolol nedeniyle sönük kalır — TUZAK veya KANIT tabanlı yaklaşım yüksek baskı yaratır.",
+        "Şahsi hesap hareketleri ve 'açıklanamayan ödemeler' konusuna girildiğinde — GSR baseline'ı zaten yüksek olduğundan ek sıçrama belirgin; nefes ritmi kararsızlaşır — EMPATIK yaklaşım savunmayı kısmen gevşetebilir, doğrudan suçlama kapanmaya iter.",
+        "Haluk Çakır'a duyduğu sadakat ya da şirketteki 'eski günler' hatırlatıldığında — duygusal çatışma tepkisi olarak GSR ve nefes birlikte yükselir; bu desen zimmetten bağımsızdır ve dikkatlice ayrıştırılmalıdır."
+      ],
+      "modifiers": {
+        "heart_rate_suppression": 0.5,
+        "heart_rate_baseline_shift": 5,
+        "gsr_sensitivity": 1.45,
+        "gsr_baseline_shift": 3,
+        "breathing_instability": 0.22
+      }
+    },
+    "start_node": "node_01_intro",
+    "nodes": {
+      "node_01_intro": {
+        "theme": "Odanın Sessizliği",
+        "description": "Kerem Yıldız, gri takım elbisesiyle masanın karşısında oturur. Kravatını düzeltmiş, ellerini üst üste koymuştur; önündeki bardağa henüz dokunmamıştır. Kayıt cihazı açılır, dosya kapağı masaya bırakılır.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "FORMAL_OPEN",
+            "question": "Sayın Yıldız, bu görüşme kayıt altına alınıyor. Kimliğinizi ve şirketteki pozisyonunuzu doğrulamanızı istiyorum.",
+            "answer": "Kerem Yıldız. Yıldız ve Ortak İnşaat Anonim Şirketi'nde on dört yıldır finans direktörüyüm. Avukatımın buraya gelmemesini ben istedim; saklayacak hiçbir şeyim yok.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "CALM",
+              "gsr": "INCREASE",
+              "cctv_visual": "STONE_FACE",
+              "korku_bari_delta": 4,
+              "gameplay_note": "BASELINE OKUMA: HR sakin, ancak kafein etkisine bağlı GSR baseline'ı yüksek. Sonraki sıçramaları bu zemine göre değerlendirin."
+            },
+            "next_node": "node_02_baseline"
+          },
+          {
+            "type": "EMPATHIC_OPEN",
+            "question": "Uzun bir sabah olacak. Size uygun bir tempoda ilerleyelim; rahat olduğunuzda başlayalım.",
+            "answer": "Teşekkür ederim. Son haftalar biraz yorucuydu... Bu meseleyi bir an önce bitirmek istiyorum, o yüzden ne sorarsanız cevaplayacağım.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "DEEP",
+              "gsr": "STABLE",
+              "cctv_visual": "RELEASED_SHOULDERS",
+              "korku_bari_delta": -2,
+              "gameplay_note": "ILERLEME: Empatik giriş savunma duvarını düşürüyor. Referans okumalar daha temiz; yaklaşan sıçramalar daha belirgin görünecek."
+            },
+            "next_node": "node_02_baseline"
+          }
+        ]
+      },
+      "node_02_baseline": {
+        "theme": "Görev ve Yetki",
+        "description": "Kerem, sorulan iş tanımına dair soruları kısa, hesaplı cümlelerle yanıtlamaya hazırlanır. Sağ eli hafifçe masanın altına kayar; sol eli bardağın kenarında kalır.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "ANALYTICAL",
+            "question": "Şirketin mali onay mimarisi üzerinden gidelim. 500.000 TL üzeri transferlerde kimin imzası zorunlu?",
+            "answer": "Bu tutarın üzerindeki tüm transferler benim onayımdan geçer. İkinci imza olarak muhasebe müdürü Selin Hanım gerekli; ancak son teknik onay bende. Bu şirketin kuruluşundan beri işleyen bir protokoldür.",
+            "mechanics": {
+              "heart_rate": "BASELINE",
+              "breathing": "CALM",
+              "gsr": "STABLE",
+              "cctv_visual": "STONE_FACE",
+              "korku_bari_delta": 3,
+              "gameplay_note": "DOGRU HAMLE: Rutin protokol sorusu temiz baseline veriyor. Suphelinin normal durumunu sabitledik."
+            },
+            "next_node": "node_03_authorization"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "On dört yıl uzun bir süre. Bu şirkette geçirdiğiniz yıllar size ne ifade ediyor?",
+            "answer": "Bu şirket benim evim gibi. Haluk Bey beni sektörde kimse tanımıyorken işe aldı. İki kriz atlattık birlikte... O binayı, o insanları ben de kendim kurmuş gibi hissederim.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "INCREASE",
+              "cctv_visual": "LOOK_DOWN",
+              "korku_bari_delta": -3,
+              "gameplay_note": "ILERLEME: Haluk Bey ismi geçtiğinde belirgin duygusal tepki. Buraya daha sonra dönülebilir — duygusal leverage noktası aktif."
+            },
+            "next_node": "node_03_authorization"
+          },
+          {
+            "type": "DIRECT_PRESSURE",
+            "question": "CFO olarak şirket hesaplarında sizin bilginiz dışında bir hareket olamayacağını siz söylüyorsunuz. Doğru mu?",
+            "answer": "Teorik olarak evet, ama pratikte bir şirketin günlük kan dolaşımında... her kalemi gerçek zamanlı izleyemezsiniz. Onayladığım her transferin doğruluğuna inanırım; bu başka bir şey.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": -4,
+              "gameplay_note": "ZAYIF HAMLE: Erken sıkıştırma supheliyi savunmaya soktu. Baseline belirsiz kaldı; sonraki sıçramalar yorumlanması zorlaşacak."
+            },
+            "next_node": "node_03_authorization"
+          }
+        ]
+      },
+      "node_03_authorization": {
+        "theme": "İmzaların Ağırlığı",
+        "description": "Operator dosyadan bir yığın onay formu çıkarır, masaya dizer. Kerem'in bakışı kâğıtların üzerinde kısa süre dolaşır, sonra yine operatöre döner.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "FORENSIC_CALL_OUT",
+            "question": "Bu on bir formun tamamında sizin imzanız var. Sekiz tanesi mesai saatleri dışında — akşam 21:14, 23:42, 00:51. Bu saatlerde hangi süreçle onay verdiniz?",
+            "answer": "O saatlerde genellikle evden uzak bağlantıyla çalışırım, bilinen bir şey. Ama... doğrusunu söylemek gerekirse, her birini tek tek hatırlamıyorum. Mimariyi bilirim, tarihleri değil.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": 6,
+              "gameplay_note": "DOGRU HAMLE: Belirli zaman damgalarına dair kısmi kaçamak. Imzaların tamamını kendinin attığını doğrulamaktan kaçınıyor — dikkat edin."
+            },
+            "next_node": "node_04_mechanism"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "Bu kadar çok geç saat onayı yorucu olmalı. O saatlerde yalnız mı çalışıyordunuz, yoksa sistem başkalarıyla erişim paylaşıyor muydu?",
+            "answer": "Kendi hesabımdan onay verdim... ama bilirsiniz, bir üst düzey yönetici iki faktörlü doğrulamadan sonra kendi cihazıyla imzayı tetikleyebilir. Teoride. Pratikte ben imzaladım demektir.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "SPIKE",
+              "cctv_visual": "LIP_PRESS",
+              "korku_bari_delta": 7,
+              "gameplay_note": "DOGRU HAMLE: Supheli gönüllü olarak 'teorik' bir kapıyı aralıyor ama hemen kapatıyor. Burada bir şey gizleniyor; takipte tut."
+            },
+            "next_node": "node_04_mechanism"
+          },
+          {
+            "type": "AGGRESSIVE",
+            "question": "İmza sizin. Para kaybolmuş. Matematik basit, değil mi?",
+            "answer": "Matematik sizin dediğiniz kadar basit olsaydı burada olmazdık. Ben size yirmi yıldır bu sektörde çalıştığımı söylüyorum; siz bana aritmetik dersi veriyorsunuz.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "DEEP",
+              "gsr": "STABLE",
+              "cctv_visual": "DEFENSIVE_CROSS_ARMS",
+              "korku_bari_delta": -5,
+              "gameplay_note": "YANLIS HAMLE: Agresif sıkıştırma supheliyi savunmaya soktu; duygusal duvar yükseldi. Ilerleyen dugumlerde sinyaller baskılanacak."
+            },
+            "next_node": "node_04_mechanism"
+          }
+        ]
+      },
+      "node_04_mechanism": {
+        "theme": "Mekanizmanın Anatomisi",
+        "description": "Operator, önündeki not defterini kapatır. 'Şimdi tekniğe dönelim' der. Kerem ellerini birleştirir, gözleri masa üzerinde sabit bir noktaya kilitlenir.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "TECHNICAL_DRILL",
+            "question": "Bu 1,2 milyon TL dört ayrı transferle taşınmış. Bana anlatın: bir ödeme emri SAP sisteminde oluşturulduğu andan banka hesabına ulaştığı ana kadar hangi modüllerden, hangi onay katmanlarından geçer? Adım adım.",
+            "answer": "SAP'ta ödeme modülünden oluşturulur... FI modülü üzerinden geçer sanırım, sonra bankacılık entegrasyonuna düşer. Dört göz prensibi uygulanır. Ayrıntıyı bilen aslında muhasebe ekibidir; ben onay aşamasında devreye girerim, parametreleri o ekip kurar.",
+            "mechanics": {
+              "heart_rate": "STABLE",
+              "breathing": "CALM",
+              "gsr": "DECREASE",
+              "cctv_visual": "EMPTY_STARE",
+              "korku_bari_delta": -2,
+              "gameplay_note": "KRITIK OKUMA: Teknik sorgulama karsisinda sinyaller DUSTU. Ayrıntıda belirsizlik, 'sanırım' ifadesi, sorumluluğu ekibe devrediyor. Mekanizmayi birinci el bilmeyen biri gibi konusuyor — yorumu sorgu boyu birikecek kanitla birlikte yapin."
+            },
+            "next_node": "node_05_followup_exploit"
+          },
+          {
+            "type": "NARROW_TARGET",
+            "question": "Teknik detayı bırakalım. Bu para kime gitti, siz söyleyin.",
+            "answer": "Benim bildiğim kadarıyla tedarikçi hesaplarına gitti. Kime gittiğini savcılık zaten biliyor olmalı; ben o isimleri ezbere saymam.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "SPIKE",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": -8,
+              "gameplay_note": "YANLIS HAMLE: Mekanizma testini atladınız. En kritik ayırt edici dugumu kaybettiniz — supheli mimariyi gercekten biliyor mu, bilmiyor mu, asla net ogrenmeyeceksiniz. Sinyaller kayboldu."
+            },
+            "next_node": "node_06_personal_accounts"
+          }
+        ]
+      },
+      "node_05_followup_exploit": {
+        "theme": "Ayrıntıdaki Boşluk",
+        "description": "Operator az önceki cevabı kalemle not düşer, sayfayı çevirir. Kerem nefesini ayarlamaya çalışır; masanın altındaki sağ eli hafifçe pantolonunu sıkmaktadır.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "FORENSIC_CALL_OUT",
+            "question": "Biraz önce parametrelerin muhasebe ekibi tarafından kurulduğunu söylediniz. Ama bu dört transfer için parametreleri onaylayan imza sayfaları elimde — üçünde tek imza var, sadece sizinki. Dört göz prensibi nerede çalışmamış?",
+            "answer": "O üç transferi... hatırlamıyorum şu anda. Eğer tek imza görünüyorsa... belki o gün müdür izindeydi, belki sistemde acil kayıt olarak geçmiştir. Bakmam lazım. Böyle bir şey olduysa bu bir ihlaldir evet, ama kötü niyetle olduğu anlamına gelmez.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SURGE",
+              "cctv_visual": "HAND_PINCH_UNDER_TABLE",
+              "korku_bari_delta": 11,
+              "gameplay_note": "DOGRU HAMLE: Takip somurulmesi isledi. GSR surge + nefes tutma + masa altinda el sikma. HR bisoprolol nedeniyle sonuk kaliyor ama diger kanallar ortusuyor. Bu sinyal kumesini not edin; sonra gorecegiz ayni desen hangi konularda tekrarliyor."
+            },
+            "next_node": "node_07_emre_name"
+          },
+          {
+            "type": "EMPATHIC_REFRAME",
+            "question": "Bir CFO'nun her transferin parametresini hatırlaması beklenmez, bunu biliyorum. Size hatırlatmama izin verin: bu formlardan ikisi bir hafta sonunda oluşturulmuş. O hafta sonu neredeydiniz?",
+            "answer": "O hafta sonu... sanırım İstanbul'daydım, bir toplantı vardı. Kesin tarihi hatırlamam mümkün değil, ama ajandamda kayıtlıdır. Sistemden onay vermiş olabilirim, evet. Bu olağandışı değil.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "cctv_visual": "LIP_PRESS",
+              "korku_bari_delta": 4,
+              "gameplay_note": "ILERLEME: Empatik cerceveleme supheliyi acik tuttu ama takip somurusunun keskinligi kaybedildi. Orta seviye sinyal — alacak daha cok bilgi var."
+            },
+            "next_node": "node_08_reframing"
+          },
+          {
+            "type": "EARLY_ESCALATION",
+            "question": "Yani imza sayfalarında tek imza olması, bunu size hatırlatmam gerekiyor anlamına mı geliyor? Saklıyorsunuz.",
+            "answer": "Ben hiçbir şey saklamıyorum. Belgeleri siz getirdiniz, ben de size bakıyorum. Eğer iddianızı destekleyen bir kanıtınız varsa koyun masaya; yoksa bu konuşma böyle verimli ilerlemeyecek.",
+            "mechanics": {
+              "heart_rate": "STABLE",
+              "breathing": "DEEP",
+              "gsr": "STABLE",
+              "cctv_visual": "DEFENSIVE_CROSS_ARMS",
+              "korku_bari_delta": -9,
+              "gameplay_note": "YANLIS HAMLE: Erken tirmanma supheliye avantaji teslim etti. Sinyaller duzlestı; savunmaci duvar yukseldi. Elinizdeki boslugu kullanamadiniz."
+            },
+            "next_node": "node_08_reframing"
+          }
+        ]
+      },
+      "node_06_personal_accounts": {
+        "theme": "Kişisel Hesapların Dili",
+        "description": "Operator bir banka dökümü çıkarır ve masaya bırakır. Kerem'in gözü dökümdeki rakamlara takılır; bir süre okumuyormuş gibi durur, sonra boğazını temizler.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EVIDENCE",
+            "question": "Son altı ayda kendi şahsi hesabınıza on yedi ayrı 'açıklanamayan' giriş çıkış var. Toplam: 340.000 TL. Bu rakamlar nereden geliyor, nereye gidiyor?",
+            "answer": "Bu... bu şirket parasıyla ilgili değil. Bunu hemen söyleyeyim. Özel meselelerim var, ailevi meseleler. Bu hareketleri savcılığa tek tek açıklamaya hazırım ama... burada değil.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HYPERVENTILATION",
+              "gsr": "MAX",
+              "cctv_visual": "HAND_PINCH_UNDER_TABLE",
+              "korku_bari_delta": 14,
+              "gameplay_note": "KRITIK OKUMA: Oturumun en yuksek GSR + nefes instabilitesi. HR bisoprolol ragmen sicradi — gercek bir baski noktasi. ANCAK: supheli 'şirket parasiyla ilgili degil' demesi cok hizli. Bu sinyal kumesini dava sucuyla ozdesletirmek iclerden kolay; ama kendisinin ne soylediğini dikkatle okuyun."
+            },
+            "next_node": "node_07_emre_name"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "Bu rakamların açıklamasını duymak istiyorum. Başınız belada olsun ya da olmasın, duyulmadan anlaşılmazsınız. Dinliyorum.",
+            "answer": "Bazı şahsi borçlarım var. Kumar değil, ticari değil... sadece kötü zamanlama. Ağabeyimin borcunu kapatmaya çalışıyorum. Aileden kimse bilmiyor. Eşim bile. Bu konu buradan çıkmaz, değil mi?",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "MAX",
+              "cctv_visual": "TEAR_POOLING",
+              "korku_bari_delta": 12,
+              "gameplay_note": "KRITIK OKUMA: Cok yuksek sinyaller ama ifadenin icerigi kiskandirici — 'agabeyim' ifadesi dosyadaki 'kucuk kardes Tolga' ile uyuşmuyor. Supheli bir seyler orterken baska bir seyler mi soyluyor? Kumar ismini soylemekten kacinmasi dikkat cekici."
+            },
+            "next_node": "node_08_reframing"
+          }
+        ]
+      },
+      "node_07_emre_name": {
+        "theme": "Bir İsmin Yükü",
+        "description": "Operator, dosyadan tek bir sayfa çıkarır: şirket organizasyon şeması. Parmağı bir kutunun üzerine konar. Kerem bakışını yükseltir, uzun süre sayfadan ayırmaz.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "NARROW_TARGET",
+            "question": "Emre Çakır. Orta kademe yönetici. Kurucu ortağın oğlu. Bu kişinin bu transferlerle bir ilişkisi var mıydı?",
+            "answer": "Emre... Emre şirkette çalışır evet. Benim onay sürecimde Emre'nin imzası yok. O başka birimlerde. Bu soruya ne cevap vermemi bekliyorsunuz bilemiyorum.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SURGE",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": 13,
+              "gameplay_note": "DOGRU HAMLE: Emre adinin soylenmesi en buyuk sinyallerden birini tetikledi. HR suppression'a ragmen sicrama var. Supheli 'ne cevap vermemi bekliyorsunuz' diye gizlenmeye calisiyor — bir seyleri biliyor ama soylemiyor."
+            },
+            "next_node": "node_10_haluk_loyalty"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "Emre Çakır'ı yıllardır tanıyorsunuz. Bu soruşturma ona nasıl etki eder sizce?",
+            "answer": "Emre... Haluk Bey'in oğlu. Babası için... babası için ağır olur. Ama ben kimin ne yaptığını söyleyecek konumda değilim. Sadece kendi hesabımı verebilirim.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "UNEVEN",
+              "gsr": "SURGE",
+              "cctv_visual": "LOOK_DOWN",
+              "korku_bari_delta": 9,
+              "gameplay_note": "ILERLEME: Supheli Emre'yi direkt korumuyor, babasini koruyor. GSR yuksek ama sozel icerik Emre'ye dair iddiaya girmekten kaciniyor. Onemli bir cizgi cekiyor."
+            },
+            "next_node": "node_08_reframing"
+          },
+          {
+            "type": "TRAP",
+            "question": "Dosyanızda şu an bir yanıt var: 'Bazı transferlerin parametreleri Emre Çakır'ın yetki kodundan geçti.' Bunu doğrular mısınız?",
+            "answer": "Böyle bir şey... söyledim mi ben? Hayır. Ben Emre'nin yetki koduyla ilgili bir şey söylemedim. Bunu kim yazdı? Bu doğru değil.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HYPERVENTILATION",
+              "gsr": "MAX",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": 8,
+              "gameplay_note": "KARMASIK OKUMA: Tuzak isledi, ama supheli dogru bir sekilde yalani reddediyor — uydurma bir alintiyla test edildi ve dogru tepki verdi. Sinyaller yuksek ama icerik dikkatli. Tuzak ayrica kumar kulubu kanit yolunu aciyor."
+            },
+            "next_node": "node_09_gambling_club"
+          }
+        ]
+      },
+      "node_08_reframing": {
+        "theme": "Anlatıyı Çevirme Girişimi",
+        "description": "Kerem öne eğilir, sesi alçalır. Masadaki bardağı kenara iter, sanki yeni bir konuya geçiyormuş gibi elleriyle havada bir sınır çizer.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "DIRECT_CONTRADICTION",
+            "question": "Konuyu değiştirmeyin. Az önce transferlerin parametrelerinde dört göz ihlali olduğunu kabul ettiniz; şimdi bunun üzerine gidelim. O günü kim sistemdeydi, kim değildi?",
+            "answer": "Ben... kabul etmedim, ihlal olabilir dedim. Lütfen sözlerimi çarpıtmayın. O gün sistemde kimler vardı, bunu size dökümden çıkarmanız mümkün. Bana sormanıza gerek yok; sistemden bakın.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SURGE",
+              "cctv_visual": "HAND_PINCH_UNDER_TABLE",
+              "korku_bari_delta": 10,
+              "gameplay_note": "DOGRU HAMLE: Yeniden cerceveleme girisimini reddettiniz ve celiski ile zorladınız. Ikinci en yuksek biyometrik kumesi — oturumun anahtar anlarindan biri. Supheli sistemden bakmanızı istiyor; kendi ifadesi vermek istemiyor."
+            },
+            "next_node": "node_10_haluk_loyalty"
+          },
+          {
+            "type": "GENTLE_REDIRECT",
+            "question": "Anladım, ara verelim. Daha somut bir noktaya bakalım: son altı ayda sıklıkla aradığınız bir numara var. Bu numarayı tanıyor musunuz?",
+            "answer": "Ne numarasıymış? Arkadaşlarımı, yakınlarımı ararım. Bir listede numaraları ezbere bilemem. Siz söyleyin, ben doğrulayayım.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "SHALLOW",
+              "gsr": "INCREASE",
+              "cctv_visual": "EYE_DART",
+              "korku_bari_delta": -4,
+              "gameplay_note": "TAKTIKSEL RESET: Baskiyi dusurduunuz, supheli nefes aldi. Kisa vadede kotu, ama yeni bir yol (telefon kayitlari) acildi. Sinyalleri toplayin."
+            },
+            "next_node": "node_09_gambling_club"
+          },
+          {
+            "type": "ACCEPT_REFRAME",
+            "question": "Peki, size alan açıyorum. Kendi sözlerinizle neler olduğunu anlatın.",
+            "answer": "Teşekkür ederim. Ben on dört yıldır bu şirkete dürüst hizmet ettim. Bu dosyada yazılanların sistematik bir eksiklikten kaynaklandığını düşünüyorum. Suçlu aranıyorsa, sistemin kendisi sorgulanmalı; ben değil. Bugün burada söyleyeceklerim bundan ibaret. Avukatımla bir sonraki görüşmede ayrıntılara gireriz.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "DEEP",
+              "gsr": "DECREASE",
+              "cctv_visual": "RELEASED_SHOULDERS",
+              "korku_bari_delta": -18,
+              "gameplay_note": "YANLIS HAMLE: Yeniden cerceveleme kabul edildi, supheli zemini geri aldi. Sinyaller duzlesti, kontrol el degistirdi. Sorgu yumusak savusturmaya dogru kapaniyor."
+            },
+            "next_node": "node_fail_deflection"
+          }
+        ]
+      },
+      "node_09_gambling_club": {
+        "theme": "Telefon Kayıtları",
+        "description": "Operator bir CD'yi kutusundan çıkarır, ardından basılı bir telefon dökümünü masaya koyar. Döküm üzerinde birkaç numara sarıyla işaretlidir. Kerem dökümle göz teması kurmaz; bakışı operatorun yüzünde sabit kalır.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EVIDENCE",
+            "question": "Bu numara — dört ay boyunca yüz on iki arama — Ankara'da bir yasadışı kumar kulübüne kayıtlı. Bu kulübü 1,2 milyon TL kayıp ile ilişkilendiriyoruz. Açıklayın.",
+            "answer": "Ben... evet, o kulübü arıyorum. Ama bu şirketle ilgili değil. Hiç ilgili değil. Şahsi. Bunu savcılığa anlatmaya hazırım, ama bu paranın kaynağı şirket değil. İnanın bana. O para benim kendi paramdı, maaşımdan, ikramiyemden...",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HYPERVENTILATION",
+              "gsr": "MAX",
+              "cctv_visual": "TEAR_POOLING",
+              "korku_bari_delta": -6,
+              "gameplay_note": "KANIT TUZAGI: En yuksek sinyaller ama supheli surekli 'sirket parasiyla ilgili degil' diyor. Bu kanit gercek bir sir yakaladı — ama hangi sucun sirrini yakaladı? Iddianameyle baglamak icin henuz somut koprunuz yok. Hukum ekraninda iki sirri ayirmak zorunda kalacaksiniz."
+            },
+            "next_node": "node_fail_lockdown"
+          },
+          {
+            "type": "EMPATHIC",
+            "question": "Bu numarayı arıyorsunuz, bu açık. Ama şu an size sormak istediğim şey şirket hesaplarıyla bağlantı değil — kişisel olarak başınıza ne geldiğini anlamak istiyorum.",
+            "answer": "Ben... borçlandım. Kötü bir yere düştüm. İki yıldır çıkmaya çalışıyorum. Bu meblağın yanında benim borcum küçük kalır — o yüzden şirket parasıyla karıştırılmasın. Söz veriyorum, her lira benim cebimden çıktı. Şirketten bir kuruş almadım.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "CRYING",
+              "gsr": "MAX",
+              "cctv_visual": "BREAKDOWN",
+              "korku_bari_delta": 6,
+              "gameplay_note": "KRITIK OKUMA: Empatik yaklasim ikincil sirri icten acti — kumar borcu itirafi. Bu sinyal kumesi asil suctan BAGIMSIZ bir baski kaynagi oldugunu dogruluyor. 'Sirketten bir kurus almadim' ifadesi dikkatle not alin."
+            },
+            "next_node": "node_10_haluk_loyalty"
+          },
+          {
+            "type": "NARROW_TARGET",
+            "question": "Bu kulübe ödenen paraların kaynağı sizce kim tarafından sorgulanacak? Burada netleştirelim — hangi hesaplardan çıktı?",
+            "answer": "Kendi şahsi hesabımdan. Hepsi. İsterseniz her bir kalemini gösterebilirim. Şirket hesaplarıyla bir temas noktası yok. Bunu banka dökümlerim gösterir, uzman raporlarıyla teyit edilebilir.",
+            "mechanics": {
+              "heart_rate": "RISE",
+              "breathing": "SHALLOW",
+              "gsr": "SURGE",
+              "cctv_visual": "JAW_TIGHTEN",
+              "korku_bari_delta": 8,
+              "gameplay_note": "ILERLEME: Supheli finansal ayirimi net koydu — sahsi hesap, sirket hesabi ayri. Sinyaller yuksek ama icerik tutarli. Hesap dokumleri ile dogrulanabilir bir ifade verdi."
+            },
+            "next_node": "node_10_haluk_loyalty"
+          }
+        ]
+      },
+      "node_10_haluk_loyalty": {
+        "theme": "Son Baskı",
+        "description": "Operator önündeki tüm dökümleri tek bir yığına toplar, kenara iter. Odada sadece bir boş sayfa kalır. Kerem bu boş sayfaya bakar, nefesi derinleşir.",
+        "is_end_state": false,
+        "choices": [
+          {
+            "type": "EMPATHIC",
+            "question": "Haluk Bey on dört yıl önce size şans verdi. Şimdi onu en çok neyin incitebileceğini biliyorsunuz. Bu odadan çıkarken ona bakabilmek istiyorsunuz, değil mi? O zaman bildiğinizi söyleyin.",
+            "answer": "Haluk Bey'e... ona borçluyum. Bu şirkete borçluyum. Ben... ben imzaları ben atmadım. Son üç transferi ben onaylamadım. Onay ekranında birisi benim oturumumu kullandı ve ben... bunu fark ettim. Hemen fark ettim. Ve sustum. Çünkü kim olduğunu gördüm ve Haluk Bey'e bunu söyleyemedim. O kadar. İşlediğim suç bu — sustum. Ama ben almadım o parayı. Almadım.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "CRYING",
+              "gsr": "MAX",
+              "cctv_visual": "BREAKDOWN",
+              "korku_bari_delta": 20,
+              "gameplay_note": "TAM COKUS: Supheli imzanın sahte oldugunu ve kimligini korudugunu itiraf ediyor. Isim vermekten kaciniyor ama 'kim oldugunu gordum' demesi dosyadaki Emre Cakir notuyla ortusuyor. Biyometrik desen bunu destekliyor: mekanizma sorusunda DUSUK sinyal, kisisel/aile konularinda MAX sinyal."
+            },
+            "next_node": "node_success_breakdown"
+          },
+          {
+            "type": "MORAL_PRESSURE",
+            "question": "Sizin yerinize başka biri hapse girmeyi kabul edecek mi sanıyorsunuz? Bu soruşturma size kapanırsa, bir sonraki kapıyı çalacaklar. Şimdi konuşun; sonra geç olabilir.",
+            "answer": "Ben kimse için hapse girmeyi kabul etmiyorum. Sadece... elimde belirli belgeler var. Bunları savcılıkla paylaşmaya hazırım, ama bir avukat eşliğinde. Bugün burada kesin bir isim vermeyeceğim. Şunu söyleyeyim: bu imzaların benim tarafımdan atıldığı ispatlanamaz. Grafolojik inceleme talep edin.",
+            "mechanics": {
+              "heart_rate": "SPIKE",
+              "breathing": "HOLDING_BREATH",
+              "gsr": "SURGE",
+              "cctv_visual": "LIP_PRESS",
+              "korku_bari_delta": 12,
+              "gameplay_note": "KISMI KABUL: Supheli imzaların kendisine ait olmadigini ima etti ama isim vermedi. Grafolojik inceleme talebi kritik bir savunma. Biyometrik kumesi yuksek ama sogukkanlilik korunuyor."
+            },
+            "next_node": "node_success_partial"
+          },
+          {
+            "type": "AGGRESSIVE",
+            "question": "Haluk Çakır'a sadakat mazeretiyle hırsızlığınızı süsleyemezsiniz. Siz çaldınız, kulübünüzde yaktınız, ve şimdi burada yalvarıyorsunuz.",
+            "answer": "Bu görüşme burada bitti. Avukatım olmadan tek bir soru daha cevaplamayacağım. Bu söylediğiniz bir hakarettir ve tutanağa geçmesini istiyorum.",
+            "mechanics": {
+              "heart_rate": "DROP",
+              "breathing": "DEEP",
+              "gsr": "STABLE",
+              "cctv_visual": "STONE_FACE",
+              "korku_bari_delta": -25,
+              "gameplay_note": "YANLIS HAMLE: Dogrulanmamis bir varsayimla agresif suclama. Supheli avukat talep ederek odayı kilitledi. Tum ikincil kanit yollari kapandi; hukum ekranina elinizdeki daginik sinyallerle gideceksiniz."
+            },
+            "next_node": "node_fail_lockdown"
+          }
+        ]
+      },
+      "node_success_breakdown": {
+        "theme": "Kırılma",
+        "description": "Kerem masaya yaslanır, omuzları çöker. Gözyaşları ince bir şekilde akar. Operatordan peçete ister, alır, yüzünü siler. Uzun bir sessizlik olur; kayıt cihazı sadece nefesini alır.",
+        "is_end_state": true,
+        "result_text": "Sorgu, kontrollü bir duygusal çökmeyle sona erdi. Biyometrik kaydın dağılımı dikkate değer: mekanizma ve teknik ayrıntı dugumlerinde (SAP akışı, onay modülü sıraları) sinyaller BASELINE civarında kaldı; HR düştü, GSR zayıf seyretti — supheli bu mimariyi birinci elden anlatmakta zorlandı. Buna karşılık kişisel/ailevi eksende (kişisel hesap hareketleri, kumar kulübü telefon kayıtları, Emre Çakır'ın adı, Haluk Çakır'a sadakat) biyometrik zirveler yığıldı: GSR MAX, nefes ağlamalı-kesik, mikro-ifadede çözülme. HR sıçramaları bisoprolol nedeniyle sönük kaldı ama mevcuttu. Final aşamada supheli son üç transferin imzasının kendi oturumunu kullanan başka biri tarafından atıldığını ve bu kişinin kimliğini bildiği halde sessiz kaldığını kabul etti — ancak parayı kendisinin almadığını ısrarla savundu. İmzaların grafolojik incelenmesini kendisi talep etti. Hukum ekranında değerlendirilmek üzere: ikincil baskı kaynağı (kumar borcu) supheli tarafından açıkça itiraf edildi; birincil suçlama mekanizmasına dair itiraf YOK; tersine aktif bir çürütme var."
+      },
+      "node_success_partial": {
+        "theme": "Ölçülü Teslim",
+        "description": "Kerem sandalyesinde dikilir. Sesi hâlâ düzgündür ama ellerindeki titreme artık gizlenmiyor. Bir belgeyi savcılıkla paylaşma teklifini tekrarlar, cümleleri bitmiş bir insanın cümleleri gibidir.",
+        "is_end_state": true,
+        "result_text": "Supheli soğukkanlılığını büyük ölçüde korudu ama kritik bir eşik aştı: onay formlarındaki imzaların kendi tarafından atıldığının ispatlanamayacağını beyan etti ve grafolojik inceleme talebinde bulundu. Biyometrik desen tutarlı: teknik/mekanizma sorularında sinyaller DURAĞAN — hatta DECREASE eğilimli; kişisel hesap, kumar kulübü ve Emre Çakır adı etrafında ise belirgin SURGE ve HOLDING_BREATH kümelenmeleri var. Supheli kumar borcunu ikincil bir baskı kaynağı olarak dolaylı yoldan kabul etti; şirket hesaplarıyla hiçbir temasının olmadığını özellikle vurguladı ve banka dökümleriyle ispatlamayı önerdi. İsim vermedi ancak dosyadaki üçüncü bir kişiyi işaret eden bir belge olduğunu ima etti. Hukum ekranı için: iki ayrı sır kaynağı biyometrik olarak ayırt edilebilir desenler üretti — mekanizma-cahilliği + aile-temelli duygusal yüklenme."
+      },
+      "node_fail_lockdown": {
+        "theme": "Hukuki Kapanma",
+        "description": "Kerem ayağa kalkmadan sandalyesinde sessizce oturur; sadece bakışları değişmiştir. Avukatının gelmesine kadar tek kelime daha söylemeyeceğini tekrarlar. Operatorun önündeki belgeler toplanmaya başlar.",
+        "is_end_state": true,
+        "result_text": "Sorgu avukat talebi ile sert biçimde kapandı. Biyometrik kayıt parçalı: ilk üç içerik dugumunde temiz baseline oluşturuldu; ancak orta bölümde yapılan hamleler suphelinin duvarını erken yükseltti ve son aşamada suçlayıcı ifade karşısında supheli tamamen kontrolü ele aldı (HR DROP, GSR STABLE, STONE_FACE). Kumar kulübü kaniti ortaya kondu ve supheli burada yüksek sinyal gösterdi ama 'şirket parasıyla ilgisi yok' savunmasını sürekli tekrarladı; operator bu kaniti birincil suçlamayla bağlayacak somut bir köprü kuramadan sorgu sona erdi. Teknik/mekanizma sorularındaki düşük sinyaller (suphelinin akışı tam bilmediğine dair gösterge) dosyada kayıtlı. Hukum ekranına eksik bir tablo ile giriliyor: iki ayrı sır kaynağının ayırt edilmesi oyuncuya kalıyor."
+      },
+      "node_fail_deflection": {
+        "theme": "Yumuşak Savuşturma",
+        "description": "Kerem nazikçe sorgunun burada bitmesini rica eder. Kravatını düzeltir, bir sonraki randevu için bir tarih önerir. Odayı kontrollü bir şekilde terk etmeye hazırlanır.",
+        "is_end_state": true,
+        "result_text": "Supheli kontrolü yeniden ele aldı ve sorgu yumuşak bir şekilde kapandı. Biyometrik kayıt büyük ölçüde düzleşti: final aşamada HR DROP, breathing DEEP, GSR DECREASE, RELEASED_SHOULDERS gözlendi. Kritik orta dugumlerde bazı yüksek sıçramalar kaydedilmişti (SURGE, HOLDING_BREATH) fakat bu kümeler konu bazında belirsiz kaldı — hangi sıçramanın hangi sırrı tetiklediğine dair net bir ayrım kurulamadı. Supheli hiçbir imza, transfer veya isim kabul etmedi; 'sistemik eksiklik' savunmasıyla anlatıyı tersine çevirdi. Hukum ekranına ciddi biçimde eksik kanıt ile giriliyor; iddia da savunma da ispatlanamamış durumda. Oyuncu biyometrik desenin COĞRAFYASINA (hangi konularda sinyal, hangilerinde sessizlik) ayrıntılı bakarak bir karara varmak zorunda."
+      }
+    },
+    "character_image": "./assets/characters/tr-case-4.png"
+  }
+}
