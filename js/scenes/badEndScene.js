@@ -1,4 +1,4 @@
-import { drawRect, drawScrollableText, drawText, drawWrappedText } from '../draw.js';
+import { drawRect, drawScrollableText, drawText } from '../draw.js';
 import { registerScene, setScene } from '../sceneManager.js';
 import {
   getPlatformScrollDelta,
@@ -24,7 +24,6 @@ import {
 let anim = 0;
 let textScrollOffset = 0;
 let textMaxScroll = 0;
-let textViewportRect = null;
 let recorded = false;
 
 function drawBadEndScene(ctx) {
@@ -70,8 +69,6 @@ function drawBadEndScene(ctx) {
   const descText = outcome?.description || '';
   const fullText = [descText, resultText].filter(Boolean).join('\n\n');
 
-  textViewportRect = { x: bodyX, y: bodyY, w: bodyW, h: bodyH };
-
   const scroll = drawScrollableText(ctx, fullText, bodyX, bodyY, bodyW, bodyH, textScrollOffset, {
     size: 11,
     color: COLORS.cream,
@@ -101,7 +98,6 @@ export function registerBadEndScene(_canvas, ctx) {
       anim = 0;
       textScrollOffset = 0;
       textMaxScroll = 0;
-      textViewportRect = null;
       recorded = false;
       resetScroll('badEnd.text');
 
