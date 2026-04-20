@@ -24,6 +24,12 @@ export const CASES = [
     language: 'tr',
   },
   {
+    id: 'tr-case-5',
+    file: './dialogs/tr-case-5.json',
+    label: 'Vektör E-Spor Kulübü Antrenörlük Lisansı İptali Dosyası - Serdar Önal',
+    language: 'tr',
+  },
+  {
     id: 'en-case-1',
     file: './dialogs/en-case-1.json',
     label: 'Velastyn Adverse Events Investigation — Ardent BioPharma',
